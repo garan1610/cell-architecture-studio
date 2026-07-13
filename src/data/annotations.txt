@@ -1,0 +1,569 @@
+Lop 10:
+
+glucose: 
+Đường đơn	Đường đơn như glucose là đơn phân cơ bản của carbohydrate, cung cấp năng lượng nhanh cho tế bào.
+Đường đôi	Đường đôi được tạo từ hai đường đơn liên kết với nhau.
+Liên kết glycosidic	Liên kết nối các đơn phân đường để tạo đường đôi hoặc đường đa.
+Tinh bột	Polysaccharide dự trữ ở thực vật, được tạo từ nhiều đơn phân glucose.
+Glycogen	Polysaccharide dự trữ ở động vật và nấm.
+Cellulose	Polysaccharide cấu trúc, là thành phần chính của thành tế bào thực vật.
+Chitin	Polysaccharide cấu trúc, có ở thành tế bào nấm và vỏ ngoài của côn trùng/giáp xác.
+
+Lipid:
+Triglyceride	Gồm glycerol liên kết với 3 acid béo, có vai trò dự trữ năng lượng lâu dài.
+Acid béo	Chuỗi hydrocarbon kị nước, làm lipid không tan trong nước.
+Glycerol	Khung liên kết với acid béo để tạo triglyceride.
+Phospholipid	Gồm đầu ưa nước và hai đuôi kị nước, là thành phần chính của màng sinh chất.
+Đầu ưa nước	Phần phosphate phân cực, quay ra môi trường nước.
+Đuôi kị nước	Hai đuôi acid béo không phân cực, quay vào trong lớp màng để tránh nước.
+Lớp kép phospholipid	Hai lớp phospholipid tạo nền cấu trúc của màng tế bào.
+Steroid nếu có	Lipid có cấu trúc vòng; một số steroid tham gia cấu tạo màng hoặc điều hòa sinh lí.
+
+Protein:
+Amino acid	Đơn phân cấu tạo protein, gồm nhóm –NH₂, nhóm –COOH, H và gốc R.
+Gốc R	Phần khác nhau giữa các amino acid, quyết định đặc điểm riêng của từng amino acid.
+Liên kết peptide	Liên kết nối các amino acid lại với nhau để tạo chuỗi polypeptide.
+Chuỗi polypeptide	Chuỗi gồm nhiều amino acid; trình tự amino acid tạo cấu trúc bậc 1 của protein.
+Xoắn α	Một dạng cấu trúc bậc 2 của protein, được giữ ổn định nhờ liên kết hydrogen.
+Gấp nếp β	Một dạng cấu trúc bậc 2 khác của protein.
+Cấu trúc 3D	Cấu trúc không gian bậc 3 quyết định chức năng đặc hiệu của protein.
+Nhiều chuỗi polypeptide	Khi nhiều chuỗi polypeptide kết hợp, protein có cấu trúc bậc 4.
+Biến tính protein	Nhiệt độ hoặc pH không phù hợp có thể làm protein mất cấu trúc không gian và mất chức năng.
+Enzyme	Enzyme là chất xúc tác sinh học, thường có bản chất protein, làm tăng tốc độ phản ứng và không bị tiêu hao sau phản ứng.
+Trung tâm hoạt động	Vùng có hình dạng không gian phù hợp để gắn cơ chất; quyết định tính đặc hiệu của enzyme.
+Cơ chất	Chất tham gia phản ứng và gắn tạm thời vào trung tâm hoạt động của enzyme.
+Phức hệ enzyme – cơ chất	Trạng thái tạm thời khi cơ chất gắn với enzyme trước khi tạo sản phẩm.
+
+DNA và RNA:
+Nucleotide	Đơn phân cấu tạo nucleic acid, gồm phosphate, đường pentose và base nitrogen.
+Nhóm phosphate	Thành phần tham gia tạo khung mạch của nucleic acid.
+Đường pentose	DNA có đường deoxyribose; RNA có đường ribose.
+Base nitrogen	DNA có A, T, G, C; RNA có A, U, G, C.
+DNA	Thường gồm hai mạch xoắn kép, có chức năng lưu giữ thông tin di truyền.
+RNA	Thường là một mạch, tham gia truyền đạt và thực hiện thông tin di truyền.
+mRNA	Mang thông tin từ DNA đến ribosome để tổng hợp protein.
+Ribosome	Nơi tổng hợp protein dựa trên thông tin của mRNA.
+Protein	Sản phẩm được tạo ra theo thông tin di truyền: DNA → mRNA → protein.
+
+Tế bào nhân sơ tổng thể:
+Kích thước tế bào	Tế bào nhân sơ thường có kích thước nhỏ, khoảng 1–10 µm.
+Vỏ nhầy	Lớp ngoài cùng nếu có, giúp bảo vệ và hỗ trợ vi khuẩn bám dính. Không phải mọi vi khuẩn đều có vỏ nhầy.
+Thành tế bào	Thành tế bào vi khuẩn cấu tạo chủ yếu từ peptidoglycan, giúp duy trì hình dạng và bảo vệ tế bào.
+Màng sinh chất	Lớp kép phospholipid và protein, kiểm soát các chất đi vào và đi ra khỏi tế bào.
+Tế bào chất	Môi trường bên trong tế bào, nơi diễn ra nhiều phản ứng sinh hóa.
+Ribosome 70S	Nơi tổng hợp protein của tế bào nhân sơ.
+Vùng nhân	Vùng chứa DNA vòng lớn, không có màng nhân bao bọc. Không gọi là “nhân tế bào”.
+Plasmid	Phân tử DNA vòng nhỏ, độc lập, có thể mang gene đặc biệt như gene kháng kháng sinh.
+Pili/fimbriae	Cấu trúc ngắn trên bề mặt, giúp bám dính hoặc trao đổi vật chất di truyền.
+Lông roi	Cấu trúc giúp một số vi khuẩn di chuyển. Không phải mọi vi khuẩn đều có lông roi.
+
+Tế bào động vật:
+Màng sinh chất	Bao bọc tế bào, kiểm soát trao đổi chất và tiếp nhận tín hiệu từ môi trường.
+Tế bào chất	Phần nằm giữa màng sinh chất và nhân, chứa bào quan và là nơi diễn ra nhiều hoạt động sống.
+Nhân tế bào	Chứa thông tin di truyền và điều khiển hoạt động của tế bào.
+Màng nhân	Màng kép bao bọc nhân, có lỗ nhân kiểm soát trao đổi giữa nhân và tế bào chất.
+Hạch nhân	Vùng trong nhân, tham gia tổng hợp rRNA và lắp ráp tiểu đơn vị ribosome.
+Chất nhiễm sắc/DNA	DNA kết hợp với protein, chứa thông tin di truyền của tế bào.
+Ribosome 80S	Nơi tổng hợp protein trong tế bào chất của tế bào nhân thực.
+Lưới nội chất hạt	Có ribosome bám trên màng, tham gia tổng hợp protein tiết ra ngoài hoặc protein màng.
+Lưới nội chất trơn	Không có ribosome, tham gia tổng hợp lipid, chuyển hóa đường và khử độc.
+Bộ máy Golgi	Chế biến, đóng gói và phân phối protein/lipid đến nơi cần thiết.
+Lysosome	Túi màng chứa enzyme thủy phân, tiêu hóa nội bào và tái chế bào quan hỏng.
+Ti thể	Bào quan hô hấp tế bào, tạo ATP cung cấp năng lượng cho hoạt động sống.
+Trung thể	Gồm các trung tử, tham gia tổ chức thoi phân bào khi tế bào phân chia.
+Khung xương tế bào	Mạng sợi protein giúp duy trì hình dạng tế bào và neo giữ bào quan.
+Đường phân trong tế bào chất	Đường phân diễn ra ở tế bào chất, biến glucose thành pyruvate và tạo một lượng nhỏ ATP; giai đoạn này không cần O₂ trực tiếp.
+Chất nền ti thể (matrix)	Nơi diễn ra oxy hóa pyruvate và chu trình Krebs trong hô hấp hiếu khí.
+Màng trong ti thể và mào ti thể	Nơi đặt chuỗi truyền electron và ATP synthase; mào ti thể làm tăng diện tích bề mặt để tạo nhiều ATP.
+
+Tế bào thực vật:
+Thành tế bào	Cấu tạo chủ yếu từ cellulose, nằm ngoài màng sinh chất, giúp tế bào cứng chắc và được bảo vệ.
+Màng sinh chất	Nằm sát bên trong thành tế bào, kiểm soát chất đi vào và đi ra khỏi tế bào.
+Tế bào chất	Chứa bào quan và là nơi diễn ra nhiều phản ứng sinh hóa.
+Nhân tế bào	Chứa DNA và điều khiển hoạt động của tế bào.
+Không bào trung tâm	Túi lớn chứa dịch tế bào, giúp dự trữ nước/chất tan và duy trì sức trương của tế bào.
+Lục lạp	Bào quan quang hợp, chứa hệ thylakoid/grana và chất nền stroma.
+Ti thể	Bào quan hô hấp tế bào, tạo ATP; tế bào thực vật vẫn có ti thể.
+Ribosome 80S	Nơi tổng hợp protein trong tế bào chất.
+Lưới nội chất	Hệ thống màng tham gia tổng hợp và vận chuyển protein/lipid.
+Bộ máy Golgi	Chế biến, đóng gói và phân phối sản phẩm của tế bào.
+Cầu sinh chất nếu có	Kênh nối giữa các tế bào thực vật, giúp trao đổi chất và thông tin giữa các tế bào kề nhau.
+Màng thylakoid	Vị trí diễn ra pha sáng của quang hợp; tại đây hệ sắc tố hấp thụ ánh sáng để tạo ATP, NADPH và giải phóng O₂ từ nước.
+Hệ sắc tố quang hợp	Diệp lục và sắc tố phụ nằm trên màng thylakoid, có vai trò hấp thụ năng lượng ánh sáng.
+Stroma	Chất nền của lục lạp, nơi diễn ra pha tối/chu trình Calvin để cố định CO₂ tạo chất hữu cơ.
+
+So sánh tế bào động vật – thực vật:
+Phần giống nhau	Cả hai đều là tế bào nhân thực: có màng sinh chất, tế bào chất, nhân, ribosome, ER, Golgi và ti thể.
+Chỉ có ở tế bào thực vật	Có thành cellulose, lục lạp và không bào trung tâm lớn.
+Đặc trưng ở tế bào động vật	Có trung thể và lysosome điển hình; không có thành tế bào cellulose và không có lục lạp.
+Lưu ý quan trọng	Tế bào thực vật có cả lục lạp và ti thể; lục lạp không thay thế chức năng của ti thể.
+
+Màng sinh chất tổng thể:
+Phospholipid	Phân tử chính tạo lớp kép màng, gồm đầu ưa nước và hai đuôi kị nước.
+Đầu ưa nước	Quay ra ngoài, tiếp xúc với môi trường nước trong và ngoài tế bào.
+Đuôi kị nước	Quay vào trong màng, tránh tiếp xúc với nước.
+Lớp kép phospholipid	Nền cấu trúc của màng sinh chất, tạo hàng rào thấm chọn lọc.
+Protein xuyên màng	Protein đi xuyên qua lớp kép, có thể tạo kênh hoặc chất vận chuyển.
+Protein bám màng	Gắn ở một phía của màng, tham gia hỗ trợ cấu trúc hoặc truyền tín hiệu.
+Kênh protein	Cho một số ion hoặc phân tử phân cực đi qua màng theo tính chọn lọc.
+Protein thụ thể	Tiếp nhận tín hiệu từ môi trường ngoài và truyền thông tin vào trong tế bào.
+Glycoprotein/glycolipid	Tham gia nhận biết tế bào và giao tiếp giữa các tế bào.
+Cholesterol nếu có	Giúp điều chỉnh độ linh hoạt của màng sinh chất ở tế bào động vật.
+Mô hình khảm lỏng	Màng không cứng cố định; phospholipid và protein có thể di chuyển trong mặt phẳng màng.
+
+Các hình thức vận chuyển qua màng:
+Khuếch tán trực tiếp	Chất nhỏ, không phân cực như O₂, CO₂ đi qua lớp lipid theo chiều gradient, không tốn ATP.
+Khuếch tán qua kênh	Ion hoặc phân tử phân cực đi qua kênh protein theo chiều gradient, không tốn ATP.
+Thẩm thấu	Nước đi qua màng bán thấm từ nơi có nồng độ chất tan thấp đến nơi có nồng độ chất tan cao hơn.
+Vận chuyển chủ động	Chất được vận chuyển ngược chiều gradient, cần protein bơm và tiêu tốn ATP.
+Bơm Na⁺/K⁺ nếu có	Bơm 3 Na⁺ ra ngoài và 2 K⁺ vào trong tế bào, tiêu tốn ATP.
+Nhập bào	Màng sinh chất lõm vào, bao lấy vật chất và tạo túi đưa vào tế bào.
+Thực bào	Một dạng nhập bào, tế bào đưa vật rắn lớn như vi khuẩn vào bên trong.
+Ẩm bào	Một dạng nhập bào, tế bào đưa giọt dịch nhỏ từ môi trường vào trong.
+Xuất bào	Túi tiết hợp nhất với màng sinh chất để giải phóng chất ra ngoài tế bào.
+
+Virus tổng thể:
+Lõi nucleic acid	Vật chất di truyền của virus, có thể là DNA hoặc RNA tùy loại virus.
+Capsid	Vỏ protein bao quanh và bảo vệ lõi nucleic acid.
+Capsomere nếu có	Đơn vị protein cấu tạo nên capsid.
+Vỏ ngoài nếu có	Lớp màng lipid bao ngoài capsid ở một số virus; không phải virus nào cũng có vỏ ngoài.
+Gai glycoprotein	Cấu trúc trên bề mặt giúp virus bám vào tế bào chủ phù hợp.
+Không có cấu tạo tế bào	Virus không có tế bào chất, không có bào quan và không có màng nhân.
+Phụ thuộc tế bào chủ	Virus không tự sinh sản độc lập, phải nhân lên bên trong tế bào chủ.
+
+bacteriophage:
+Virus đa diện	Capsid có dạng hình khối đều, bao quanh nucleic acid.
+Virus dạng xoắn	Capsid sắp xếp xoắn quanh nucleic acid.
+Virus có vỏ ngoài	Có lớp vỏ lipid và gai bề mặt, thường dễ bị phá hủy bởi xà phòng/chất tẩy phù hợp.
+Thực khuẩn thể	Virus lây nhiễm vi khuẩn, thường có đầu, đuôi và sợi đuôi.
+Đầu thực khuẩn thể	Phần chứa nucleic acid của thực khuẩn thể.
+Đuôi và sợi đuôi	Giúp thực khuẩn thể bám vào vi khuẩn và đưa vật chất di truyền vào tế bào chủ.
+
+Influenza (Cúm):
+Vỏ ngoài của HIV	Lớp màng bao ngoài, có các gai glycoprotein giúp bám vào tế bào đích.
+Capsid HIV	Vỏ protein bên trong, bao bọc RNA và enzyme cần cho quá trình nhân lên.
+RNA của HIV	Vật chất di truyền của HIV là RNA.
+Enzyme phiên mã ngược	Enzyme đặc trưng giúp HIV chuyển thông tin từ RNA thành DNA trong tế bào chủ.
+Vỏ ngoài virus cúm	Lớp màng bao ngoài có gai bề mặt, giúp virus cúm bám và xâm nhập tế bào đường hô hấp.
+Gai bề mặt virus cúm	Cấu trúc giúp virus cúm bám vào tế bào và tham gia giải phóng virus mới.
+RNA phân đoạn của virus cúm	Hệ gene RNA phân đoạn góp phần làm virus cúm dễ xuất hiện biến thể.
+
+Nguyên Phân(mitosis):
+NST kép	NST đã nhân đôi, gồm hai chromatid chị em dính nhau ở tâm động.
+Chromatid chị em	Hai bản sao giống nhau của một NST sau pha S; tách nhau ở kỳ sau nguyên phân.
+Tâm động	Vị trí gắn hai chromatid chị em và là nơi thoi phân bào bám để kéo NST.
+Thoi phân bào	Hệ vi ống hình thành trong nguyên phân, giúp sắp xếp và phân li NST.
+Mặt phẳng xích đạo	Vị trí NST kép xếp thành hàng ở kỳ giữa; đây là lúc NST co xoắn cực đại, dễ quan sát nhất.
+Cực tế bào	Hai phía đối diện của tế bào, nơi chromatid chị em di chuyển về trong kỳ sau.
+Màng nhân	Màng nhân tiêu biến ở kỳ đầu và tái xuất hiện ở kỳ cuối để tạo hai nhân mới.
+Phân chia tế bào chất	Tế bào chất phân chia sau khi nhân phân chia, tạo hai tế bào con.
+Hai tế bào con 2n	Sau nguyên phân, một tế bào mẹ 2n tạo hai tế bào con 2n giống nhau và giống tế bào mẹ.
+
+Lop 11:
+Tế bào lông hút(Internal Root Structure)
+Vùng lông hút	Vùng rễ có nhiều lông hút làm tăng diện tích tiếp xúc với dung dịch đất.
+Tế bào lông hút	Tế bào biểu bì kéo dài thành lông hút, chuyên hóa cho hấp thụ nước và ion khoáng.
+Thành tế bào	Lớp ngoài bảo vệ tế bào, cho nước và chất tan đi qua trước khi tới màng sinh chất.
+Màng sinh chất	Màng thấm chọn lọc, kiểm soát nước và ion khoáng đi vào tế bào.
+Không bào lớn	Chứa dịch tế bào, góp phần tạo áp suất thẩm thấu giúp hút nước.
+Tế bào chất	Môi trường bên trong tế bào, nơi ion khoáng có thể được vận chuyển qua con đường tế bào chất.
+Dung dịch đất	Nguồn cung cấp nước và ion khoáng cho rễ; lông hút tiếp xúc trực tiếp với dung dịch này.
+
+Cắt ngang rễ(Root cross section)
+Biểu bì rễ	Lớp ngoài cùng của rễ, nơi có tế bào lông hút hấp thụ nước và ion khoáng.
+Vỏ rễ	Vùng tế bào nằm giữa biểu bì và nội bì, là nơi nước và ion khoáng đi qua để vào trung trụ.
+Nội bì	Lớp tế bào bao quanh trung trụ, kiểm soát chất đi vào mạch dẫn.
+Đai Caspary	Dải không thấm nước ở nội bì, chặn con đường gian bào và buộc nước/ion khoáng đi qua màng sinh chất.
+Trung trụ	Vùng trung tâm của rễ, chứa mạch gỗ và mạch rây.
+Mạch gỗ	Mô dẫn vận chuyển nước và ion khoáng từ rễ lên thân, lá.
+Mạch rây	Mô dẫn vận chuyển chất hữu cơ từ cơ quan nguồn đến cơ quan sử dụng hoặc dự trữ.
+
+Mạch gỗ(xylem)
+Mạch ống	Các tế bào chết nối đầu với nhau tạo ống dẫn nước liên tục.
+Quản bào	Tế bào dẫn nước dạng dài, thành dày hóa gỗ, có vai trò dẫn truyền và nâng đỡ.
+Thành hóa gỗ	Thành tế bào chứa lignin, giúp mạch gỗ bền chắc và không bị xẹp khi dẫn nước.
+Lỗ bên	Vùng mỏng trên thành tế bào, cho nước đi ngang giữa các tế bào mạch gỗ.
+Khoang rỗng	Phần trong tế bào chết không còn chất sống, tạo đường dẫn nước và ion khoáng.
+Chiều vận chuyển	Mạch gỗ vận chuyển chủ yếu một chiều từ rễ lên thân và lá.
+
+Mạch rây(Floem)
+Ống rây	Tế bào sống chuyên hóa để vận chuyển đường và chất hữu cơ.
+Bản rây	Vùng có nhiều lỗ ở đầu ống rây, cho dòng chất hữu cơ đi qua.
+Tế bào kèm	Tế bào sống nằm cạnh ống rây, hỗ trợ hoạt động và trao đổi chất của ống rây.
+Dòng chất hữu cơ	Mạch rây vận chuyển chủ yếu sucrose và các chất hữu cơ khác.
+Cơ quan nguồn	Nơi tạo hoặc giải phóng đường, thường là lá quang hợp.
+Cơ quan chứa	Nơi sử dụng hoặc dự trữ chất hữu cơ như rễ, quả, hạt, chồi non.
+
+Biểu bì lá và khí khổng(Leaf anatomy)
+Biểu bì lá	Lớp tế bào bao phủ bề mặt lá, bảo vệ lá và có thể chứa khí khổng.
+Khí khổng	Cấu trúc gồm hai tế bào khí khổng và khe khí khổng, giúp trao đổi khí và thoát hơi nước.
+Tế bào khí khổng	Hai tế bào hình hạt đậu điều chỉnh độ mở của khe khí khổng.
+Khe khí khổng	Khoảng mở giữa hai tế bào khí khổng, nơi hơi nước và khí CO₂/O₂ đi qua.
+Lớp cutin nếu có	Lớp sáp mỏng trên biểu bì, giúp giảm thoát hơi nước qua bề mặt lá.
+Trao đổi khí	CO₂ đi vào lá cho quang hợp, O₂ và hơi nước có thể đi ra ngoài qua khí khổng.
+
+Cấu tạo tế bào khí khổng(Stomata)
+Thành trong dày	Thành phía sát khe khí khổng dày hơn, giúp tế bào cong khi trương nước.
+Thành ngoài mỏng	Thành phía ngoài mỏng hơn, dễ giãn khi tế bào trương nước.
+Lục lạp trong tế bào khí khổng	Tế bào khí khổng có thể có lục lạp, khác nhiều tế bào biểu bì thông thường.
+Khe khí khổng	Độ rộng của khe thay đổi theo trạng thái trương nước của tế bào khí khổng.
+Nước trong tế bào	Khi tế bào khí khổng trương nước, khe khí khổng mở rộng.
+Hình hạt đậu	Hình dạng đặc trưng giúp hai tế bào khí khổng phối hợp đóng – mở khe khí khổng.
+
+Cấu tạo lục lạp
+Màng ngoài	Lớp màng bao ngoài của lục lạp, góp phần ngăn cách lục lạp với tế bào chất.
+Màng trong	Lớp màng phía trong, bao bọc chất nền stroma.
+Stroma	Chất nền của lục lạp, nơi diễn ra pha tối/chu trình Calvin.
+Thylakoid	Túi màng dẹt chứa hệ sắc tố quang hợp, là nơi diễn ra pha sáng.
+Grana	Chồng các thylakoid xếp lên nhau, giúp tăng diện tích màng hấp thụ ánh sáng.
+DNA và ribosome riêng	Lục lạp có DNA và ribosome riêng, liên quan nguồn gốc nội cộng sinh.
+
+Cấu tạo ti thể
+Màng ngoài	Lớp màng bao ngoài của ti thể, ngăn cách ti thể với tế bào chất.
+Màng trong	Lớp màng phía trong gấp nếp, chứa nhiều protein tham gia tạo ATP.
+Mào ti thể/cristae	Nếp gấp của màng trong, làm tăng diện tích bề mặt cho hô hấp tế bào.
+Chất nền ti thể	Khoang bên trong ti thể, nơi diễn ra oxy hóa pyruvate và chu trình Krebs.
+Khoang gian màng	Khoang giữa màng ngoài và màng trong, liên quan đến chênh lệch H⁺ khi tạo ATP.
+DNA và ribosome riêng	Ti thể có DNA và ribosome riêng, liên quan nguồn gốc nội cộng sinh.
+
+Toàn bộ ống tiêu hóa
+Miệng	Nơi tiếp nhận, nghiền nhỏ thức ăn và bắt đầu tiêu hóa tinh bột nhờ amylase trong nước bọt.
+Thực quản	Ống dẫn thức ăn từ miệng xuống dạ dày nhờ nhu động.
+Dạ dày	Cơ quan dạng túi, co bóp trộn thức ăn và tiêu hóa protein bước đầu.
+Ruột non	Nơi tiêu hóa hoàn tất và hấp thụ phần lớn chất dinh dưỡng.
+Ruột già	Hấp thụ nước và tạo phân.
+Gan	Tạo mật hỗ trợ tiêu hóa lipid và xử lí nhiều chất hấp thụ từ ruột.
+Tụy	Tiết enzyme tiêu hóa vào ruột non.
+Túi mật	Dự trữ và cô đặc dịch mật trước khi đổ vào ruột non.
+
+Dạ dày
+Lớp cơ dạ dày	Co bóp để nhào trộn thức ăn với dịch vị.
+Niêm mạc dạ dày	Lớp lót bên trong, tiết chất nhầy và dịch vị.
+Dịch vị	Chứa HCl và enzyme tiêu hóa protein bước đầu.
+HCl	Tạo môi trường acid, hỗ trợ hoạt hóa enzyme tiêu hóa protein và diệt bớt vi khuẩn.
+Pepsin	Enzyme tiêu hóa protein bước đầu trong dạ dày.
+Tâm vị	Vùng nối thực quản với dạ dày, nơi thức ăn đi vào.
+Môn vị	Vùng nối dạ dày với ruột non, điều tiết thức ăn xuống ruột non.
+
+Ruột non và lông ruột
+Nếp gấp ruột non	Làm tăng diện tích bề mặt tiếp xúc với chất dinh dưỡng.
+Lông ruột	Cấu trúc nhô vào lòng ruột, giúp tăng mạnh diện tích hấp thụ.
+Vi nhung mao	Các vi cấu trúc trên tế bào biểu mô ruột, làm diện tích hấp thụ lớn hơn nữa.
+Tế bào biểu mô ruột	Lớp tế bào trực tiếp hấp thụ chất dinh dưỡng.
+Mao mạch máu	Nhận đường đơn và amino acid sau hấp thụ.
+Mạch bạch huyết	Nhận phần lớn sản phẩm tiêu hóa lipid sau hấp thụ.
+Diện tích hấp thụ lớn	Nếp gấp, lông ruột và vi nhung mao giúp ruột non hấp thụ hiệu quả.
+
+Phổi người và phế nang
+Khí quản	Ống dẫn khí chính đưa không khí từ ngoài vào phổi.
+Phế quản	Nhánh dẫn khí từ khí quản vào mỗi phổi.
+Tiểu phế quản	Các nhánh nhỏ dẫn khí đến các chùm phế nang.
+Phế nang	Túi khí nhỏ có thành rất mỏng, là nơi trao đổi O₂ và CO₂.
+Mao mạch phổi	Mạng mao mạch bao quanh phế nang, nhận O₂ và thải CO₂.
+Màng trao đổi khí	Thành phế nang và mao mạch mỏng, áp sát nhau để khí khuếch tán nhanh.
+O₂ và CO₂	O₂ khuếch tán từ phế nang vào máu, CO₂ khuếch tán từ máu ra phế nang.
+
+Cấu tạo ngoài của tim
+Tim	Cơ quan co bóp tạo lực đẩy máu đi trong hệ tuần hoàn.
+Động mạch chủ	Mạch lớn đưa máu giàu O₂ từ tâm thất trái đi nuôi cơ thể.
+Động mạch phổi	Đưa máu nghèo O₂ từ tâm thất phải đến phổi.
+Tĩnh mạch chủ	Đưa máu nghèo O₂ từ cơ thể về tâm nhĩ phải.
+Tĩnh mạch phổi	Đưa máu giàu O₂ từ phổi về tâm nhĩ trái.
+Mạch vành	Mạch máu nuôi cơ tim, giúp tim có năng lượng để co bóp liên tục.
+
+Hệ dẫn truyền tim
+Nút xoang nhĩ	Vị trí phát nhịp tự động chính của tim, khởi đầu mỗi chu kỳ co tim.
+Nút nhĩ thất	Nhận xung từ nút xoang nhĩ và làm chậm xung trước khi truyền xuống thất.
+Bó His	Đường dẫn truyền xung từ nút nhĩ thất xuống hai tâm thất.
+Mạng Purkinje	Mạng dẫn truyền lan xung nhanh trong thành tâm thất, giúp thất co đồng bộ.
+Cơ tim	Mô cơ co bóp theo xung dẫn truyền để bơm máu.
+Tính tự động của tim	Tim có hệ dẫn truyền riêng, không cần não phát lệnh cho từng nhịp.
+
+Động mạch – mao mạch – tĩnh mạch(circulatory system)
+Động mạch	Mạch đưa máu từ tim đi, thành dày và đàn hồi để chịu áp lực cao.
+Mao mạch	Mạch rất nhỏ, thành mỏng một lớp tế bào, là nơi trao đổi chất với mô.
+Tĩnh mạch	Mạch đưa máu về tim, thành mỏng hơn động mạch và thường có van.
+Van tĩnh mạch	Giúp máu chảy một chiều về tim, hạn chế máu chảy ngược.
+Thành mạch	Độ dày và độ đàn hồi của thành mạch phù hợp với chức năng từng loại mạch.
+Huyết áp	Thường cao nhất ở động mạch, thấp hơn ở mao mạch và tĩnh mạch.
+Vận tốc máu	Thay đổi theo loại mạch; chậm ở mao mạch để thuận lợi cho trao đổi chất.
+
+Hạch bạch huyết
+Mạch bạch huyết vào	Đưa dịch bạch huyết và tác nhân lạ vào hạch để được kiểm tra.
+Mạch bạch huyết ra	Đưa dịch bạch huyết ra khỏi hạch sau khi được lọc.
+Vỏ hạch	Vùng ngoài của hạch, chứa nhiều lympho bào.
+Tủy hạch	Vùng trong của hạch, có tế bào miễn dịch và xoang bạch huyết.
+Lympho B	Tế bào miễn dịch có thể biệt hóa thành tế bào tạo kháng thể.
+Lympho T	Tế bào miễn dịch tham gia điều hòa hoặc tiêu diệt tế bào nhiễm bệnh.
+Đại thực bào	Tế bào có khả năng bắt giữ, tiêu hóa và trình diện tác nhân lạ.
+
+Tế bào miễn dịch cơ bản(macrophage)
+Đại thực bào	Tế bào miễn dịch có khả năng thực bào tác nhân lạ và trình diện kháng nguyên.
+Lympho B	Tế bào tham gia miễn dịch đặc hiệu; có thể biệt hóa thành tế bào tiết kháng thể.
+Lympho T hỗ trợ	Tế bào điều phối đáp ứng miễn dịch thông qua tín hiệu hóa học.
+Lympho T độc	Tế bào có thể tiêu diệt tế bào nhiễm virus hoặc tế bào bất thường.
+Kháng nguyên	Phân tử lạ có thể kích hoạt đáp ứng miễn dịch.
+Kháng thể	Protein đặc hiệu do tế bào B biệt hóa tiết ra, giúp nhận diện tác nhân lạ.
+
+Cấu tạo thận
+Vỏ thận	Vùng ngoài của thận, chứa nhiều cầu thận và phần đầu của nephron.
+Tủy thận	Vùng trong của thận, chứa các ống thận và ống góp.
+Bể thận	Khoang nhận nước tiểu từ các ống góp trước khi xuống niệu quản.
+Niệu quản	Ống dẫn nước tiểu từ thận xuống bàng quang.
+Động mạch thận	Đưa máu đến thận để lọc và điều chỉnh thành phần dịch cơ thể.
+Tĩnh mạch thận	Đưa máu đã được thận xử lí trở về hệ tuần hoàn.
+Nephron	Đơn vị cấu trúc và chức năng cơ bản của thận.
+
+Nephron
+Cầu thận	Mạng mao mạch nơi máu được lọc để tạo dịch lọc đầu.
+Bao Bowman	Bao bọc cầu thận và hứng dịch lọc đầu.
+Ống lượn gần	Đoạn ống thận tái hấp thu mạnh nước và nhiều chất cần thiết.
+Quai Henle	Đoạn ống hình chữ U, liên quan đến tái hấp thu nước và muối.
+Ống lượn xa	Đoạn ống tiếp tục điều chỉnh thành phần dịch lọc.
+Ống góp	Nhận dịch từ nhiều nephron và dẫn nước tiểu về bể thận.
+Mao mạch quanh ống thận	Mạng mao mạch nhận lại chất tái hấp thu và tham gia trao đổi với ống thận.
+
+Cấu tạo neuron
+Thân neuron	Phần chứa nhân và phần lớn bào quan, đảm nhiệm hoạt động sống của neuron.
+Nhân	Chứa thông tin di truyền và điều khiển hoạt động của neuron.
+Sợi nhánh	Nhận tín hiệu từ neuron khác hoặc từ thụ thể.
+Sợi trục	Dẫn truyền xung thần kinh từ thân neuron đến tế bào khác.
+Bao myelin	Lớp bao cách điện quanh sợi trục, giúp tăng tốc độ dẫn truyền.
+Eo Ranvier	Khoảng ngắt giữa các đoạn bao myelin, liên quan dẫn truyền nhảy cóc.
+Cúc synapse	Đầu tận cùng của sợi trục, truyền tín hiệu sang tế bào khác qua synapse.
+
+Synapse
+Màng trước synapse	Màng ở đầu cúc synapse của neuron truyền tín hiệu.
+Túi synapse	Túi chứa chất trung gian hóa học trong cúc synapse.
+Chất trung gian hóa học	Phân tử truyền tín hiệu qua khe synapse từ neuron trước sang tế bào sau.
+Khe synapse	Khoảng hẹp giữa hai tế bào; hai neuron không dính liền trực tiếp.
+Thụ thể màng sau	Protein tiếp nhận chất trung gian hóa học ở tế bào sau synapse.
+Màng sau synapse	Màng của neuron hoặc tế bào nhận tín hiệu.
+Chiều truyền synapse	Tín hiệu thường truyền một chiều từ màng trước sang màng sau synapse.
+
+Mắt người
+Giác mạc	Lớp trong suốt phía trước mắt, giúp bảo vệ và khúc xạ ánh sáng.
+Thủy dịch	Dịch trong khoang trước mắt, nuôi dưỡng và duy trì áp lực trong mắt.
+Đồng tử	Lỗ ở giữa mống mắt, điều chỉnh lượng ánh sáng đi vào mắt.
+Thể thủy tinh	Thấu kính trong suốt, điều chỉnh tiêu cự để ảnh hội tụ trên võng mạc.
+Dịch kính	Khối dịch trong suốt giữ hình dạng nhãn cầu và cho ánh sáng đi qua.
+Võng mạc	Lớp chứa tế bào cảm thụ ánh sáng, biến ánh sáng thành tín hiệu thần kinh.
+Dây thần kinh thị giác	Dẫn truyền tín hiệu từ võng mạc về não.
+
+Tai người
+Tai ngoài	Thu nhận sóng âm và dẫn vào ống tai.
+Màng nhĩ	Rung khi nhận sóng âm, truyền dao động vào tai giữa.
+Chuỗi xương tai	Khuếch đại và truyền dao động từ màng nhĩ vào tai trong.
+Ốc tai	Cơ quan thu nhận âm thanh, biến dao động thành tín hiệu thần kinh.
+Ống bán khuyên	Cấu trúc của hệ tiền đình, liên quan đến giữ thăng bằng.
+Dây thần kinh thính giác	Dẫn truyền tín hiệu âm thanh từ tai trong về não.
+Vòi nhĩ nếu có	Giúp cân bằng áp suất hai bên màng nhĩ.
+
+Thụ thể cảm giác cơ bản (skin anatomy)
+Thụ thể cơ học	Nhận kích thích cơ học như áp lực, rung động hoặc kéo giãn.
+Thụ thể hóa học	Nhận kích thích là các phân tử hóa học, liên quan vị giác và khứu giác.
+Thụ thể nhiệt	Nhận thay đổi nhiệt độ nóng hoặc lạnh.
+Thụ thể đau	Nhận kích thích có nguy cơ gây tổn thương mô.
+Thụ thể ánh sáng	Tế bào cảm thụ ở võng mạc, nhận kích thích ánh sáng.
+Tín hiệu thần kinh	Thụ thể chuyển kích thích thành tín hiệu truyền về hệ thần kinh.
+
+Vị trí mô phân sinh
+Mô phân sinh đỉnh chồi	Tạo tế bào mới giúp thân và chồi dài ra.
+Mô phân sinh đỉnh rễ	Tạo tế bào mới giúp rễ dài ra.
+Mô phân sinh bên	Tạo tế bào mới giúp thân và rễ to ra ở cây có sinh trưởng thứ cấp.
+Tầng sinh mạch	Mô phân sinh bên tạo mạch gỗ thứ cấp và mạch rây thứ cấp.
+Tầng sinh bần	Mô phân sinh bên tạo bần, góp phần hình thành vỏ bảo vệ.
+Sinh trưởng sơ cấp	Sự dài ra của thân và rễ nhờ mô phân sinh đỉnh.
+Sinh trưởng thứ cấp	Sự to ra của thân và rễ nhờ mô phân sinh bên.
+
+Sinh trưởng sơ cấp
+Vùng phân chia	Nơi tế bào mô phân sinh phân chia liên tục tạo tế bào mới.
+Vùng kéo dài	Nơi tế bào tăng kích thước, làm thân hoặc rễ dài ra.
+Vùng phân hóa	Nơi tế bào chuyên hóa thành các loại mô khác nhau.
+Đỉnh rễ	Vị trí sinh trưởng sơ cấp giúp rễ dài ra trong đất.
+Đỉnh chồi	Vị trí sinh trưởng sơ cấp giúp thân và cành dài ra.
+Sinh trưởng chiều dài	Kết quả chính của sinh trưởng sơ cấp ở cây.
+
+Sinh trưởng thứ cấp và tầng phát sinh
+Tầng sinh mạch	Mô phân sinh bên tạo mạch gỗ thứ cấp vào phía trong và mạch rây thứ cấp ra phía ngoài.
+Mạch gỗ thứ cấp	Mô dẫn nước và khoáng được tạo thêm về phía trong, góp phần làm thân to ra.
+Mạch rây thứ cấp	Mô dẫn chất hữu cơ được tạo thêm về phía ngoài tầng sinh mạch.
+Tầng sinh bần	Mô phân sinh bên tạo lớp bần bảo vệ bên ngoài thân.
+Bần	Lớp tế bào bảo vệ thay thế biểu bì ở thân già.
+Sinh trưởng bề ngang	Kết quả của sinh trưởng thứ cấp, làm thân và rễ to ra.
+
+Vòng gỗ
+Vòng năm	Một vòng gỗ thường tương ứng với một năm sinh trưởng trong điều kiện có mùa rõ.
+Gỗ sớm	Phần gỗ tạo đầu mùa sinh trưởng, thường có tế bào lớn hơn và màu sáng hơn.
+Gỗ muộn	Phần gỗ tạo cuối mùa sinh trưởng, thường tế bào nhỏ hơn và màu sẫm hơn.
+Tâm gỗ	Phần gỗ già ở trung tâm thân, thường có vai trò nâng đỡ.
+Dác gỗ	Phần gỗ trẻ hơn ở phía ngoài, còn tham gia dẫn nước.
+Tính tuổi cây	Có thể ước tính tuổi cây bằng cách đếm số vòng năm trên mặt cắt thân gỗ.
+
+Cấu tạo hoa lưỡng tính
+Đài hoa	Bộ phận thường màu xanh, bảo vệ nụ hoa khi còn non.
+Cánh hoa	Bộ phận thường có màu sắc, có thể giúp thu hút sinh vật thụ phấn.
+Nhị	Cơ quan sinh sản đực của hoa, gồm chỉ nhị và bao phấn.
+Chỉ nhị	Phần cuống nâng đỡ bao phấn.
+Bao phấn	Nơi chứa và tạo hạt phấn.
+Nhụy	Cơ quan sinh sản cái của hoa, gồm đầu nhụy, vòi nhụy và bầu nhụy.
+Đầu nhụy	Nơi tiếp nhận hạt phấn trong quá trình thụ phấn.
+Vòi nhụy	Ống nối đầu nhụy với bầu nhụy, là đường ống phấn phát triển.
+Bầu nhụy	Phần chứa noãn, sau thụ tinh có thể phát triển thành quả.
+
+Bao phấn và hạt phấn
+Bao phấn	Phần của nhị chứa các túi phấn và hạt phấn.
+Túi phấn	Khoang trong bao phấn, nơi chứa hạt phấn.
+Hạt phấn	Cấu trúc mang giao tử đực hoặc tế bào sinh sản đực ở thực vật có hoa.
+Vỏ hạt phấn	Lớp bảo vệ hạt phấn khi di chuyển đến đầu nhụy.
+Ống phấn	Ống phát triển từ hạt phấn sau khi nảy mầm trên đầu nhụy, đưa giao tử đực tới noãn.
+Thụ phấn	Quá trình hạt phấn được chuyển đến đầu nhụy.
+
+Bầu nhụy và noãn
+Bầu nhụy	Phần dưới của nhụy chứa noãn; sau thụ tinh có thể phát triển thành quả.
+Noãn	Cấu trúc nằm trong bầu nhụy; sau thụ tinh phát triển thành hạt.
+Vòi nhụy	Đường ống phấn đi qua để đưa giao tử đực đến noãn.
+Đầu nhụy	Nơi hạt phấn bám và nảy mầm.
+Túi phôi nếu có	Cấu trúc bên trong noãn, nơi diễn ra thụ tinh ở thực vật có hoa.
+Hạt sau thụ tinh	Hạt được hình thành từ noãn sau thụ tinh, không phải là noãn trước thụ tinh.
+
+Hạt và quả
+Quả	Được hình thành chủ yếu từ bầu nhụy sau thụ tinh, có vai trò bảo vệ và phát tán hạt.
+Vỏ quả	Lớp bao ngoài của quả, có thể giúp bảo vệ hạt.
+Hạt	Được hình thành từ noãn sau thụ tinh.
+Vỏ hạt	Lớp bảo vệ bên ngoài hạt.
+Phôi	Cơ thể non của cây mới trong hạt.
+Chất dự trữ	Nguồn dinh dưỡng nuôi phôi khi hạt nảy mầm.
+
+Hệ sinh dục nam
+Tinh hoàn	Nơi tạo tinh trùng và tiết hormone sinh dục nam.
+Mào tinh	Nơi tinh trùng tiếp tục hoàn thiện và được lưu giữ tạm thời.
+Ống dẫn tinh	Dẫn tinh trùng từ mào tinh về phía niệu đạo.
+Túi tinh	Tuyến phụ tiết dịch góp phần tạo tinh dịch.
+Tuyến tiền liệt	Tuyến phụ tiết dịch giúp tinh trùng hoạt động thuận lợi hơn.
+Niệu đạo	Ống dẫn tinh dịch ra ngoài cơ thể; ở nam cũng là đường dẫn nước tiểu.
+Dương vật	Cơ quan đưa tinh dịch vào đường sinh dục nữ trong giao phối.
+
+Hệ sinh dục nữ
+Buồng trứng	Nơi tạo trứng và tiết hormone sinh dục nữ.
+Ống dẫn trứng	Đường dẫn trứng về tử cung; thường là nơi diễn ra thụ tinh.
+Tử cung	Nơi phôi làm tổ và phát triển trong thai kỳ.
+Nội mạc tử cung	Lớp lót bên trong tử cung, biến đổi theo chu kỳ và là nơi phôi làm tổ.
+Cổ tử cung	Phần hẹp nối tử cung với âm đạo.
+Âm đạo	Đường tiếp nhận tinh trùng và là đường sinh khi sinh thường.
+Vị trí thụ tinh	Thụ tinh thường diễn ra ở ống dẫn trứng, không phải trong tử cung.
+
+Tinh trùng và trứng
+Đầu tinh trùng	Chứa nhân mang thông tin di truyền của bố.
+Thể cực đầu nếu có	Chứa enzyme hỗ trợ tinh trùng xuyên qua lớp bao quanh trứng.
+Cổ tinh trùng	Vùng nối đầu và đuôi, chứa nhiều ti thể cung cấp năng lượng.
+Đuôi tinh trùng	Giúp tinh trùng di chuyển.
+Trứng	Giao tử cái có kích thước lớn, chứa nhiều tế bào chất.
+Màng ngoài của trứng	Lớp bao quanh giúp bảo vệ trứng và tham gia nhận biết tinh trùng.
+Khác biệt giao tử	Tinh trùng nhỏ, di động; trứng lớn, nhiều chất dự trữ hơn.
+
+Phôi thai sớm
+Tử cung	Cơ quan nơi phôi làm tổ và phát triển trong thai kỳ.
+Nội mạc tử cung	Lớp lót giàu mạch máu, chuẩn bị cho phôi làm tổ.
+Phôi sớm	Giai đoạn phát triển ban đầu sau thụ tinh trước và trong quá trình làm tổ.
+Vị trí làm tổ	Phôi bám vào nội mạc tử cung để tiếp tục phát triển.
+Mạch máu nội mạc	Cung cấp chất dinh dưỡng và oxygen cho phôi ở giai đoạn phát triển tiếp theo.
+Nguyên tắc thể hiện	Dùng hình mô phạm sạch, tránh hình ảnh y khoa quá trực diện hoặc gây khó chịu.
+
+
+Lop 12
+DNA tổng thể
+Xoắn kép	DNA có dạng xoắn kép gồm hai mạch polynucleotide quấn quanh một trục chung.
+Hai mạch polynucleotide	Mỗi mạch DNA gồm nhiều nucleotide nối liên tiếp với nhau.
+Khung đường – phosphate	Nằm ở phía ngoài phân tử DNA, tạo “xương sống” của mỗi mạch.
+Base nitrogen	Nằm quay vào phía trong phân tử DNA, tham gia bắt cặp với base ở mạch đối diện.
+Bậc thang base bổ sung	Các cặp base ở giữa hai mạch giống các bậc thang: A bắt cặp T, G bắt cặp C.
+Trục xoắn chung	Hai mạch DNA quấn quanh cùng một trục, tạo cấu trúc ổn định cho phân tử.
+Trình tự base	Thứ tự các base A, T, G, C trên DNA là cơ sở lưu giữ thông tin di truyền.
+
+Cấu tạo 1 nucleotide
+Nucleotide	Đơn phân cấu tạo DNA, gồm nhóm phosphate, đường deoxyribose và base nitrogen.
+Nhóm phosphate	Thành phần tham gia tạo khung đường – phosphate của mạch DNA.
+Đường deoxyribose	Đường 5 carbon của DNA; khác với đường ribose của RNA.
+Base nitrogen	Thành phần khác nhau giữa các nucleotide; DNA có 4 loại base: A, T, G, C.
+Vị trí gắn base	Base nitrogen gắn với đường deoxyribose để tạo phần nhận diện của nucleotide.
+Ba thành phần phối hợp	Phosphate, đường deoxyribose và base nitrogen kết hợp tạo thành một nucleotide hoàn chỉnh.
+
+Liên kết các nucleotide trên cùng một mạch
+Mạch polynucleotide	Nhiều nucleotide nối liên tiếp tạo thành một mạch DNA.
+Liên kết phosphodiester	Liên kết cộng hóa trị nối đường của nucleotide này với phosphate của nucleotide kế tiếp.
+Khung đường – phosphate	Phần nối chính và bền vững của mạch DNA.
+Base quay vào trong	Base không phải phần nối chính của mạch, mà hướng vào trong để bắt cặp với mạch đối diện.
+Chiều 5′ → 3′	Mỗi mạch DNA có chiều xác định từ đầu 5′ đến đầu 3′.
+Trình tự nucleotide	Thứ tự các base trên mạch DNA là cơ sở lưu giữ thông tin di truyền.
+
+Ribosome tổng thể
+Ribosome	Bào quan không có màng bao bọc, là nơi diễn ra dịch mã và tổng hợp protein.
+Tiểu phần nhỏ	Bám vào mRNA và giúp ribosome đọc đúng các codon trên mRNA.
+Tiểu phần lớn	Chứa các vị trí gắn tRNA và tham gia hình thành liên kết peptide.
+mRNA	Mạch khuôn mang thông tin di truyền đi qua ribosome trong quá trình dịch mã.
+Khe đọc mRNA	Vùng ribosome giữ mRNA đúng vị trí để các codon được đọc lần lượt.
+tRNA đang gắn ribosome	tRNA đưa amino acid đến ribosome theo codon tương ứng trên mRNA.
+Chuỗi polypeptide	Chuỗi amino acid đang được tổng hợp theo trình tự codon trên mRNA.
+
+mRNA và codon
+mRNA	RNA thông tin mang bản mã từ DNA ra tế bào chất để tham gia tổng hợp protein.
+Codon	Bộ ba nucleotide liên tiếp trên mRNA, mã hóa một amino acid hoặc tín hiệu kết thúc.
+Codon mở đầu AUG	Thường là tín hiệu bắt đầu dịch mã và mã hóa amino acid methionine.
+Codon kết thúc	UAA, UAG, UGA là các bộ ba kết thúc, không mã hóa amino acid.
+Chiều đọc mRNA	Ribosome đọc mRNA theo chiều 5′ → 3′.
+Codon nằm trên mRNA	Codon là bộ ba trên mRNA, không nằm trên tRNA.
+Trình tự codon	Thứ tự codon trên mRNA quyết định thứ tự amino acid trong chuỗi polypeptide.
+
+tRNA, anticodon và amino acid
+tRNA	RNA vận chuyển có nhiệm vụ đưa amino acid phù hợp đến ribosome.
+Cấu trúc gấp của tRNA	tRNA có cấu trúc gấp đặc trưng giúp nhận diện codon và gắn amino acid phù hợp.
+Anticodon	Bộ ba nucleotide trên tRNA bắt cặp bổ sung với codon trên mRNA.
+Amino acid gắn với tRNA	Amino acid được gắn vào tRNA trước khi tRNA đi vào ribosome.
+Bắt cặp codon – anticodon	Anticodon bắt cặp bổ sung với codon để đưa đúng amino acid vào chuỗi protein.
+tRNA mang amino acid	Mỗi tRNA mang amino acid phù hợp với bộ ba mã hóa tương ứng.
+tRNA rỗng	Sau khi chuyển amino acid vào chuỗi polypeptide, tRNA rời ribosome ở trạng thái không còn amino acid.
+
+Ba vị trí A, P, E
+Vị trí A	Nơi nhận tRNA mới mang amino acid phù hợp với codon trên mRNA.
+Vị trí P	Nơi giữ tRNA đang mang chuỗi polypeptide kéo dài.
+Vị trí E	Nơi tRNA rỗng rời khỏi ribosome sau khi đã chuyển amino acid.
+mRNA trong ribosome	Các codon trên mRNA lần lượt đi qua các vị trí A, P, E khi ribosome dịch chuyển.
+Liên kết peptide	Liên kết được hình thành giữa amino acid mới và chuỗi polypeptide đang kéo dài.
+Dịch chuyển ribosome	Ribosome dịch từng codon trên mRNA; chuyển động chi tiết nên thể hiện bằng animation.
+Chuỗi polypeptide	Chuỗi amino acid kéo dài theo thứ tự codon trên mRNA.
+
+Nhiễm sắc thể kì giữa(Chromosome)
+Nhiễm sắc thể kì giữa	NST kép co xoắn cực đại ở kì giữa nên quan sát rõ nhất dưới kính hiển vi.
+Hai chromatid chị em	Hai bản sao giống nhau của một NST sau khi DNA đã nhân đôi.
+Tâm động	Vùng gắn hai chromatid chị em và là nơi thoi phân bào bám vào.
+Hai cánh NST	Hai phần kéo dài từ tâm động đến đầu mút; không phải là hai chromatid chị em.
+Đầu mút NST	Phần tận cùng của nhiễm sắc thể, giúp bảo vệ đầu NST.
+Vị trí phân li	Hai chromatid chị em tách nhau tại tâm động khi bước vào kì sau phân bào.
+Cấu trúc co xoắn	Sự co xoắn giúp DNA rất dài được đóng gói gọn và phân li chính xác.
+
+Phân loại theo vị trí tâm động
+Tâm động	Vị trí tâm động quyết định hình dạng và chiều dài tương đối của hai cánh NST.
+NST tâm giữa	Tâm động nằm gần giữa, hai cánh NST tương đối bằng nhau.
+NST tâm lệch	Tâm động lệch khỏi giữa, tạo một cánh dài và một cánh ngắn.
+NST tâm mút	Tâm động nằm gần đầu mút, một cánh rất ngắn hoặc khó quan sát.
+Hai cánh NST	Cánh NST được xác định theo vị trí tâm động, không phải là hai chromatid chị em.
+Ý nghĩa phân loại	Phân loại theo tâm động giúp nhận diện hình thái các NST trong bộ nhiễm sắc thể.
+
+Các mức đóng gói DNA(eukaryotic-chromosome)
+DNA xoắn kép	Mức cấu trúc phân tử cơ bản mang thông tin di truyền.
+Nucleosome	DNA quấn quanh lõi histone, tạo đơn vị đóng gói cơ bản của nhiễm sắc thể.
+Sợi cơ bản 10 nm	Chuỗi nucleosome nối tiếp nhau tạo dạng “chuỗi hạt”.
+Sợi co xoắn	Sợi cơ bản tiếp tục cuộn xoắn tạo cấu trúc dày và gọn hơn.
+Chromatid	Mức đóng gói cao hơn, chứa một phân tử DNA được cuộn chặt với protein.
+Nhiễm sắc thể kì giữa	Mức đóng gói cực đại, thường gồm hai chromatid chị em.
+Ý nghĩa đóng gói	Đóng gói giúp DNA rất dài nằm gọn trong nhân và phân li chính xác khi phân bào.
+
+DNA quấn quanh histone tạo nucleosome
+Nucleosome	Đơn vị cấu trúc cơ bản của nhiễm sắc thể ở sinh vật nhân thực.
+Lõi histone	Gồm 8 phân tử histone tạo lõi protein để DNA quấn quanh.
+DNA quấn quanh histone	DNA xoắn kép quấn quanh lõi histone để tạo nucleosome.
+DNA nối	Đoạn DNA nối giữa các nucleosome liền kề trên sợi cơ bản.
+DNA + protein histone	Nucleosome không phải DNA đơn thuần, mà là phức hợp DNA với protein histone.
+Chức năng đóng gói	Nucleosome giúp rút ngắn và tổ chức DNA trong nhân tế bào.
+Liên hệ mức cao hơn	Nhiều nucleosome nối tiếp tạo sợi cơ bản và tiếp tục đóng gói thành NST.

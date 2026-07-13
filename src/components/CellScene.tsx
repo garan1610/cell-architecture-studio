@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Center, ContactShadows, Float, Html, OrbitControls, RoundedBox, useGLTF, useProgress } from "@react-three/drei";
-import { Suspense, useMemo, useRef } from "react";
+import { CameraControls, Center, ContactShadows, Html, RoundedBox, useGLTF, useProgress } from "@react-three/drei";
+import { Suspense, useMemo, useRef, useState } from "react";
 import {
   Color,
   CatmullRomCurve3,
@@ -14,20 +14,21 @@ import {
   type Material,
   type MeshStandardMaterialParameters,
 } from "three";
-import type { CellItem, CellModelAsset, ViewMode } from "../data/cells";
+import type { CellItem, CellModelAsset, ModelAnnotation, ViewMode } from "../data/cells";
 
 type CellSceneProps = {
   cell: CellItem;
-  activeOrganelle: string;
+  activePartId: string;
   viewMode: ViewMode;
   crossSection: boolean;
   autoRotate: boolean;
+  hideAnnotations: boolean;
   resetKey: number;
 };
 
 type MaterialProps = {
   id: string;
-  activeOrganelle: string;
+  activePartId: string;
   viewMode: ViewMode;
   color: string;
   opacity?: number;
@@ -37,14 +38,14 @@ type MaterialProps = {
 
 function CellMaterial({
   id,
-  activeOrganelle,
+  activePartId,
   viewMode,
   color,
   opacity = 1,
   roughness = 0.66,
   metalness = 0.03,
 }: MaterialProps) {
-  const active = id === activeOrganelle;
+  const active = id === activePartId;
   const dimmed = viewMode === "focus" && !active;
   const material: MeshStandardMaterialParameters = {
     color,
@@ -64,7 +65,7 @@ type TubeProps = {
   color: string;
   points: Array<[number, number, number]>;
   radius?: number;
-  activeOrganelle: string;
+  activePartId: string;
   viewMode: ViewMode;
 };
 
@@ -73,7 +74,7 @@ function CurveTube({
   color,
   points,
   radius = 0.035,
-  activeOrganelle,
+  activePartId,
   viewMode,
 }: TubeProps) {
   const geometry = useMemo(() => {
@@ -87,7 +88,7 @@ function CurveTube({
     <mesh geometry={geometry} castShadow receiveShadow>
       <CellMaterial
         id={id}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         color={color}
         roughness={0.58}
@@ -97,7 +98,7 @@ function CurveTube({
 }
 
 type CommonModelProps = {
-  activeOrganelle: string;
+  activePartId: string;
   viewMode: ViewMode;
   crossSection: boolean;
 };
@@ -121,7 +122,6 @@ function applyAssetVertexColors(mesh: Mesh, cell: CellItem) {
   const palette = [
     new Color(cell.color),
     new Color(cell.accent),
-    ...cell.organelles.map((organelle) => new Color(organelle.color)),
   ];
   const highlight = new Color("#fff4d8");
   const shadow = new Color("#3d4a72");
@@ -202,14 +202,16 @@ function createNativeAssetMaterial({
         displayMap.anisotropy = 8;
         displayMap.needsUpdate = true;
       }
-      material.vertexColors = false;
+      material.vertexColors = asset.preserveNativeColor ? material.vertexColors : false;
       material.emissive = new Color("#fff8eb");
       material.emissiveMap = displayMap;
       material.emissiveIntensity = 0.07 * (asset.exposure ?? 1);
       material.envMapIntensity = 0.62 * (asset.exposure ?? 1);
       material.roughness = Math.max(0.34, Math.min(material.roughness, 0.58));
       material.metalness = Math.min(material.metalness, 0.08);
-      material.color.setRGB(1.04, 1.035, 1.02);
+      if (!asset.preserveNativeColor) {
+        material.color.setRGB(1.04, 1.035, 1.02);
+      }
     }
 
     material.needsUpdate = true;
@@ -219,16 +221,56 @@ function createNativeAssetMaterial({
   return Array.isArray(original) ? original.map(cloneMaterial) : cloneMaterial(original);
 }
 
+function ModelAnnotationDot({
+  annotation,
+  number,
+  open,
+  onToggle,
+}: {
+  annotation: ModelAnnotation;
+  number: number;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className={`model-annotation-ui${open ? " is-open" : ""}`}>
+      <button
+        type="button"
+        className="model-annotation-dot"
+        aria-label={`${open ? "Ẩn" : "Hiện"} ${annotation.label}`}
+        aria-expanded={open}
+        onPointerDown={(event) => event.stopPropagation()}
+        onClick={(event) => {
+          event.stopPropagation();
+          onToggle();
+        }}
+      >
+        {number}
+      </button>
+      {open && (
+        <div className="model-annotation-card">
+          <strong>{annotation.label}</strong>
+          {annotation.description && <p>{annotation.description}</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AssetCellModel({
   cell,
   asset,
   viewMode,
   crossSection,
+  hideAnnotations,
 }: CommonModelProps & {
   cell: CellItem;
   asset: CellModelAsset;
+  hideAnnotations: boolean;
 }) {
   const { scene } = useGLTF(asset.url);
+  const [openAnnotationId, setOpenAnnotationId] = useState<string | null>(null);
+  const annotations = cell.annotations ?? asset.annotations;
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
     let meshIndex = 0;
@@ -262,7 +304,7 @@ function AssetCellModel({
     });
 
     return clone;
-  }, [cell, scene, viewMode, crossSection]);
+  }, [asset, cell, scene, viewMode, crossSection]);
 
   return (
     <group
@@ -272,6 +314,24 @@ function AssetCellModel({
     >
       <Center>
         <primitive object={clonedScene} />
+        {!hideAnnotations && annotations?.map((annotation, index) => (
+          <Html
+            key={annotation.id}
+            position={annotation.position}
+            center
+            distanceFactor={7.5}
+            className="model-annotation"
+          >
+            <ModelAnnotationDot
+              annotation={annotation}
+              number={index + 1}
+              open={openAnnotationId === annotation.id}
+              onToggle={() =>
+                setOpenAnnotationId((currentId) => (currentId === annotation.id ? null : annotation.id))
+              }
+            />
+          </Html>
+        ))}
       </Center>
     </group>
   );
@@ -280,7 +340,7 @@ function AssetCellModel({
 function Dots({
   id,
   color,
-  activeOrganelle,
+  activePartId,
   viewMode,
   count,
   spread,
@@ -311,7 +371,7 @@ function Dots({
           <sphereGeometry args={[0.055 + (index % 3) * 0.018, 18, 18]} />
           <CellMaterial
             id={id}
-            activeOrganelle={activeOrganelle}
+            activePartId={activePartId}
             viewMode={viewMode}
             color={color}
             opacity={0.92}
@@ -326,7 +386,7 @@ function Nucleus({
   id = "nucleus",
   position,
   scale,
-  activeOrganelle,
+  activePartId,
   viewMode,
   color = "#7047a8",
 }: CommonModelProps & {
@@ -341,7 +401,7 @@ function Nucleus({
         <sphereGeometry args={[1, 48, 48]} />
         <CellMaterial
           id={id}
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color={color}
           opacity={0.92}
@@ -352,7 +412,7 @@ function Nucleus({
         <sphereGeometry args={[0.23, 28, 28]} />
         <CellMaterial
           id={id}
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#b56ad8"
           opacity={0.9}
@@ -367,7 +427,7 @@ function Mitochondrion({
   position,
   rotation = [0, 0, 0],
   scale = [1, 1, 1],
-  activeOrganelle,
+  activePartId,
   viewMode,
 }: CommonModelProps & {
   id?: string;
@@ -381,7 +441,7 @@ function Mitochondrion({
         <capsuleGeometry args={[0.16, 0.46, 10, 24]} />
         <CellMaterial
           id={id}
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#cf7042"
         />
@@ -391,7 +451,7 @@ function Mitochondrion({
           <torusGeometry args={[0.09, 0.012, 8, 18]} />
           <CellMaterial
             id={id}
-            activeOrganelle={activeOrganelle}
+            activePartId={activePartId}
             viewMode={viewMode}
             color="#f0b074"
           />
@@ -401,13 +461,13 @@ function Mitochondrion({
   );
 }
 
-function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProps) {
+function PlantModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
   return (
-    <group rotation={[0.1, -0.28, 0]}>
+    <group rotation={[0, -0.28, 0]}>
       <RoundedBox args={[4.7, 2.7, 0.42]} radius={0.18} smoothness={8} position={[0, 0, 0]}>
         <CellMaterial
           id="cellWall"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#84ad4a"
           opacity={crossSection ? 0.34 : 0.5}
@@ -416,7 +476,7 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
       <RoundedBox args={[4.18, 2.24, 0.24]} radius={0.12} smoothness={8} position={[0.02, 0.02, 0.08]}>
         <CellMaterial
           id="cellWall"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#4f9f83"
           opacity={0.24}
@@ -426,7 +486,7 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
         <sphereGeometry args={[0.78, 46, 46]} />
         <CellMaterial
           id="vacuole"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#62bdd2"
           opacity={0.74}
@@ -435,7 +495,7 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
       <Nucleus
         position={[0.92, 0.42, 0.45]}
         scale={[0.52, 0.52, 0.38]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -449,7 +509,7 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
             <sphereGeometry args={[1, 30, 20]} />
             <CellMaterial
               id="chloroplast"
-              activeOrganelle={activeOrganelle}
+              activePartId={activePartId}
               viewMode={viewMode}
               color="#67ad46"
             />
@@ -458,7 +518,7 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
             <torusGeometry args={[0.22, 0.012, 8, 42]} />
             <CellMaterial
               id="chloroplast"
-              activeOrganelle={activeOrganelle}
+              activePartId={activePartId}
               viewMode={viewMode}
               color="#9ed36a"
             />
@@ -469,7 +529,7 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
         position={[0.28, -0.72, 0.42]}
         rotation={[0.3, 0.2, 1.35]}
         scale={[0.95, 0.95, 0.95]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -483,7 +543,7 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
           [1.44, 0.06, 0.38],
         ]}
         radius={0.05}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
       />
       <Dots
@@ -491,7 +551,7 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
         color="#c76ac5"
         count={18}
         spread={[1.72, 0.92, 0.42]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -499,14 +559,14 @@ function PlantModel({ activeOrganelle, viewMode, crossSection }: CommonModelProp
   );
 }
 
-function WhiteBloodModel({ activeOrganelle, viewMode, crossSection }: CommonModelProps) {
+function WhiteBloodModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
   return (
     <group scale={[1.2, 1.2, 1.2]}>
       <mesh castShadow receiveShadow>
         <sphereGeometry args={[1.35, 64, 64]} />
         <CellMaterial
           id="membrane"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#d6d7e6"
           opacity={crossSection ? 0.28 : 0.45}
@@ -523,7 +583,7 @@ function WhiteBloodModel({ activeOrganelle, viewMode, crossSection }: CommonMode
           position={position as [number, number, number]}
           scale={[0.42, 0.36, 0.28]}
           color="#6c35a0"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           crossSection={crossSection}
         />
@@ -533,7 +593,7 @@ function WhiteBloodModel({ activeOrganelle, viewMode, crossSection }: CommonMode
         color="#c06696"
         count={30}
         spread={[1.05, 1.02, 0.72]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -542,7 +602,7 @@ function WhiteBloodModel({ activeOrganelle, viewMode, crossSection }: CommonMode
         color="#8b54b7"
         count={12}
         spread={[0.92, 0.88, 0.62]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -550,15 +610,15 @@ function WhiteBloodModel({ activeOrganelle, viewMode, crossSection }: CommonMode
   );
 }
 
-function NeuronModel({ activeOrganelle, viewMode, crossSection }: CommonModelProps) {
+function NeuronModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
   return (
-    <group rotation={[0.02, -0.2, 0]} scale={[1.05, 1.05, 1.05]}>
+    <group rotation={[0, -0.2, 0]} scale={[1.05, 1.05, 1.05]}>
       <Nucleus
         id="soma"
         position={[-0.55, 0, 0.08]}
         scale={[0.64, 0.58, 0.44]}
         color="#774eb2"
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -566,7 +626,7 @@ function NeuronModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
         <sphereGeometry args={[1, 52, 52]} />
         <CellMaterial
           id="soma"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#8db5d8"
           opacity={crossSection ? 0.36 : 0.55}
@@ -582,7 +642,7 @@ function NeuronModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
           [2.35, -0.04, 0],
         ]}
         radius={0.08}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
       />
       {[0.55, 1.06, 1.58, 2.08].map((x, index) => (
@@ -590,7 +650,7 @@ function NeuronModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
           <capsuleGeometry args={[0.16, 0.24, 8, 24]} />
           <CellMaterial
             id="axon"
-            activeOrganelle={activeOrganelle}
+            activePartId={activePartId}
             viewMode={viewMode}
             color="#bfd1df"
             opacity={0.94}
@@ -625,7 +685,7 @@ function NeuronModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
           color="#7d9bcf"
           points={points as Array<[number, number, number]>}
           radius={0.052}
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
         />
       ))}
@@ -634,7 +694,7 @@ function NeuronModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
         color="#b46ac7"
         count={12}
         spread={[2.2, 1.4, 0.2]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -642,13 +702,13 @@ function NeuronModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
   );
 }
 
-function EpithelialModel({ activeOrganelle, viewMode, crossSection }: CommonModelProps) {
+function EpithelialModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
   return (
-    <group rotation={[0.08, -0.22, 0]} scale={[1.08, 1.08, 1.08]}>
+    <group rotation={[0, -0.22, 0]} scale={[1.08, 1.08, 1.08]}>
       <RoundedBox args={[2.4, 2.0, 0.72]} radius={0.1} smoothness={8} position={[0, -0.12, 0]}>
         <CellMaterial
           id="membrane"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#d79baa"
           opacity={crossSection ? 0.32 : 0.52}
@@ -664,7 +724,7 @@ function EpithelialModel({ activeOrganelle, viewMode, crossSection }: CommonMode
           <capsuleGeometry args={[0.045, 0.34, 8, 14]} />
           <CellMaterial
             id="microvilli"
-            activeOrganelle={activeOrganelle}
+            activePartId={activePartId}
             viewMode={viewMode}
             color="#c86f80"
           />
@@ -673,7 +733,7 @@ function EpithelialModel({ activeOrganelle, viewMode, crossSection }: CommonMode
       <Nucleus
         position={[0.15, -0.2, 0.32]}
         scale={[0.55, 0.5, 0.36]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -687,7 +747,7 @@ function EpithelialModel({ activeOrganelle, viewMode, crossSection }: CommonMode
           [0.96, 0.68, 0.42],
         ]}
         radius={0.04}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
       />
       <Dots
@@ -695,7 +755,7 @@ function EpithelialModel({ activeOrganelle, viewMode, crossSection }: CommonMode
         color="#d082a2"
         count={18}
         spread={[0.96, 0.72, 0.38]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -703,14 +763,14 @@ function EpithelialModel({ activeOrganelle, viewMode, crossSection }: CommonMode
   );
 }
 
-function BacteriaModel({ activeOrganelle, viewMode, crossSection }: CommonModelProps) {
+function BacteriaModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
   return (
-    <group rotation={[0.02, 0.1, -0.02]} scale={[1.12, 1.12, 1.12]}>
+    <group rotation={[0, 0.1, 0]} scale={[1.12, 1.12, 1.12]}>
       <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
         <capsuleGeometry args={[0.78, 2.9, 14, 48]} />
         <CellMaterial
           id="cellWall"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#65b8ae"
           opacity={crossSection ? 0.36 : 0.62}
@@ -720,7 +780,7 @@ function BacteriaModel({ activeOrganelle, viewMode, crossSection }: CommonModelP
         <capsuleGeometry args={[0.62, 2.6, 12, 40]} />
         <CellMaterial
           id="cellWall"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#235a74"
           opacity={0.44}
@@ -737,7 +797,7 @@ function BacteriaModel({ activeOrganelle, viewMode, crossSection }: CommonModelP
           [1.02, 0.06, 0.32],
         ]}
         radius={0.12}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
       />
       <CurveTube
@@ -750,7 +810,7 @@ function BacteriaModel({ activeOrganelle, viewMode, crossSection }: CommonModelP
           [3.55, -0.95, 0],
         ]}
         radius={0.055}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
       />
       <Dots
@@ -758,7 +818,7 @@ function BacteriaModel({ activeOrganelle, viewMode, crossSection }: CommonModelP
         color="#e59b3a"
         count={34}
         spread={[1.42, 0.48, 0.36]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -766,14 +826,14 @@ function BacteriaModel({ activeOrganelle, viewMode, crossSection }: CommonModelP
   );
 }
 
-function AnimalModel({ activeOrganelle, viewMode, crossSection }: CommonModelProps) {
+function AnimalModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
   return (
-    <group rotation={[0.06, -0.34, 0]} scale={[1.08, 1.08, 1.08]}>
+    <group rotation={[0, -0.34, 0]} scale={[1.08, 1.08, 1.08]}>
       <mesh scale={[1.7, 1.25, 0.72]} castShadow receiveShadow>
         <sphereGeometry args={[1, 64, 64]} />
         <CellMaterial
           id="membrane"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#9db6dc"
           opacity={crossSection ? 0.28 : 0.48}
@@ -782,14 +842,14 @@ function AnimalModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
       <Nucleus
         position={[0.22, 0.18, 0.36]}
         scale={[0.55, 0.55, 0.42]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
       <Mitochondrion
         position={[-0.82, 0.44, 0.32]}
         rotation={[0.4, 0.1, 1.12]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -797,7 +857,7 @@ function AnimalModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
         position={[0.82, -0.42, 0.25]}
         rotation={[0.1, 0.35, -0.75]}
         scale={[0.9, 0.9, 0.9]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -806,7 +866,7 @@ function AnimalModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
           <torusGeometry args={[0.38 + index * 0.035, 0.025, 10, 52]} />
           <CellMaterial
             id="golgi"
-            activeOrganelle={activeOrganelle}
+            activePartId={activePartId}
             viewMode={viewMode}
             color="#d49057"
           />
@@ -817,7 +877,7 @@ function AnimalModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
         color="#b35fc8"
         count={28}
         spread={[1.25, 0.85, 0.46]}
-        activeOrganelle={activeOrganelle}
+        activePartId={activePartId}
         viewMode={viewMode}
         crossSection={crossSection}
       />
@@ -825,14 +885,14 @@ function AnimalModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
   );
 }
 
-function MuscleModel({ activeOrganelle, viewMode, crossSection }: CommonModelProps) {
+function MuscleModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
   return (
-    <group rotation={[0.15, -0.26, -0.03]} scale={[1.08, 1.08, 1.08]}>
+    <group rotation={[0, -0.26, 0]} scale={[1.08, 1.08, 1.08]}>
       <mesh rotation={[0, 0, Math.PI / 2]} scale={[0.95, 1, 0.82]} castShadow receiveShadow>
         <capsuleGeometry args={[0.76, 2.9, 14, 48]} />
         <CellMaterial
           id="sarcolemma"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           color="#d7b284"
           opacity={crossSection ? 0.26 : 0.42}
@@ -844,7 +904,7 @@ function MuscleModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
             <cylinderGeometry args={[0.13, 0.13, 0.86, 24]} />
             <CellMaterial
               id="myofibril"
-              activeOrganelle={activeOrganelle}
+              activePartId={activePartId}
               viewMode={viewMode}
               color={index % 2 === 0 ? "#bd3d51" : "#cf6272"}
             />
@@ -858,7 +918,7 @@ function MuscleModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
           position={[x, 0.54 - index * 0.92, 0.36]}
           scale={[0.26, 0.2, 0.18]}
           color="#cf7042"
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
           crossSection={crossSection}
         />
@@ -874,7 +934,7 @@ function MuscleModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
             [-1.55 + index * 0.65, 0.72, 0.28],
           ]}
           radius={0.035}
-          activeOrganelle={activeOrganelle}
+          activePartId={activePartId}
           viewMode={viewMode}
         />
       ))}
@@ -884,10 +944,11 @@ function MuscleModel({ activeOrganelle, viewMode, crossSection }: CommonModelPro
 
 function CellModel({
   cell,
-  activeOrganelle,
+  activePartId,
   viewMode,
   crossSection,
   autoRotate,
+  hideAnnotations,
 }: Omit<CellSceneProps, "resetKey">) {
   const group = useRef<Group>(null);
 
@@ -897,21 +958,21 @@ function CellModel({
     }
   });
 
-  const common = { activeOrganelle, viewMode, crossSection };
+  const common = { activePartId, viewMode, crossSection };
 
   return (
     <group ref={group} position={[0, 0, 0]}>
       {cell.modelAsset ? (
-        <AssetCellModel cell={cell} asset={cell.modelAsset} {...common} />
+        <AssetCellModel
+          key={cell.modelAsset.url}
+          cell={cell}
+          asset={cell.modelAsset}
+          hideAnnotations={hideAnnotations}
+          {...common}
+        />
       ) : (
         <>
           {cell.modelKind === "plant" && <PlantModel {...common} />}
-          {cell.modelKind === "whiteBlood" && <WhiteBloodModel {...common} />}
-          {cell.modelKind === "neuron" && <NeuronModel {...common} />}
-          {cell.modelKind === "epithelial" && <EpithelialModel {...common} />}
-          {cell.modelKind === "bacteria" && <BacteriaModel {...common} />}
-          {cell.modelKind === "animal" && <AnimalModel {...common} />}
-          {cell.modelKind === "muscle" && <MuscleModel {...common} />}
         </>
       )}
     </group>
@@ -925,7 +986,7 @@ function ModelLoadingOverlay({ cell }: { cell: CellItem }) {
   return (
     <Html center className="model-loader">
       <div>
-        <span>Loading 3D specimen</span>
+        <span>Đang tải mẫu 3D</span>
         <strong>{cell.name}</strong>
         <i>
           <b style={{ width: `${displayProgress}%` }} />
@@ -938,13 +999,15 @@ function ModelLoadingOverlay({ cell }: { cell: CellItem }) {
 
 export function CellScene({
   cell,
-  activeOrganelle,
+  activePartId,
   viewMode,
   crossSection,
   autoRotate,
+  hideAnnotations,
   resetKey,
 }: CellSceneProps) {
   const nativeMaterial = cell.modelAsset?.materialMode === "native";
+  const modelKey = cell.modelAsset?.url ?? cell.id;
 
   return (
     <Canvas
@@ -953,7 +1016,7 @@ export function CellScene({
       dpr={[1, 2]}
       shadows
       gl={{ antialias: true, alpha: true, premultipliedAlpha: false }}
-      camera={{ position: [0, 0.2, 5.8], fov: 38 }}
+      camera={{ position: [0, 0, 5.5], fov: 38 }}
     >
       {!nativeMaterial && <color attach="background" args={["#fbf7ee"]} />}
       <ambientLight intensity={nativeMaterial ? 1.42 : 1.28} />
@@ -988,16 +1051,16 @@ export function CellScene({
         intensity={nativeMaterial ? 0.46 : 0.6}
         color={nativeMaterial ? "#ffffff" : cell.accent}
       />
-      <Suspense fallback={<ModelLoadingOverlay cell={cell} />}>
-        <Float speed={1.25} rotationIntensity={0.08} floatIntensity={0.18}>
-          <CellModel
-            cell={cell}
-            activeOrganelle={activeOrganelle}
-            viewMode={viewMode}
-            crossSection={crossSection}
-            autoRotate={autoRotate}
-          />
-        </Float>
+      <Suspense key={modelKey} fallback={<ModelLoadingOverlay cell={cell} />}>
+        <CellModel
+          key={modelKey}
+          cell={cell}
+          activePartId={activePartId}
+          viewMode={viewMode}
+          crossSection={crossSection}
+          autoRotate={autoRotate}
+          hideAnnotations={hideAnnotations}
+        />
         <ContactShadows
           position={[0, -1.8, 0]}
           opacity={nativeMaterial ? 0.18 : 0.26}
@@ -1006,13 +1069,13 @@ export function CellScene({
           far={4.2}
         />
       </Suspense>
-      <OrbitControls
+      <CameraControls
         makeDefault
-        enableDamping
-        dampingFactor={0.08}
-        enablePan
-        minDistance={3.2}
-        maxDistance={8.4}
+        draggingSmoothTime={0.08}
+        dollySpeed={1.05}
+        truckSpeed={1.25}
+        azimuthRotateSpeed={0.9}
+        polarRotateSpeed={0.9}
       />
     </Canvas>
   );
