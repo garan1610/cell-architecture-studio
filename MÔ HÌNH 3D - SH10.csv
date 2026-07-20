@@ -1,0 +1,99 @@
+Tên mô hình,Màn hình tổng thể,Mô tả Tab 1,Link nguồn Tab 1,Mô tả Tab 2,Link nguồn Tab 2,Mô tả Tab 3,Link nguồn Tab 3,Góp ý biên tập chung,Khóa sản xuất cho đội 3D
+"Carbon và nước trong tế bào
+ (Bài 4 SGK)","Đây là màn hình tổng thể của 1 mô hình, gồm 3 tab ngang hàng: Tab 1 – Carbon tạo 4 liên kết; Tab 2 – Glucose mạch thẳng và mạch vòng; Tab 3 – Nước và liên kết hydrogen. Màn hình tổng thể chỉ hiển thị tên 3 tab và hình đại diện lấy từ đúng nguồn đã có. Khi bấm tab nào thì mở đúng nội dung chi tiết của tab đó.","TAB 1 – CARBON TẠO 4 LIÊN KẾT.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: CH₄ bên trái, C₂H₆ bên phải, cùng xuất hiện trên một màn hình để so sánh.
+ Thành phần đánh số: ① nguyên tử C; ② nguyên tử H; ③ liên kết C–H; ④ liên kết C–C; ⑤ góc liên kết 109,5°.
+ Tương tác: bấm số nào thì thành phần đó sáng lên, các phần còn lại giảm sáng nhẹ; tên thành phần hiện trong khung thông tin cố định.
+ Text chốt hiển thị: “Carbon có 4 electron hoá trị nên có thể tạo 4 liên kết cộng hoá trị. Carbon có thể liên kết với carbon và với các nguyên tố như H, O, N, nhờ đó hình thành các bộ khung carbon đa dạng.”","https://sketchfab.com/3d-models/methane-molecule-3d-models-for-education-de63badb5ae14aa189bfe9e733525de9
+ https://sketchfab.com/3d-models/ethane-molecular-form-01003f579d3141d1a9bbde2a4da2cda6","TAB 2 – GLUCOSE MẠCH THẲNG VÀ MẠCH VÒNG.
+ Loại tab: tab chi tiết có so sánh/chuyển đổi.
+ Đối tượng hiển thị: glucose mạch thẳng và glucose mạch vòng. Nếu animation nguồn hoạt động tốt thì dùng đúng animation có sẵn; nếu không, đặt hai trạng thái cạnh nhau.
+ Thành phần đánh số: ① vòng pyranose gồm 5C và 1O; ② O trong vòng; ③ nhóm –OH; ④ liên kết C–C; ⑤ nhóm –CHO ở dạng mạch thẳng.
+ Tương tác: bấm số trên trạng thái nào thì chỉ highlight đúng thành phần ở trạng thái đó.
+ Text chốt hiển thị: “Vòng glucose dạng pyranose gồm 5 nguyên tử carbon và 1 nguyên tử oxygen. Glucose minh hoạ khả năng hình thành bộ khung carbon dạng mạch thẳng và dạng vòng, kết hợp với các nhóm chức.”","https://sketchfab.com/3d-models/glucose-molecule-10659ca1502c4ade88abba6284bb50f2
+ https://sketchfab.com/3d-models/glucose-mutarotation-240a13d47b0a47b5b506cda04efee770","TAB 3 – NƯỚC PHÂN CỰC VÀ LIÊN KẾT HYDROGEN.
+ Loại tab: tab chi tiết theo trình tự nguyên nhân → kết quả.
+ Đối tượng hiển thị: một phân tử H₂O phóng to bên trái; cụm 3–4 phân tử nước bên phải.
+ Thành phần đánh số: ① O, δ⁻; ② H, δ⁺; ③ liên kết O–H; ④ góc 104,5°; ⑤ liên kết hydrogen nét đứt; ⑥ cụm phân tử nước.
+ Tương tác: xem H₂O đơn trước, sau đó xem cụm nước; bấm số nào thì highlight đúng cấu trúc đó.
+ Text chốt hiển thị: “Phân tử nước có tính phân cực vì oxygen hút electron mạnh hơn hydrogen. Nhờ đó, các phân tử nước có thể hình thành liên kết hydrogen với nhau. Nước là dung môi phân cực, góp phần điều hoà nhiệt, tham gia phản ứng sinh hoá và bảo vệ cơ học.”","https://sketchfab.com/3d-models/h2o-molecule-e181944932084b5dbb4d5b625a5e9b10
+ https://sketchfab.com/3d-models/structure-of-liquid-water-bbf17bb125f440d5ab2c71af13e5e6eb
+ https://sketchfab.com/3d-models/hydrogen-bonding-between-water-molecules-9cc68cb975b844f6b1fe6808ad6d7551",Sửa lỗi “6C tạo vòng 6 cạnh” thành vòng gồm 5C và 1O. Chuyển các chuỗi mũi tên thành câu hoàn chỉnh. Không bổ sung chất hoặc cơ chế ngoài nội dung gốc.,"Chỉ dùng đúng các nguồn đã ghi. Không thêm phân tử khác. Chữ đặt trong khung cố định bên phải hoặc phía dưới, không phủ lên mô hình. Chữ cái Tab 1–3 chỉ là điều hướng; số ①②③… dùng để gắn vào thành phần. Luôn có nút quay lại màn hình tổng thể."
+"Carbohydrate
+ (Bài 5 SGK)",Màn hình tổng thể gồm 3 tab ngang hàng: Tab 1 – Monosaccharide: glucose; Tab 2 – Disaccharide; Tab 3 – Polysaccharide: tinh bột. Mỗi tab dùng đúng các mô hình đã có trong cột nguồn; không thêm loại carbohydrate khác.,"TAB 1 – MONOSACCHARIDE: GLUCOSE.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: glucose dạng mạch vòng là mô hình chính; có thể dùng animation chuyển đổi mạch thẳng ↔ vòng từ đúng nguồn đã nêu.
+ Thành phần đánh số: ① C; ② O trong vòng; ③ nhóm –OH; ④ vòng pyranose; ⑤ H.
+ Tương tác: bấm số để highlight đúng thành phần.
+ Text chốt hiển thị: “Glucose là một monosaccharide có công thức C₆H₁₂O₆ và là đơn phân cấu tạo nên nhiều carbohydrate. Trong tế bào, glucose là nguồn nguyên liệu trực tiếp cho hô hấp tế bào.”","https://sketchfab.com/3d-models/glucose-molecule-10659ca1502c4ade88abba6284bb50f2
+ https://sketchfab.com/3d-models/glucose-mutarotation-240a13d47b0a47b5b506cda04efee770
+ https://sketchfab.com/3d-models/d-glucose-f044c0a2bb3f4d3ba1923c27ab4c5e8d","TAB 2 – DISACCHARIDE.
+ Loại tab: tab chi tiết có lựa chọn mô hình.
+ Đối tượng hiển thị: maltose và sucrose là hai lựa chọn trong cùng tab; mỗi lần chỉ hiển thị một mô hình chính.
+ Thành phần đánh số: ① vòng đường thứ nhất; ② vòng đường thứ hai; ③ liên kết glycosidic; ④ nhóm –OH tự do; ⑤ O.
+ Tương tác: chọn maltose hoặc sucrose, sau đó bấm số để highlight.
+ Text chốt hiển thị: “Disaccharide gồm 2 monosaccharide liên kết với nhau bằng liên kết glycosidic. Maltose gồm 2 glucose; sucrose gồm glucose và fructose. Khi bị thuỷ phân, liên kết glycosidic bị phá vỡ, tạo thành 2 monosaccharide.”","https://sketchfab.com/3d-models/maltose-5d76df25af1449d4baececae85bc133d
+ https://sketchfab.com/3d-models/sucrose-molecule-adc74f80cf52473cb42ec0e999de7f77
+ https://sketchfab.com/3d-models/sucrose-41c1b007b3ed42abae34a70b3352047c","TAB 3 – POLYSACCHARIDE: TINH BỘT.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: mô hình amylose toàn màn hình, cho phép xoay và phóng to.
+ Thành phần đánh số: ① một đơn phân glucose đại diện; ② một liên kết glycosidic α(1→4) đại diện.
+ Tương tác: phóng to một đoạn chuỗi, bấm số để highlight; sau đó thu nhỏ về toàn chuỗi.
+ Text chốt hiển thị: “Tinh bột là polysaccharide gồm nhiều đơn phân glucose liên kết với nhau bằng liên kết glycosidic. Mô hình này minh hoạ chuỗi amylose với các liên kết α(1→4).”","https://sketchfab.com/3d-models/starch-3d-model-81b1c7b59b2643ad82ceb4d128278bbf
+ https://www.acs.org/education/resources/undergraduate/chemistryincontext/interactives/nutrition/3d-model-starch.html",Bỏ câu “glucose là đơn phân của mọi carbohydrate”. Không đưa lactose lên giao diện vì không có nguồn mô hình tương ứng. Làm rõ mô hình tinh bột chỉ minh hoạ amylose.,"Không thêm monosaccharide, disaccharide hoặc polysaccharide ngoài các nguồn đã có. Mỗi tab có một khung text cố định; không đặt chữ trực tiếp lên mô hình."
+"Lipid và phospholipid
+ (Bài 5 SGK)",Màn hình tổng thể gồm 3 tab ngang hàng: Tab 1 – Triglyceride; Tab 2 – Một phân tử phospholipid; Tab 3 – Lớp kép phospholipid. Ba tab đi theo trình tự từ cấu tạo lipid đơn lẻ đến cấu trúc lớp kép.,"TAB 1 – TRIGLYCERIDE.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: một phân tử triglyceride ở trung tâm.
+ Thành phần đánh số: ① glycerol; ② ba đuôi acid béo; ③ liên kết ester; ④ vùng đầu glycerol; ⑤ vùng đuôi kị nước.
+ Tương tác: bấm số để highlight đúng vùng; không tách rời phân tử.
+ Text chốt hiển thị: “Triglyceride gồm 1 glycerol liên kết với 3 acid béo bằng các liên kết ester. Phân tử nhìn chung kị nước, không tan trong nước và có chức năng dự trữ năng lượng, cách nhiệt.”",https://sketchfab.com/3d-models/triglyceride-f4e158afb17143c89c80ead35f66b3ff,"TAB 2 – MỘT PHÂN TỬ PHOSPHOLIPID.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: một hoặc hai phân tử phospholipid riêng lẻ đúng nguồn.
+ Thành phần đánh số: ① đầu ưa nước; ② đuôi kị nước thứ nhất; ③ đuôi kị nước thứ hai; ④ liên kết ester; ⑤ nhóm phosphate nếu nguồn thể hiện rõ.
+ Tương tác: bấm số để highlight đầu hoặc đuôi tương ứng.
+ Text chốt hiển thị: “Phospholipid có một đầu ưa nước và hai đuôi kị nước. Nhờ tính lưỡng tính, các phân tử phospholipid có thể tự sắp xếp thành lớp kép trong môi trường nước, tạo nên nền tảng cấu trúc của màng sinh chất.”","https://sketchfab.com/3d-models/phospholipid-f7b83eec8c9b4f15a5791e2a17a954ac
+ https://sketchfab.com/3d-models/a-lipid-bilayer-as-it-occurs-in-cell-membranes-b4dbe55f5df34af5a4d57cd713a107dd","TAB 3 – LỚP KÉP PHOSPHOLIPID.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: đoạn lớp kép nằm ngang, đầu ưa nước ở hai phía, đuôi kị nước ở giữa.
+ Thành phần đánh số: ① lớp đầu ưa nước phía trên; ② lớp đầu ưa nước phía dưới; ③ vùng đuôi kị nước tiếp giáp; ④ tính lưỡng tính; ⑤ khoảng kị nước giữa hai lớp.
+ Tương tác: bấm số để highlight theo từng dải cấu trúc.
+ Text chốt hiển thị: “Trong môi trường nước, hai lớp phospholipid xếp đối diện nhau: các đầu ưa nước quay ra môi trường nước, còn các đuôi kị nước quay vào nhau. Cấu trúc này tạo nên hàng rào ngăn cách môi trường trong và ngoài tế bào.”",https://sketchfab.com/3d-models/a-lipid-bilayer-as-it-occurs-in-cell-membranes-b4dbe55f5df34af5a4d57cd713a107dd,Bỏ cách nói “hoàn toàn không phân cực”. Thay “lưỡng cực” bằng “lưỡng tính”. Không khẳng định mọi đầu phospholipid luôn tích điện âm nếu nguồn không thể hiện rõ.,"Không thêm cholesterol, protein màng, carbohydrate màng, nước hoặc dung môi. Chỉ dùng đúng triglyceride, phospholipid và lớp kép trong nguồn."
+"Protein
+ (Bài 5 SGK)",Màn hình tổng thể gồm 3 tab ngang hàng: Tab 1 – Amino acid; Tab 2 – Các cấp cấu trúc protein; Tab 3 – Enzyme và trung tâm hoạt động. Các tab đi từ đơn phân → cấu trúc protein → chức năng xúc tác.,"TAB 1 – AMINO ACID.
+ Loại tab: tab chi tiết có lựa chọn mô hình.
+ Đối tượng hiển thị: glycine hoặc alanine; nếu dùng cả hai thì cho chọn từng mô hình, không chồng lên nhau.
+ Thành phần đánh số: ① Cα; ② nhóm amin; ③ nhóm carboxyl; ④ gốc R; ⑤ H gắn Cα.
+ Tương tác: bấm số để highlight đúng nhóm.
+ Text chốt hiển thị: “Amino acid là đơn phân cấu tạo nên protein. Mỗi amino acid có một carbon trung tâm liên kết với nhóm amin, nhóm carboxyl, một nguyên tử H và gốc R. Các amino acid khác nhau chủ yếu ở gốc R. Các amino acid liên kết với nhau bằng liên kết peptide để tạo chuỗi polypeptide.”","https://sketchfab.com/3d-models/glycine-e7d8bd505d4e4ed183e458d95eb396c9
+ https://sketchfab.com/3d-models/alanine-c0e244c6b2bc4e68864102015c98eea7","TAB 2 – CÁC CẤP CẤU TRÚC PROTEIN.
+ Loại tab: tab chi tiết trên một mô hình ribbon.
+ Đối tượng hiển thị: human hexokinase toàn cấu trúc; dùng các điểm đánh số để chỉ ra các cấp cấu trúc trên cùng mô hình.
+ Thành phần đánh số: ① amino acid/đoạn chuỗi đại diện; ② chuỗi polypeptide; ③ xoắn α; ④ gấp nếp β; ⑤ cấu trúc không gian 3D.
+ Tương tác: bấm số thì camera zoom nhẹ tới đúng vùng, không tách thành mô hình mới.
+ Text chốt hiển thị: “Protein được hình thành từ chuỗi polypeptide và gấp cuộn thành cấu trúc không gian đặc trưng. Cấu trúc bậc 2 gồm xoắn α và gấp nếp β, được ổn định chủ yếu bởi liên kết hydrogen. Cấu trúc bậc 3 là hình dạng không gian của toàn bộ chuỗi và có vai trò quyết định chức năng của protein.”",https://sketchfab.com/3d-models/human-hexokinase-protein-d963bcdebd7140908ddf8e7f94610dee,"TAB 3 – ENZYME VÀ TRUNG TÂM HOẠT ĐỘNG.
+ Loại tab: tab chi tiết có animation nguồn.
+ Đối tượng hiển thị: mô hình enzyme catalysis đúng nguồn; enzyme là đối tượng chính, cơ chất và sản phẩm xuất hiện theo đúng animation có sẵn.
+ Thành phần đánh số: ① enzyme; ② trung tâm hoạt động; ③ cơ chất; ④ xoắn α/gấp nếp β; ⑤ sản phẩm nếu nguồn có.
+ Tương tác: bấm trung tâm hoạt động để highlight vùng lõm; chạy animation nguồn; bấm sản phẩm ở cuối.
+ Text chốt hiển thị: “Enzyme là chất xúc tác sinh học, phần lớn có bản chất protein. Enzyme làm giảm năng lượng hoạt hoá, giúp phản ứng xảy ra nhanh hơn trong điều kiện của tế bào và không bị tiêu hao sau phản ứng. Trung tâm hoạt động có cấu trúc phù hợp với cơ chất.”",https://sketchfab.com/3d-models/process-of-enzyme-catalysis-c4e3a9e46f5249bd8ea0aca8ef0eae83,Sửa “gấp nếp β là sợi song song” vì không phải lúc nào cũng song song. Không tự gọi cơ chất là amylose hoặc enzyme là amylase nếu mô hình nguồn không thể hiện rõ.,"Không thêm amino acid, protein hoặc phản ứng khác. Không tạo cấu trúc bậc 4. Animation enzyme phải giữ đúng các giai đoạn có sẵn trong nguồn."
+"Nucleic acid – DNA và RNA
+ (Bài 5 SGK)",Màn hình tổng thể gồm 3 tab ngang hàng: Tab 1 – Nucleotide; Tab 2 – DNA xoắn kép; Tab 3 – RNA đơn mạch. Các tab đi từ đơn phân → DNA → RNA.,"TAB 1 – NUCLEOTIDE.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: một nucleotide đơn phosphate từ đúng nguồn; ưu tiên mô hình DNA nucleotide, không dùng ATP làm hình đại diện mặc định.
+ Thành phần đánh số: ① base nitrogen; ② đường pentose; ③ phosphate; ④ liên kết base–đường; ⑤ vị trí nối phosphodiester.
+ Tương tác: bấm số để highlight đúng thành phần.
+ Text chốt hiển thị: “Nucleotide gồm một base nitrogen, một đường pentose và một nhóm phosphate. Nucleotide của DNA chứa deoxyribose và các base A, T, G, C; nucleotide của RNA chứa ribose và các base A, U, G, C. Các nucleotide liên kết với nhau tạo chuỗi polynucleotide.”","https://sketchfab.com/3d-models/dna-nucleotide-4ff9b29e7952443ca050e15dff05256a
+ https://sketchfab.com/cmccutchan/collections/nucleotides-b4d58268eaf74b8bb075559f72bd8f01
+ https://sketchfab.com/3d-models/dna-double-helix-base-pairing-model-5b3bdf0a379648b8a8896b86f591ee07","TAB 2 – DNA XOẮN KÉP.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: một DNA xoắn kép ở trung tâm, cho phép xoay và phóng to.
+ Thành phần đánh số: ① hai mạch polynucleotide; ② khung đường–phosphate; ③ cặp base A–T và G–C; ④ dạng xoắn kép; ⑤ liên kết hydrogen.
+ Tương tác: bấm số để zoom vừa đủ tới vùng cần quan sát; sau đó thu nhỏ về toàn DNA.
+ Text chốt hiển thị: “DNA gồm hai mạch polynucleotide xoắn quanh một trục chung. Khung đường–phosphate nằm phía ngoài; các base nằm phía trong và bắt cặp bổ sung: A–T bằng 2 liên kết hydrogen, G–C bằng 3 liên kết hydrogen. DNA mang, bảo quản và truyền đạt thông tin di truyền.”",https://sketchfab.com/3d-models/dna-rna-animated-visualization-f0ef115f9e9646a28642a2d509b8d727,"TAB 3 – RNA ĐƠN MẠCH.
+ Loại tab: tab chi tiết.
+ Đối tượng hiển thị: đúng mô hình RNA/tRNA trong nguồn. Chỉ dùng mô hình để chỉ ra đặc điểm một mạch, ribose, phosphate và U; không coi hình dạng tRNA là hình dạng chung của mọi RNA.
+ Thành phần đánh số: ① một mạch polynucleotide; ② ribose; ③ phosphate; ④ base U; ⑤ hình dạng một mạch linh hoạt.
+ Tương tác: bấm số để highlight một vị trí đại diện, không đánh số dày trên toàn chuỗi.
+ Text chốt hiển thị: “RNA thường gồm một mạch polynucleotide, chứa đường ribose và base uracil thay cho thymine. mRNA mang thông tin dùng làm khuôn tổng hợp protein; tRNA vận chuyển amino acid; rRNA tham gia cấu tạo ribosome.”",https://sketchfab.com/3d-models/molecular-structure-of-the-transfer-rna-trna-b2052daba15f49edab6aa3242efbb1cc,"Không dùng ATP để đại diện mặc định cho nucleotide. Không chủ động dựng DNA sai để đơn giản hoá. Cảnh báo nguồn RNA là tRNA, không đại diện cho mọi loại RNA.","Không thêm nhân đôi, phiên mã, dịch mã hoặc protein liên kết. DNA không được vẽ kiểu hai dây thừng bện; hai mạch xoắn quanh cùng một trục, base ở trong."

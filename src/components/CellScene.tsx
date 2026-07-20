@@ -1,5 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { CameraControls, Center, ContactShadows, Html, RoundedBox, useGLTF, useProgress } from "@react-three/drei";
+import { Link2 } from "lucide-react";
 import { Suspense, useMemo, useRef, useState } from "react";
 import {
   Color,
@@ -14,7 +15,7 @@ import {
   type Material,
   type MeshStandardMaterialParameters,
 } from "three";
-import type { CellItem, CellModelAsset, ModelAnnotation, ViewMode } from "../data/cells";
+import type { CellItem, CellModelAsset, ModelAnnotation, ModelLink, ViewMode } from "../data/cells";
 
 type CellSceneProps = {
   cell: CellItem;
@@ -24,6 +25,7 @@ type CellSceneProps = {
   autoRotate: boolean;
   hideAnnotations: boolean;
   resetKey: number;
+  onSelectCell: (id: string) => void;
 };
 
 type MaterialProps = {
@@ -251,8 +253,41 @@ function ModelAnnotationDot({
         <div className="model-annotation-card">
           <strong>{annotation.label}</strong>
           {annotation.description && <p>{annotation.description}</p>}
+          {annotation.image && (
+            <img
+              src={annotation.image.url}
+              alt={annotation.image.alt ?? ""}
+              loading="lazy"
+            />
+          )}
         </div>
       )}
+    </div>
+  );
+}
+
+function ModelLinkDot({
+  link,
+  onSelectCell,
+}: {
+  link: ModelLink;
+  onSelectCell: (id: string) => void;
+}) {
+  return (
+    <div className="model-annotation-ui model-link-ui">
+      <button
+        type="button"
+        className="model-annotation-dot model-link-dot"
+        aria-label={link.label}
+        title={link.label}
+        onPointerDown={(event) => event.stopPropagation()}
+        onClick={(event) => {
+          event.stopPropagation();
+          onSelectCell(link.targetCellId);
+        }}
+      >
+        <Link2 size={4} strokeWidth={3} aria-hidden="true" />
+      </button>
     </div>
   );
 }
@@ -263,14 +298,17 @@ function AssetCellModel({
   viewMode,
   crossSection,
   hideAnnotations,
+  onSelectCell,
 }: CommonModelProps & {
   cell: CellItem;
   asset: CellModelAsset;
   hideAnnotations: boolean;
+  onSelectCell: (id: string) => void;
 }) {
   const { scene } = useGLTF(asset.url);
   const [openAnnotationId, setOpenAnnotationId] = useState<string | null>(null);
   const annotations = cell.annotations ?? asset.annotations;
+  const modelLinks = cell.modelLinks;
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
     let meshIndex = 0;
@@ -330,6 +368,17 @@ function AssetCellModel({
                 setOpenAnnotationId((currentId) => (currentId === annotation.id ? null : annotation.id))
               }
             />
+          </Html>
+        ))}
+        {!hideAnnotations && modelLinks?.map((link) => (
+          <Html
+            key={link.id}
+            position={link.position}
+            center
+            distanceFactor={7.5}
+            className="model-annotation"
+          >
+            <ModelLinkDot link={link} onSelectCell={onSelectCell} />
           </Html>
         ))}
       </Center>
@@ -949,6 +998,7 @@ function CellModel({
   crossSection,
   autoRotate,
   hideAnnotations,
+  onSelectCell,
 }: Omit<CellSceneProps, "resetKey">) {
   const group = useRef<Group>(null);
 
@@ -968,6 +1018,7 @@ function CellModel({
           cell={cell}
           asset={cell.modelAsset}
           hideAnnotations={hideAnnotations}
+          onSelectCell={onSelectCell}
           {...common}
         />
       ) : (
@@ -1005,6 +1056,7 @@ export function CellScene({
   autoRotate,
   hideAnnotations,
   resetKey,
+  onSelectCell,
 }: CellSceneProps) {
   const nativeMaterial = cell.modelAsset?.materialMode === "native";
   const modelKey = cell.modelAsset?.url ?? cell.id;
@@ -1060,6 +1112,7 @@ export function CellScene({
           crossSection={crossSection}
           autoRotate={autoRotate}
           hideAnnotations={hideAnnotations}
+          onSelectCell={onSelectCell}
         />
         <ContactShadows
           position={[0, -1.8, 0]}

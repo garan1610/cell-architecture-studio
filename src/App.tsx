@@ -59,8 +59,10 @@ function Header({ cell }: { cell: CellItem }) {
 
 type SidebarProps = {
   selectedCell: CellItem;
+  selectedGrade: GradeLevel;
   favorites: Set<string>;
   onSelectCell: (id: string) => void;
+  onSelectedGradeChange: (grade: GradeLevel) => void;
   onToggleFavorite: (id: string) => void;
 };
 
@@ -101,6 +103,14 @@ const gradeModelKinds: Record<GradeLevel, ModelKind[]> = {
   "Lớp 12": ["dna", "chromosome", "translation"],
 };
 
+function getGradeForCell(cell: CellItem): GradeLevel {
+  return (
+    (Object.keys(gradeModelKinds) as GradeLevel[]).find((grade) =>
+      gradeModelKinds[grade].includes(cell.modelKind),
+    ) ?? "Lá»›p 10"
+  );
+}
+
 function MiniCell({ cell }: { cell: CellItem }) {
   if (cell.renderImage?.url) {
     return (
@@ -129,12 +139,13 @@ function MiniCell({ cell }: { cell: CellItem }) {
 
 function Sidebar({
   selectedCell,
+  selectedGrade,
   favorites,
   onSelectCell,
+  onSelectedGradeChange,
   onToggleFavorite,
 }: SidebarProps) {
   const gradeOptions = Object.keys(gradeModelKinds) as GradeLevel[];
-  const [selectedGrade, setSelectedGrade] = useState<GradeLevel>(gradeOptions[0]);
   const modelGroups: ModelGroup[] = [
     {
       label: "Tế bào",
@@ -223,7 +234,7 @@ function Sidebar({
           <label className="model-grade-select">
             <select
               value={selectedGrade}
-              onChange={(event) => setSelectedGrade(event.target.value as GradeLevel)}
+              onChange={(event) => onSelectedGradeChange(event.target.value as GradeLevel)}
               aria-label="Chon lop"
             >
               {gradeOptions.map((grade, index) => (
@@ -290,6 +301,7 @@ type StageProps = {
   onCrossSectionChange: (value: boolean) => void;
   onAutoRotateChange: (value: boolean) => void;
   onHideAnnotationsChange: (value: boolean) => void;
+  onSelectCell: (id: string) => void;
   onReset: () => void;
 };
 
@@ -304,6 +316,7 @@ function Stage({
   onCrossSectionChange,
   onAutoRotateChange,
   onHideAnnotationsChange,
+  onSelectCell,
   onReset,
 }: StageProps) {
   return (
@@ -338,6 +351,7 @@ function Stage({
             autoRotate={autoRotate}
             hideAnnotations={hideAnnotations}
             resetKey={resetKey}
+            onSelectCell={onSelectCell}
           />
         </div>
 
@@ -383,6 +397,7 @@ function Toast({ message }: { message: string | null }) {
 
 export default function App() {
   const [selectedCellId, setSelectedCellId] = useState(initialCell.id);
+  const [selectedGrade, setSelectedGrade] = useState<GradeLevel>(() => getGradeForCell(initialCell));
   const [viewMode] = useState<ViewMode>("mesh");
   const [crossSection, setCrossSection] = useState(false);
   const [autoRotate, setAutoRotate] = useState(false);
@@ -416,6 +431,8 @@ export default function App() {
   }
 
   function selectCell(id: string) {
+    const nextCell = getCellById(id);
+    setSelectedGrade(getGradeForCell(nextCell));
     setSelectedCellId((currentId) => {
       if (currentId === id) {
         return currentId;
@@ -439,8 +456,10 @@ export default function App() {
       <div className="app-grid">
         <Sidebar
           selectedCell={selectedCell}
+          selectedGrade={selectedGrade}
           favorites={favorites}
           onSelectCell={selectCell}
+          onSelectedGradeChange={setSelectedGrade}
           onToggleFavorite={toggleFavorite}
         />
 
@@ -456,6 +475,7 @@ export default function App() {
             onCrossSectionChange={setCrossSection}
             onAutoRotateChange={setAutoRotate}
             onHideAnnotationsChange={setHideAnnotations}
+            onSelectCell={selectCell}
             onReset={() => {
               setResetKey((key) => key + 1);
               showToast("Đã đặt lại góc nhìn.");

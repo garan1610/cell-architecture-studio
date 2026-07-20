@@ -31,6 +31,17 @@ export type ModelAnnotation = {
   id: string;
   label: string;
   description?: string;
+  image?: {
+    url: string;
+    alt?: string;
+  };
+  position: [number, number, number];
+};
+
+export type ModelLink = {
+  id: string;
+  label: string;
+  targetCellId: string;
   position: [number, number, number];
 };
 
@@ -60,6 +71,7 @@ export type CellItem = {
   modelKind: ModelKind;
   defaultFocusId: string;
   annotations?: ModelAnnotation[];
+  modelLinks?: ModelLink[];
   modelAsset?: CellModelAsset;
   renderImage?: CellRenderImage;
 };
@@ -160,8 +172,7 @@ const lop10Annotations = {
     {
       id: "fatty-acid",
       label: "Acid béo",
-      description:
-        "Chuỗi hydrocarbon kị nước, làm lipid không tan trong nước.",
+      description: "Chuỗi hydrocarbon kị nước, làm lipid không tan trong nước.",
       position: [72, 6.4, 11.6],
     },
     {
@@ -402,7 +413,7 @@ const lop10Annotations = {
       id: "nucleoid",
       label: "Vùng nhân",
       description:
-        "Vùng chứa DNA vòng lớn, không có màng nhân bao bọc. Không gọi là \"nhân tế bào\".",
+        'Vùng chứa DNA vòng lớn, không có màng nhân bao bọc. Không gọi là "nhân tế bào".',
       position: [-18, 36, -4],
     },
     {
@@ -566,8 +577,7 @@ const lop10Annotations = {
     {
       id: "cytoplasm",
       label: "Tế bào chất",
-      description:
-        "Chứa bào quan và là nơi diễn ra nhiều phản ứng sinh hóa.",
+      description: "Chứa bào quan và là nơi diễn ra nhiều phản ứng sinh hóa.",
       position: [0, -42, -40],
     },
     {
@@ -613,8 +623,7 @@ const lop10Annotations = {
     {
       id: "golgi-apparatus",
       label: "Bộ máy Golgi",
-      description:
-        "Chế biến, đóng gói và phân phối sản phẩm của tế bào.",
+      description: "Chế biến, đóng gói và phân phối sản phẩm của tế bào.",
       position: [-72, -46, -82],
     },
     {
@@ -705,8 +714,7 @@ const lop10Annotations = {
     {
       id: "glycoprotein-glycolipid",
       label: "Glycoprotein/glycolipid",
-      description:
-        "Tham gia nhận biết tế bào và giao tiếp giữa các tế bào.",
+      description: "Tham gia nhận biết tế bào và giao tiếp giữa các tế bào.",
       position: [32, 1.8, -26],
     },
     {
@@ -756,8 +764,7 @@ const lop10Annotations = {
     {
       id: "sodium-potassium-pump",
       label: "Bơm Na+/K+ nếu có",
-      description:
-        "Bơm 3 Na+ ra ngoài và 2 K+ vào trong tế bào, tiêu tốn ATP.",
+      description: "Bơm 3 Na+ ra ngoài và 2 K+ vào trong tế bào, tiêu tốn ATP.",
       position: [0.18, 0.16, 0.18],
     },
     {
@@ -861,8 +868,7 @@ const lop10Annotations = {
     {
       id: "bacteriophage",
       label: "Thực khuẩn thể",
-      description:
-        "Virus lây nhiễm vi khuẩn, thường có đầu, đuôi và sợi đuôi.",
+      description: "Virus lây nhiễm vi khuẩn, thường có đầu, đuôi và sợi đuôi.",
       position: [0, -0.04, 0],
     },
     {
@@ -999,91 +1005,220 @@ const lop10Annotations = {
 const lop11Annotations = {
   internalRootStructure: makeAnnotations(
     [
-      ["Vùng lông hút", "Vùng rễ có nhiều lông hút làm tăng diện tích tiếp xúc với dung dịch đất."],
-      ["Tế bào lông hút", "Tế bào biểu bì kéo dài thành lông hút, chuyên hóa cho hấp thụ nước và ion khoáng."],
-      ["Thành tế bào", "Lớp ngoài bảo vệ tế bào, cho nước và chất tan đi qua trước khi tới màng sinh chất."],
-      ["Màng sinh chất", "Màng thấm chọn lọc, kiểm soát nước và ion khoáng đi vào tế bào."],
-      ["Không bào lớn", "Chứa dịch tế bào, góp phần tạo áp suất thẩm thấu giúp hút nước."],
-      ["Tế bào chất", "Môi trường bên trong tế bào, nơi ion khoáng có thể được vận chuyển qua con đường tế bào chất."],
-      ["Dung dịch đất", "Nguồn cung cấp nước và ion khoáng cho rễ; lông hút tiếp xúc trực tiếp với dung dịch này."],
+      [
+        "Vùng lông hút",
+        "Vùng rễ có nhiều lông hút làm tăng diện tích tiếp xúc với dung dịch đất.",
+      ],
+      [
+        "Tế bào lông hút",
+        "Tế bào biểu bì kéo dài thành lông hút, chuyên hóa cho hấp thụ nước và ion khoáng.",
+      ],
+      [
+        "Thành tế bào",
+        "Lớp ngoài bảo vệ tế bào, cho nước và chất tan đi qua trước khi tới màng sinh chất.",
+      ],
+      [
+        "Màng sinh chất",
+        "Màng thấm chọn lọc, kiểm soát nước và ion khoáng đi vào tế bào.",
+      ],
+      [
+        "Không bào lớn",
+        "Chứa dịch tế bào, góp phần tạo áp suất thẩm thấu giúp hút nước.",
+      ],
+      [
+        "Tế bào chất",
+        "Môi trường bên trong tế bào, nơi ion khoáng có thể được vận chuyển qua con đường tế bào chất.",
+      ],
+      [
+        "Dung dịch đất",
+        "Nguồn cung cấp nước và ion khoáng cho rễ; lông hút tiếp xúc trực tiếp với dung dịch này.",
+      ],
     ],
     { min: [-0.0332, -0.0024, -0.033], max: [0.0341, 0.0154, 0.034] },
   ),
   rootCrossSection: makeAnnotations(
     [
-      ["Biểu bì rễ", "Lớp ngoài cùng của rễ, nơi có tế bào lông hút hấp thụ nước và ion khoáng."],
-      ["Vỏ rễ", "Vùng tế bào nằm giữa biểu bì và nội bì, là nơi nước và ion khoáng đi qua để vào trung trụ."],
-      ["Nội bì", "Lớp tế bào bao quanh trung trụ, kiểm soát chất đi vào mạch dẫn."],
-      ["Đai Caspary", "Dải không thấm nước ở nội bì, chặn con đường gian bào và buộc nước/ion khoáng đi qua màng sinh chất."],
+      [
+        "Biểu bì rễ",
+        "Lớp ngoài cùng của rễ, nơi có tế bào lông hút hấp thụ nước và ion khoáng.",
+      ],
+      [
+        "Vỏ rễ",
+        "Vùng tế bào nằm giữa biểu bì và nội bì, là nơi nước và ion khoáng đi qua để vào trung trụ.",
+      ],
+      [
+        "Nội bì",
+        "Lớp tế bào bao quanh trung trụ, kiểm soát chất đi vào mạch dẫn.",
+      ],
+      [
+        "Đai Caspary",
+        "Dải không thấm nước ở nội bì, chặn con đường gian bào và buộc nước/ion khoáng đi qua màng sinh chất.",
+      ],
       ["Trung trụ", "Vùng trung tâm của rễ, chứa mạch gỗ và mạch rây."],
       ["Mạch gỗ", "Mô dẫn vận chuyển nước và ion khoáng từ rễ lên thân, lá."],
-      ["Mạch rây", "Mô dẫn vận chuyển chất hữu cơ từ cơ quan nguồn đến cơ quan sử dụng hoặc dự trữ."],
+      [
+        "Mạch rây",
+        "Mô dẫn vận chuyển chất hữu cơ từ cơ quan nguồn đến cơ quan sử dụng hoặc dự trữ.",
+      ],
     ],
     { min: [-0.2145, -0.1891, -0.1047], max: [0.2475, 0.1417, 0.0456] },
   ),
   xylemEdited: makeAnnotations(
     [
-      ["Mạch ống", "Các tế bào chết nối đầu với nhau tạo ống dẫn nước liên tục."],
-      ["Quản bào", "Tế bào dẫn nước dạng dài, thành dày hóa gỗ, có vai trò dẫn truyền và nâng đỡ."],
-      ["Thành hóa gỗ", "Thành tế bào chứa lignin, giúp mạch gỗ bền chắc và không bị xẹp khi dẫn nước."],
-      ["Lỗ bên", "Vùng mỏng trên thành tế bào, cho nước đi ngang giữa các tế bào mạch gỗ."],
-      ["Khoang rỗng", "Phần trong tế bào chết không còn chất sống, tạo đường dẫn nước và ion khoáng."],
-      ["Chiều vận chuyển", "Mạch gỗ vận chuyển chủ yếu một chiều từ rễ lên thân và lá."],
+      [
+        "Mạch ống",
+        "Các tế bào chết nối đầu với nhau tạo ống dẫn nước liên tục.",
+      ],
+      [
+        "Quản bào",
+        "Tế bào dẫn nước dạng dài, thành dày hóa gỗ, có vai trò dẫn truyền và nâng đỡ.",
+      ],
+      [
+        "Thành hóa gỗ",
+        "Thành tế bào chứa lignin, giúp mạch gỗ bền chắc và không bị xẹp khi dẫn nước.",
+      ],
+      [
+        "Lỗ bên",
+        "Vùng mỏng trên thành tế bào, cho nước đi ngang giữa các tế bào mạch gỗ.",
+      ],
+      [
+        "Khoang rỗng",
+        "Phần trong tế bào chết không còn chất sống, tạo đường dẫn nước và ion khoáng.",
+      ],
+      [
+        "Chiều vận chuyển",
+        "Mạch gỗ vận chuyển chủ yếu một chiều từ rễ lên thân và lá.",
+      ],
     ],
     { min: [-2.3324, 0.9534, -1.0665], max: [-1.6106, 2.4751, -0.0502] },
   ),
   phloemEdited: makeAnnotations(
     [
       ["Ống rây", "Tế bào sống chuyên hóa để vận chuyển đường và chất hữu cơ."],
-      ["Bản rây", "Vùng có nhiều lỗ ở đầu ống rây, cho dòng chất hữu cơ đi qua."],
-      ["Tế bào kèm", "Tế bào sống nằm cạnh ống rây, hỗ trợ hoạt động và trao đổi chất của ống rây."],
-      ["Dòng chất hữu cơ", "Mạch rây vận chuyển chủ yếu sucrose và các chất hữu cơ khác."],
-      ["Cơ quan nguồn", "Nơi tạo hoặc giải phóng đường, thường là lá quang hợp."],
-      ["Cơ quan chứa", "Nơi sử dụng hoặc dự trữ chất hữu cơ như rễ, quả, hạt, chồi non."],
+      [
+        "Bản rây",
+        "Vùng có nhiều lỗ ở đầu ống rây, cho dòng chất hữu cơ đi qua.",
+      ],
+      [
+        "Tế bào kèm",
+        "Tế bào sống nằm cạnh ống rây, hỗ trợ hoạt động và trao đổi chất của ống rây.",
+      ],
+      [
+        "Dòng chất hữu cơ",
+        "Mạch rây vận chuyển chủ yếu sucrose và các chất hữu cơ khác.",
+      ],
+      [
+        "Cơ quan nguồn",
+        "Nơi tạo hoặc giải phóng đường, thường là lá quang hợp.",
+      ],
+      [
+        "Cơ quan chứa",
+        "Nơi sử dụng hoặc dự trữ chất hữu cơ như rễ, quả, hạt, chồi non.",
+      ],
     ],
     { min: [-1.2014, 0.0609, -0.4864], max: [0.2645, 2.5657, 0.7048] },
   ),
   leafAnatomy: makeAnnotations(
     [
-      ["Biểu bì lá", "Lớp tế bào bao phủ bề mặt lá, bảo vệ lá và có thể chứa khí khổng."],
-      ["Khí khổng", "Cấu trúc gồm hai tế bào khí khổng và khe khí khổng, giúp trao đổi khí và thoát hơi nước."],
-      ["Tế bào khí khổng", "Hai tế bào hình hạt đậu điều chỉnh độ mở của khe khí khổng."],
-      ["Khe khí khổng", "Khoảng mở giữa hai tế bào khí khổng, nơi hơi nước và khí CO2/O2 đi qua."],
-      ["Lớp cutin nếu có", "Lớp sáp mỏng trên biểu bì, giúp giảm thoát hơi nước qua bề mặt lá."],
-      ["Trao đổi khí", "CO2 đi vào lá cho quang hợp, O2 và hơi nước có thể đi ra ngoài qua khí khổng."],
+      [
+        "Biểu bì lá",
+        "Lớp tế bào bao phủ bề mặt lá, bảo vệ lá và có thể chứa khí khổng.",
+      ],
+      [
+        "Khí khổng",
+        "Cấu trúc gồm hai tế bào khí khổng và khe khí khổng, giúp trao đổi khí và thoát hơi nước.",
+      ],
+      [
+        "Tế bào khí khổng",
+        "Hai tế bào hình hạt đậu điều chỉnh độ mở của khe khí khổng.",
+      ],
+      [
+        "Khe khí khổng",
+        "Khoảng mở giữa hai tế bào khí khổng, nơi hơi nước và khí CO2/O2 đi qua.",
+      ],
+      [
+        "Lớp cutin nếu có",
+        "Lớp sáp mỏng trên biểu bì, giúp giảm thoát hơi nước qua bề mặt lá.",
+      ],
+      [
+        "Trao đổi khí",
+        "CO2 đi vào lá cho quang hợp, O2 và hơi nước có thể đi ra ngoài qua khí khổng.",
+      ],
     ],
     { min: [-0.4568, -0.5, -0.4797], max: [0.4568, 0.5, 0.4797] },
   ),
   plantStomata: makeAnnotations(
     [
-      ["Thành trong dày", "Thành phía sát khe khí khổng dày hơn, giúp tế bào cong khi trương nước."],
-      ["Thành ngoài mỏng", "Thành phía ngoài mỏng hơn, dễ giãn khi tế bào trương nước."],
-      ["Lục lạp", "Tế bào khí khổng có thể có lục lạp, khác nhiều tế bào biểu bì thông thường."],
-      ["Khe khí khổng", "Độ rộng của khe thay đổi theo trạng thái trương nước của tế bào khí khổng."],
-      ["Nước trong tế bào", "Khi tế bào khí khổng trương nước, khe khí khổng mở rộng."],
-      ["Hình hạt đậu", "Hình dạng đặc trưng giúp hai tế bào khí khổng phối hợp đóng mở khe khí khổng."],
+      [
+        "Thành trong dày",
+        "Thành phía sát khe khí khổng dày hơn, giúp tế bào cong khi trương nước.",
+      ],
+      [
+        "Thành ngoài mỏng",
+        "Thành phía ngoài mỏng hơn, dễ giãn khi tế bào trương nước.",
+      ],
+      [
+        "Lục lạp",
+        "Tế bào khí khổng có thể có lục lạp, khác nhiều tế bào biểu bì thông thường.",
+      ],
+      [
+        "Khe khí khổng",
+        "Độ rộng của khe thay đổi theo trạng thái trương nước của tế bào khí khổng.",
+      ],
+      [
+        "Nước trong tế bào",
+        "Khi tế bào khí khổng trương nước, khe khí khổng mở rộng.",
+      ],
+      [
+        "Hình hạt đậu",
+        "Hình dạng đặc trưng giúp hai tế bào khí khổng phối hợp đóng mở khe khí khổng.",
+      ],
     ],
     { min: [-0.2406, -0.2237, -0.5], max: [0.2406, 0.2237, 0.5] },
   ),
   chloroplast: makeAnnotations(
     [
-      ["Màng ngoài", "Lớp màng bao ngoài của lục lạp, góp phần ngăn cách lục lạp với tế bào chất."],
+      [
+        "Màng ngoài",
+        "Lớp màng bao ngoài của lục lạp, góp phần ngăn cách lục lạp với tế bào chất.",
+      ],
       ["Màng trong", "Lớp màng phía trong, bao bọc chất nền stroma."],
       ["Stroma", "Chất nền của lục lạp, nơi diễn ra pha tối/chu trình Calvin."],
-      ["Thylakoid", "Túi màng dẹt chứa hệ sắc tố quang hợp, là nơi diễn ra pha sáng."],
-      ["Grana", "Chồng các thylakoid xếp lên nhau, giúp tăng diện tích màng hấp thụ ánh sáng."],
-      ["DNA và ribosome riêng", "Lục lạp có DNA và ribosome riêng, liên quan nguồn gốc nội cộng sinh."],
+      [
+        "Thylakoid",
+        "Túi màng dẹt chứa hệ sắc tố quang hợp, là nơi diễn ra pha sáng.",
+      ],
+      [
+        "Grana",
+        "Chồng các thylakoid xếp lên nhau, giúp tăng diện tích màng hấp thụ ánh sáng.",
+      ],
+      [
+        "DNA và ribosome riêng",
+        "Lục lạp có DNA và ribosome riêng, liên quan nguồn gốc nội cộng sinh.",
+      ],
     ],
     { min: [-1.1319, 0.0047, -0.548], max: [1.1317, 1.088, 0.5465] },
   ),
   digestiveSystem: makeAnnotations(
     [
-      ["Miệng", "Nơi tiếp nhận, nghiền nhỏ thức ăn và bắt đầu tiêu hóa tinh bột nhờ amylase trong nước bọt."],
+      [
+        "Miệng",
+        "Nơi tiếp nhận, nghiền nhỏ thức ăn và bắt đầu tiêu hóa tinh bột nhờ amylase trong nước bọt.",
+      ],
       ["Thực quản", "Ống dẫn thức ăn từ miệng xuống dạ dày nhờ nhu động."],
-      ["Dạ dày", "Cơ quan dạng túi, co bóp trộn thức ăn và tiêu hóa protein bước đầu."],
-      ["Ruột non", "Nơi tiêu hóa hoàn tất và hấp thụ phần lớn chất dinh dưỡng."],
+      [
+        "Dạ dày",
+        "Cơ quan dạng túi, co bóp trộn thức ăn và tiêu hóa protein bước đầu.",
+      ],
+      [
+        "Ruột non",
+        "Nơi tiêu hóa hoàn tất và hấp thụ phần lớn chất dinh dưỡng.",
+      ],
       ["Ruột già", "Hấp thụ nước và tạo phân."],
-      ["Gan", "Tạo mật hỗ trợ tiêu hóa lipid và xử lí nhiều chất hấp thụ từ ruột."],
+      [
+        "Gan",
+        "Tạo mật hỗ trợ tiêu hóa lipid và xử lí nhiều chất hấp thụ từ ruột.",
+      ],
       ["Tụy", "Tiết enzyme tiêu hóa vào ruột non."],
       ["Túi mật", "Dự trữ và cô đặc dịch mật trước khi đổ vào ruột non."],
     ],
@@ -1094,22 +1229,40 @@ const lop11Annotations = {
       ["Lớp cơ dạ dày", "Co bóp để nhào trộn thức ăn với dịch vị."],
       ["Niêm mạc dạ dày", "Lớp lót bên trong, tiết chất nhầy và dịch vị."],
       ["Dịch vị", "Chứa HCl và enzyme tiêu hóa protein bước đầu."],
-      ["HCl", "Tạo môi trường acid, hỗ trợ hoạt hóa enzyme tiêu hóa protein và diệt bớt vi khuẩn."],
+      [
+        "HCl",
+        "Tạo môi trường acid, hỗ trợ hoạt hóa enzyme tiêu hóa protein và diệt bớt vi khuẩn.",
+      ],
       ["Pepsin", "Enzyme tiêu hóa protein bước đầu trong dạ dày."],
       ["Tâm vị", "Vùng nối thực quản với dạ dày, nơi thức ăn đi vào."],
-      ["Môn vị", "Vùng nối dạ dày với ruột non, điều tiết thức ăn xuống ruột non."],
+      [
+        "Môn vị",
+        "Vùng nối dạ dày với ruột non, điều tiết thức ăn xuống ruột non.",
+      ],
     ],
     { min: [-0.8322, -1.0009, -0.4493], max: [0.8314, 0.9935, 0.4468] },
   ),
   intestine: makeAnnotations(
     [
-      ["Nếp gấp ruột non", "Làm tăng diện tích bề mặt tiếp xúc với chất dinh dưỡng."],
-      ["Lông ruột", "Cấu trúc nhô vào lòng ruột, giúp tăng mạnh diện tích hấp thụ."],
-      ["Vi nhung mao", "Các vi cấu trúc trên tế bào biểu mô ruột, làm diện tích hấp thụ lớn hơn nữa."],
+      [
+        "Nếp gấp ruột non",
+        "Làm tăng diện tích bề mặt tiếp xúc với chất dinh dưỡng.",
+      ],
+      [
+        "Lông ruột",
+        "Cấu trúc nhô vào lòng ruột, giúp tăng mạnh diện tích hấp thụ.",
+      ],
+      [
+        "Vi nhung mao",
+        "Các vi cấu trúc trên tế bào biểu mô ruột, làm diện tích hấp thụ lớn hơn nữa.",
+      ],
       ["Tế bào biểu mô ruột", "Lớp tế bào trực tiếp hấp thụ chất dinh dưỡng."],
       ["Mao mạch máu", "Nhận đường đơn và amino acid sau hấp thụ."],
       ["Mạch bạch huyết", "Nhận phần lớn sản phẩm tiêu hóa lipid sau hấp thụ."],
-      ["Diện tích hấp thụ lớn", "Nếp gấp, lông ruột và vi nhung mao giúp ruột non hấp thụ hiệu quả."],
+      [
+        "Diện tích hấp thụ lớn",
+        "Nếp gấp, lông ruột và vi nhung mao giúp ruột non hấp thụ hiệu quả.",
+      ],
     ],
     { min: [-0.8922, -1.0002, -0.4298], max: [0.8695, 0.998, 0.4404] },
   ),
@@ -1119,76 +1272,166 @@ const lop11Annotations = {
       ["Phế quản", "Nhánh dẫn khí từ khí quản vào mỗi phổi."],
       ["Tiểu phế quản", "Các nhánh nhỏ dẫn khí đến các chùm phế nang."],
       ["Phế nang", "Túi khí nhỏ có thành rất mỏng, là nơi trao đổi O2 và CO2."],
-      ["Mao mạch phổi", "Mạng mao mạch bao quanh phế nang, nhận O2 và thải CO2."],
-      ["Màng trao đổi khí", "Thành phế nang và mao mạch mỏng, áp sát nhau để khí khuếch tán nhanh."],
-      ["O2 và CO2", "O2 khuếch tán từ phế nang vào máu, CO2 khuếch tán từ máu ra phế nang."],
+      [
+        "Mao mạch phổi",
+        "Mạng mao mạch bao quanh phế nang, nhận O2 và thải CO2.",
+      ],
+      [
+        "Màng trao đổi khí",
+        "Thành phế nang và mao mạch mỏng, áp sát nhau để khí khuếch tán nhanh.",
+      ],
+      [
+        "O2 và CO2",
+        "O2 khuếch tán từ phế nang vào máu, CO2 khuếch tán từ máu ra phế nang.",
+      ],
     ],
     { min: [-1.0496, 1.2812, -0.1072], max: [-0.7772, 1.6101, 0.0651] },
   ),
   externalHeartStructure: makeAnnotations(
     [
       ["Tim", "Cơ quan co bóp tạo lực đẩy máu đi trong hệ tuần hoàn."],
-      ["Động mạch chủ", "Mạch lớn đưa máu giàu O2 từ tâm thất trái đi nuôi cơ thể."],
+      [
+        "Động mạch chủ",
+        "Mạch lớn đưa máu giàu O2 từ tâm thất trái đi nuôi cơ thể.",
+      ],
       ["Động mạch phổi", "Đưa máu nghèo O2 từ tâm thất phải đến phổi."],
       ["Tĩnh mạch chủ", "Đưa máu nghèo O2 từ cơ thể về tâm nhĩ phải."],
       ["Tĩnh mạch phổi", "Đưa máu giàu O2 từ phổi về tâm nhĩ trái."],
-      ["Mạch vành", "Mạch máu nuôi cơ tim, giúp tim có năng lượng để co bóp liên tục."],
+      [
+        "Mạch vành",
+        "Mạch máu nuôi cơ tim, giúp tim có năng lượng để co bóp liên tục.",
+      ],
     ],
     { min: [-0.5776, -0.793, -0.3971], max: [0.5055, 0.8086, 0.483] },
   ),
   cardiacConductionSystem: makeAnnotations(
     [
-      ["Nút xoang nhĩ", "Vị trí phát nhịp tự động chính của tim, khởi đầu mỗi chu kỳ co tim."],
-      ["Nút nhĩ thất", "Nhận xung từ nút xoang nhĩ và làm chậm xung trước khi truyền xuống thất."],
+      [
+        "Nút xoang nhĩ",
+        "Vị trí phát nhịp tự động chính của tim, khởi đầu mỗi chu kỳ co tim.",
+      ],
+      [
+        "Nút nhĩ thất",
+        "Nhận xung từ nút xoang nhĩ và làm chậm xung trước khi truyền xuống thất.",
+      ],
       ["Bó His", "Đường dẫn truyền xung từ nút nhĩ thất xuống hai tâm thất."],
-      ["Mạng Purkinje", "Mạng dẫn truyền lan xung nhanh trong thành tâm thất, giúp thất co đồng bộ."],
+      [
+        "Mạng Purkinje",
+        "Mạng dẫn truyền lan xung nhanh trong thành tâm thất, giúp thất co đồng bộ.",
+      ],
       ["Cơ tim", "Mô cơ co bóp theo xung dẫn truyền để bơm máu."],
-      ["Tính tự động của tim", "Tim có hệ dẫn truyền riêng, không cần não phát lệnh cho từng nhịp."],
+      [
+        "Tính tự động của tim",
+        "Tim có hệ dẫn truyền riêng, không cần não phát lệnh cho từng nhịp.",
+      ],
     ],
     { min: [-0.0577, -0.0001, -0.0537], max: [0.0537, 0.1669, 0.0213] },
   ),
   circulatorySystem: makeAnnotations(
     [
-      ["Động mạch", "Mạch đưa máu từ tim đi, thành dày và đàn hồi để chịu áp lực cao."],
-      ["Mao mạch", "Mạch rất nhỏ, thành mỏng một lớp tế bào, là nơi trao đổi chất với mô."],
-      ["Tĩnh mạch", "Mạch đưa máu về tim, thành mỏng hơn động mạch và thường có van."],
-      ["Van tĩnh mạch", "Giúp máu chảy một chiều về tim, hạn chế máu chảy ngược."],
-      ["Thành mạch", "Độ dày và độ đàn hồi của thành mạch phù hợp với chức năng từng loại mạch."],
-      ["Huyết áp", "Thường cao nhất ở động mạch, thấp hơn ở mao mạch và tĩnh mạch."],
-      ["Vận tốc máu", "Thay đổi theo loại mạch; chậm ở mao mạch để thuận lợi cho trao đổi chất."],
+      [
+        "Động mạch",
+        "Mạch đưa máu từ tim đi, thành dày và đàn hồi để chịu áp lực cao.",
+      ],
+      [
+        "Mao mạch",
+        "Mạch rất nhỏ, thành mỏng một lớp tế bào, là nơi trao đổi chất với mô.",
+      ],
+      [
+        "Tĩnh mạch",
+        "Mạch đưa máu về tim, thành mỏng hơn động mạch và thường có van.",
+      ],
+      [
+        "Van tĩnh mạch",
+        "Giúp máu chảy một chiều về tim, hạn chế máu chảy ngược.",
+      ],
+      [
+        "Thành mạch",
+        "Độ dày và độ đàn hồi của thành mạch phù hợp với chức năng từng loại mạch.",
+      ],
+      [
+        "Huyết áp",
+        "Thường cao nhất ở động mạch, thấp hơn ở mao mạch và tĩnh mạch.",
+      ],
+      [
+        "Vận tốc máu",
+        "Thay đổi theo loại mạch; chậm ở mao mạch để thuận lợi cho trao đổi chất.",
+      ],
     ],
     { min: [-0.0631, -0.1406, -0.2465], max: [0.0365, 0.4963, 0.2342] },
   ),
   lymphNode: makeAnnotations(
     [
-      ["Mạch bạch huyết vào", "Đưa dịch bạch huyết và tác nhân lạ vào hạch để được kiểm tra."],
-      ["Mạch bạch huyết ra", "Đưa dịch bạch huyết ra khỏi hạch sau khi được lọc."],
+      [
+        "Mạch bạch huyết vào",
+        "Đưa dịch bạch huyết và tác nhân lạ vào hạch để được kiểm tra.",
+      ],
+      [
+        "Mạch bạch huyết ra",
+        "Đưa dịch bạch huyết ra khỏi hạch sau khi được lọc.",
+      ],
       ["Vỏ hạch", "Vùng ngoài của hạch, chứa nhiều lympho bào."],
-      ["Tủy hạch", "Vùng trong của hạch, có tế bào miễn dịch và xoang bạch huyết."],
-      ["Lympho B", "Tế bào miễn dịch có thể biệt hóa thành tế bào tạo kháng thể."],
-      ["Lympho T", "Tế bào miễn dịch tham gia điều hòa hoặc tiêu diệt tế bào nhiễm bệnh."],
-      ["Đại thực bào", "Tế bào có khả năng bắt giữ, tiêu hóa và trình diện tác nhân lạ."],
+      [
+        "Tủy hạch",
+        "Vùng trong của hạch, có tế bào miễn dịch và xoang bạch huyết.",
+      ],
+      [
+        "Lympho B",
+        "Tế bào miễn dịch có thể biệt hóa thành tế bào tạo kháng thể.",
+      ],
+      [
+        "Lympho T",
+        "Tế bào miễn dịch tham gia điều hòa hoặc tiêu diệt tế bào nhiễm bệnh.",
+      ],
+      [
+        "Đại thực bào",
+        "Tế bào có khả năng bắt giữ, tiêu hóa và trình diện tác nhân lạ.",
+      ],
     ],
     { min: [-12.4311, -11.133, -14.2731], max: [9.2865, 11.1334, 2.4043] },
   ),
   macrophage: makeAnnotations(
     [
-      ["Đại thực bào", "Tế bào miễn dịch có khả năng thực bào tác nhân lạ và trình diện kháng nguyên."],
-      ["Lympho B", "Tế bào tham gia miễn dịch đặc hiệu; có thể biệt hóa thành tế bào tiết kháng thể."],
-      ["Lympho T hỗ trợ", "Tế bào điều phối đáp ứng miễn dịch thông qua tín hiệu hóa học."],
-      ["Lympho T độc", "Tế bào có thể tiêu diệt tế bào nhiễm virus hoặc tế bào bất thường."],
+      [
+        "Đại thực bào",
+        "Tế bào miễn dịch có khả năng thực bào tác nhân lạ và trình diện kháng nguyên.",
+      ],
+      [
+        "Lympho B",
+        "Tế bào tham gia miễn dịch đặc hiệu; có thể biệt hóa thành tế bào tiết kháng thể.",
+      ],
+      [
+        "Lympho T hỗ trợ",
+        "Tế bào điều phối đáp ứng miễn dịch thông qua tín hiệu hóa học.",
+      ],
+      [
+        "Lympho T độc",
+        "Tế bào có thể tiêu diệt tế bào nhiễm virus hoặc tế bào bất thường.",
+      ],
       ["Kháng nguyên", "Phân tử lạ có thể kích hoạt đáp ứng miễn dịch."],
-      ["Kháng thể", "Protein đặc hiệu do tế bào B biệt hóa tiết ra, giúp nhận diện tác nhân lạ."],
+      [
+        "Kháng thể",
+        "Protein đặc hiệu do tế bào B biệt hóa tiết ra, giúp nhận diện tác nhân lạ.",
+      ],
     ],
     { min: [-3.2202, -2.6017, -3.1726], max: [9.007, 3.963, 5.322] },
   ),
   kidney: makeAnnotations(
     [
-      ["Vỏ thận", "Vùng ngoài của thận, chứa nhiều cầu thận và phần đầu của nephron."],
+      [
+        "Vỏ thận",
+        "Vùng ngoài của thận, chứa nhiều cầu thận và phần đầu của nephron.",
+      ],
       ["Tủy thận", "Vùng trong của thận, chứa các ống thận và ống góp."],
-      ["Bể thận", "Khoang nhận nước tiểu từ các ống góp trước khi xuống niệu quản."],
+      [
+        "Bể thận",
+        "Khoang nhận nước tiểu từ các ống góp trước khi xuống niệu quản.",
+      ],
       ["Niệu quản", "Ống dẫn nước tiểu từ thận xuống bàng quang."],
-      ["Động mạch thận", "Đưa máu đến thận để lọc và điều chỉnh thành phần dịch cơ thể."],
+      [
+        "Động mạch thận",
+        "Đưa máu đến thận để lọc và điều chỉnh thành phần dịch cơ thể.",
+      ],
       ["Tĩnh mạch thận", "Đưa máu đã được thận xử lí trở về hệ tuần hoàn."],
       ["Nephron", "Đơn vị cấu trúc và chức năng cơ bản của thận."],
     ],
@@ -1198,46 +1441,97 @@ const lop11Annotations = {
     [
       ["Cầu thận", "Mạng mao mạch nơi máu được lọc để tạo dịch lọc đầu."],
       ["Bao Bowman", "Bao bọc cầu thận và hứng dịch lọc đầu."],
-      ["Ống lượn gần", "Đoạn ống thận tái hấp thu mạnh nước và nhiều chất cần thiết."],
-      ["Quai Henle", "Đoạn ống hình chữ U, liên quan đến tái hấp thu nước và muối."],
+      [
+        "Ống lượn gần",
+        "Đoạn ống thận tái hấp thu mạnh nước và nhiều chất cần thiết.",
+      ],
+      [
+        "Quai Henle",
+        "Đoạn ống hình chữ U, liên quan đến tái hấp thu nước và muối.",
+      ],
       ["Ống lượn xa", "Đoạn ống tiếp tục điều chỉnh thành phần dịch lọc."],
       ["Ống góp", "Nhận dịch từ nhiều nephron và dẫn nước tiểu về bể thận."],
-      ["Mao mạch quanh ống thận", "Mạng mao mạch nhận lại chất tái hấp thu và tham gia trao đổi với ống thận."],
+      [
+        "Mao mạch quanh ống thận",
+        "Mạng mao mạch nhận lại chất tái hấp thu và tham gia trao đổi với ống thận.",
+      ],
     ],
     { min: [-0.0484, 0.0185, -0.0089], max: [0.0552, 0.2226, 0.0199] },
   ),
   neuronModel: makeAnnotations(
     [
-      ["Thân neuron", "Phần chứa nhân và phần lớn bào quan, đảm nhiệm hoạt động sống của neuron."],
+      [
+        "Thân neuron",
+        "Phần chứa nhân và phần lớn bào quan, đảm nhiệm hoạt động sống của neuron.",
+      ],
       ["Nhân", "Chứa thông tin di truyền và điều khiển hoạt động của neuron."],
       ["Sợi nhánh", "Nhận tín hiệu từ neuron khác hoặc từ thụ thể."],
       ["Sợi trục", "Dẫn truyền xung thần kinh từ thân neuron đến tế bào khác."],
-      ["Bao myelin", "Lớp bao cách điện quanh sợi trục, giúp tăng tốc độ dẫn truyền."],
-      ["Eo Ranvier", "Khoảng ngắt giữa các đoạn bao myelin, liên quan dẫn truyền nhảy cóc."],
-      ["Cúc synapse", "Đầu tận cùng của sợi trục, truyền tín hiệu sang tế bào khác qua synapse."],
+      [
+        "Bao myelin",
+        "Lớp bao cách điện quanh sợi trục, giúp tăng tốc độ dẫn truyền.",
+      ],
+      [
+        "Eo Ranvier",
+        "Khoảng ngắt giữa các đoạn bao myelin, liên quan dẫn truyền nhảy cóc.",
+      ],
+      [
+        "Cúc synapse",
+        "Đầu tận cùng của sợi trục, truyền tín hiệu sang tế bào khác qua synapse.",
+      ],
     ],
     { min: [-2.0184, -0.8799, -0.242], max: [2.1119, 0.7696, 2.2902] },
   ),
   synapse: makeAnnotations(
     [
-      ["Màng trước synapse", "Màng ở đầu cúc synapse của neuron truyền tín hiệu."],
+      [
+        "Màng trước synapse",
+        "Màng ở đầu cúc synapse của neuron truyền tín hiệu.",
+      ],
       ["Túi synapse", "Túi chứa chất trung gian hóa học trong cúc synapse."],
-      ["Chất trung gian hóa học", "Phân tử truyền tín hiệu qua khe synapse từ neuron trước sang tế bào sau."],
-      ["Khe synapse", "Khoảng hẹp giữa hai tế bào; hai neuron không dính liền trực tiếp."],
-      ["Thụ thể màng sau", "Protein tiếp nhận chất trung gian hóa học ở tế bào sau synapse."],
+      [
+        "Chất trung gian hóa học",
+        "Phân tử truyền tín hiệu qua khe synapse từ neuron trước sang tế bào sau.",
+      ],
+      [
+        "Khe synapse",
+        "Khoảng hẹp giữa hai tế bào; hai neuron không dính liền trực tiếp.",
+      ],
+      [
+        "Thụ thể màng sau",
+        "Protein tiếp nhận chất trung gian hóa học ở tế bào sau synapse.",
+      ],
       ["Màng sau synapse", "Màng của neuron hoặc tế bào nhận tín hiệu."],
-      ["Chiều truyền synapse", "Tín hiệu thường truyền một chiều từ màng trước sang màng sau synapse."],
+      [
+        "Chiều truyền synapse",
+        "Tín hiệu thường truyền một chiều từ màng trước sang màng sau synapse.",
+      ],
     ],
     { min: [-0.2239, -0.3514, -0.5], max: [0.2239, 0.3514, 0.5] },
   ),
   humanEye: makeAnnotations(
     [
-      ["Giác mạc", "Lớp trong suốt phía trước mắt, giúp bảo vệ và khúc xạ ánh sáng."],
-      ["Thủy dịch", "Dịch trong khoang trước mắt, nuôi dưỡng và duy trì áp lực trong mắt."],
+      [
+        "Giác mạc",
+        "Lớp trong suốt phía trước mắt, giúp bảo vệ và khúc xạ ánh sáng.",
+      ],
+      [
+        "Thủy dịch",
+        "Dịch trong khoang trước mắt, nuôi dưỡng và duy trì áp lực trong mắt.",
+      ],
       ["Đồng tử", "Lỗ ở giữa mống mắt, điều chỉnh lượng ánh sáng đi vào mắt."],
-      ["Thể thủy tinh", "Thấu kính trong suốt, điều chỉnh tiêu cự để ảnh hội tụ trên võng mạc."],
-      ["Dịch kính", "Khối dịch trong suốt giữ hình dạng nhãn cầu và cho ánh sáng đi qua."],
-      ["Võng mạc", "Lớp chứa tế bào cảm thụ ánh sáng, biến ánh sáng thành tín hiệu thần kinh."],
+      [
+        "Thể thủy tinh",
+        "Thấu kính trong suốt, điều chỉnh tiêu cự để ảnh hội tụ trên võng mạc.",
+      ],
+      [
+        "Dịch kính",
+        "Khối dịch trong suốt giữ hình dạng nhãn cầu và cho ánh sáng đi qua.",
+      ],
+      [
+        "Võng mạc",
+        "Lớp chứa tế bào cảm thụ ánh sáng, biến ánh sáng thành tín hiệu thần kinh.",
+      ],
       ["Dây thần kinh thị giác", "Dẫn truyền tín hiệu từ võng mạc về não."],
     ],
     { min: [-0.3316, -0.3164, -0.3164], max: [0.3771, 0.3164, 0.3164] },
@@ -1246,22 +1540,46 @@ const lop11Annotations = {
     [
       ["Tai ngoài", "Thu nhận sóng âm và dẫn vào ống tai."],
       ["Màng nhĩ", "Rung khi nhận sóng âm, truyền dao động vào tai giữa."],
-      ["Chuỗi xương tai", "Khuếch đại và truyền dao động từ màng nhĩ vào tai trong."],
-      ["Ốc tai", "Cơ quan thu nhận âm thanh, biến dao động thành tín hiệu thần kinh."],
-      ["Ống bán khuyên", "Cấu trúc của hệ tiền đình, liên quan đến giữ thăng bằng."],
-      ["Dây thần kinh thính giác", "Dẫn truyền tín hiệu âm thanh từ tai trong về não."],
+      [
+        "Chuỗi xương tai",
+        "Khuếch đại và truyền dao động từ màng nhĩ vào tai trong.",
+      ],
+      [
+        "Ốc tai",
+        "Cơ quan thu nhận âm thanh, biến dao động thành tín hiệu thần kinh.",
+      ],
+      [
+        "Ống bán khuyên",
+        "Cấu trúc của hệ tiền đình, liên quan đến giữ thăng bằng.",
+      ],
+      [
+        "Dây thần kinh thính giác",
+        "Dẫn truyền tín hiệu âm thanh từ tai trong về não.",
+      ],
       ["Vòi nhĩ nếu có", "Giúp cân bằng áp suất hai bên màng nhĩ."],
     ],
     { min: [-0.5161, -0.3411, -0.2192], max: [0.0946, 0.4284, 0.1605] },
   ),
   anatomySkin: makeAnnotations(
     [
-      ["Thụ thể cơ học", "Nhận kích thích cơ học như áp lực, rung động hoặc kéo giãn."],
-      ["Thụ thể hóa học", "Nhận kích thích là các phân tử hóa học, liên quan vị giác và khứu giác."],
+      [
+        "Thụ thể cơ học",
+        "Nhận kích thích cơ học như áp lực, rung động hoặc kéo giãn.",
+      ],
+      [
+        "Thụ thể hóa học",
+        "Nhận kích thích là các phân tử hóa học, liên quan vị giác và khứu giác.",
+      ],
       ["Thụ thể nhiệt", "Nhận thay đổi nhiệt độ nóng hoặc lạnh."],
       ["Thụ thể đau", "Nhận kích thích có nguy cơ gây tổn thương mô."],
-      ["Thụ thể ánh sáng", "Tế bào cảm thụ ở võng mạc, nhận kích thích ánh sáng."],
-      ["Tín hiệu thần kinh", "Thụ thể chuyển kích thích thành tín hiệu truyền về hệ thần kinh."],
+      [
+        "Thụ thể ánh sáng",
+        "Tế bào cảm thụ ở võng mạc, nhận kích thích ánh sáng.",
+      ],
+      [
+        "Tín hiệu thần kinh",
+        "Thụ thể chuyển kích thích thành tín hiệu truyền về hệ thần kinh.",
+      ],
     ],
     { min: [-1.1, -1.5923, -0.5069], max: [1.2763, 1.4077, 1.1739] },
   ),
@@ -1269,9 +1587,18 @@ const lop11Annotations = {
     [
       ["Mô phân sinh đỉnh chồi", "Tạo tế bào mới giúp thân và chồi dài ra."],
       ["Mô phân sinh đỉnh rễ", "Tạo tế bào mới giúp rễ dài ra."],
-      ["Mô phân sinh bên", "Tạo tế bào mới giúp thân và rễ to ra ở cây có sinh trưởng thứ cấp."],
-      ["Tầng sinh mạch", "Mô phân sinh bên tạo mạch gỗ thứ cấp và mạch rây thứ cấp."],
-      ["Tầng sinh bần", "Mô phân sinh bên tạo bần, góp phần hình thành vỏ bảo vệ."],
+      [
+        "Mô phân sinh bên",
+        "Tạo tế bào mới giúp thân và rễ to ra ở cây có sinh trưởng thứ cấp.",
+      ],
+      [
+        "Tầng sinh mạch",
+        "Mô phân sinh bên tạo mạch gỗ thứ cấp và mạch rây thứ cấp.",
+      ],
+      [
+        "Tầng sinh bần",
+        "Mô phân sinh bên tạo bần, góp phần hình thành vỏ bảo vệ.",
+      ],
       ["Sinh trưởng sơ cấp", "Sự dài ra của thân và rễ nhờ mô phân sinh đỉnh."],
       ["Sinh trưởng thứ cấp", "Sự to ra của thân và rễ nhờ mô phân sinh bên."],
     ],
@@ -1279,7 +1606,10 @@ const lop11Annotations = {
   ),
   primaryGrowth: makeAnnotations(
     [
-      ["Vùng phân chia", "Nơi tế bào mô phân sinh phân chia liên tục tạo tế bào mới."],
+      [
+        "Vùng phân chia",
+        "Nơi tế bào mô phân sinh phân chia liên tục tạo tế bào mới.",
+      ],
       ["Vùng kéo dài", "Nơi tế bào tăng kích thước, làm thân hoặc rễ dài ra."],
       ["Vùng phân hóa", "Nơi tế bào chuyên hóa thành các loại mô khác nhau."],
       ["Đỉnh rễ", "Vị trí sinh trưởng sơ cấp giúp rễ dài ra trong đất."],
@@ -1290,36 +1620,69 @@ const lop11Annotations = {
   ),
   secondaryGrowthCambium: makeAnnotations(
     [
-      ["Tầng sinh mạch", "Mô phân sinh bên tạo mạch gỗ thứ cấp vào phía trong và mạch rây thứ cấp ra phía ngoài."],
-      ["Mạch gỗ thứ cấp", "Mô dẫn nước và khoáng được tạo thêm về phía trong, góp phần làm thân to ra."],
-      ["Mạch rây thứ cấp", "Mô dẫn chất hữu cơ được tạo thêm về phía ngoài tầng sinh mạch."],
+      [
+        "Tầng sinh mạch",
+        "Mô phân sinh bên tạo mạch gỗ thứ cấp vào phía trong và mạch rây thứ cấp ra phía ngoài.",
+      ],
+      [
+        "Mạch gỗ thứ cấp",
+        "Mô dẫn nước và khoáng được tạo thêm về phía trong, góp phần làm thân to ra.",
+      ],
+      [
+        "Mạch rây thứ cấp",
+        "Mô dẫn chất hữu cơ được tạo thêm về phía ngoài tầng sinh mạch.",
+      ],
       ["Tầng sinh bần", "Mô phân sinh bên tạo lớp bần bảo vệ bên ngoài thân."],
       ["Bần", "Lớp tế bào bảo vệ thay thế biểu bì ở thân già."],
-      ["Sinh trưởng bề ngang", "Kết quả của sinh trưởng thứ cấp, làm thân và rễ to ra."],
+      [
+        "Sinh trưởng bề ngang",
+        "Kết quả của sinh trưởng thứ cấp, làm thân và rễ to ra.",
+      ],
     ],
     { min: [-0.4519, -0.4994, -0.5], max: [0.4519, 0.4994, 0.5] },
   ),
   treeGrowthRings: makeAnnotations(
     [
-      ["Vòng năm", "Một vòng gỗ thường tương ứng với một năm sinh trưởng trong điều kiện có mùa rõ."],
-      ["Gỗ sớm", "Phần gỗ tạo đầu mùa sinh trưởng, thường có tế bào lớn hơn và màu sáng hơn."],
-      ["Gỗ muộn", "Phần gỗ tạo cuối mùa sinh trưởng, thường tế bào nhỏ hơn và màu sẫm hơn."],
+      [
+        "Vòng năm",
+        "Một vòng gỗ thường tương ứng với một năm sinh trưởng trong điều kiện có mùa rõ.",
+      ],
+      [
+        "Gỗ sớm",
+        "Phần gỗ tạo đầu mùa sinh trưởng, thường có tế bào lớn hơn và màu sáng hơn.",
+      ],
+      [
+        "Gỗ muộn",
+        "Phần gỗ tạo cuối mùa sinh trưởng, thường tế bào nhỏ hơn và màu sẫm hơn.",
+      ],
       ["Tâm gỗ", "Phần gỗ già ở trung tâm thân, thường có vai trò nâng đỡ."],
       ["Dác gỗ", "Phần gỗ trẻ hơn ở phía ngoài, còn tham gia dẫn nước."],
-      ["Tính tuổi cây", "Có thể ước tính tuổi cây bằng cách đếm số vòng năm trên mặt cắt thân gỗ."],
+      [
+        "Tính tuổi cây",
+        "Có thể ước tính tuổi cây bằng cách đếm số vòng năm trên mặt cắt thân gỗ.",
+      ],
     ],
     { min: [-0.9926, -0.3097, -0.8661], max: [0.9914, 0.3123, 0.8748] },
   ),
   flowerAnatomy: makeAnnotations(
     [
       ["Đài hoa", "Bộ phận thường màu xanh, bảo vệ nụ hoa khi còn non."],
-      ["Cánh hoa", "Bộ phận thường có màu sắc, có thể giúp thu hút sinh vật thụ phấn."],
+      [
+        "Cánh hoa",
+        "Bộ phận thường có màu sắc, có thể giúp thu hút sinh vật thụ phấn.",
+      ],
       ["Nhị", "Cơ quan sinh sản đực của hoa, gồm chỉ nhị và bao phấn."],
       ["Chỉ nhị", "Phần cuống nâng đỡ bao phấn."],
       ["Bao phấn", "Nơi chứa và tạo hạt phấn."],
-      ["Nhụy", "Cơ quan sinh sản cái của hoa, gồm đầu nhụy, vòi nhụy và bầu nhụy."],
+      [
+        "Nhụy",
+        "Cơ quan sinh sản cái của hoa, gồm đầu nhụy, vòi nhụy và bầu nhụy.",
+      ],
       ["Đầu nhụy", "Nơi tiếp nhận hạt phấn trong quá trình thụ phấn."],
-      ["Vòi nhụy", "Ống nối đầu nhụy với bầu nhụy, là đường ống phấn phát triển."],
+      [
+        "Vòi nhụy",
+        "Ống nối đầu nhụy với bầu nhụy, là đường ống phấn phát triển.",
+      ],
       ["Bầu nhụy", "Phần chứa noãn, sau thụ tinh có thể phát triển thành quả."],
     ],
     { min: [-0.2503, -0.3713, -0.4997], max: [0.2402, 0.3606, 0.4999] },
@@ -1328,22 +1691,43 @@ const lop11Annotations = {
     [
       ["Bao phấn", "Phần của nhị chứa các túi phấn và hạt phấn."],
       ["Túi phấn", "Khoang trong bao phấn, nơi chứa hạt phấn."],
-      ["Hạt phấn", "Cấu trúc mang giao tử đực hoặc tế bào sinh sản đực ở thực vật có hoa."],
+      [
+        "Hạt phấn",
+        "Cấu trúc mang giao tử đực hoặc tế bào sinh sản đực ở thực vật có hoa.",
+      ],
       ["Vỏ hạt phấn", "Lớp bảo vệ hạt phấn khi di chuyển đến đầu nhụy."],
-      ["Ống phấn", "Ống phát triển từ hạt phấn sau khi nảy mầm trên đầu nhụy, đưa giao tử đực tới noãn."],
+      [
+        "Ống phấn",
+        "Ống phát triển từ hạt phấn sau khi nảy mầm trên đầu nhụy, đưa giao tử đực tới noãn.",
+      ],
       ["Thụ phấn", "Quá trình hạt phấn được chuyển đến đầu nhụy."],
     ],
     { min: [-0.3784, -0.5, -0.4753], max: [0.3784, 0.5, 0.4753] },
   ),
   peachFruitSeed: makeAnnotations(
     [
-      ["Bầu nhụy", "Phần dưới của nhụy chứa noãn; sau thụ tinh có thể phát triển thành quả."],
-      ["Noãn", "Cấu trúc nằm trong bầu nhụy; sau thụ tinh phát triển thành hạt."],
+      [
+        "Bầu nhụy",
+        "Phần dưới của nhụy chứa noãn; sau thụ tinh có thể phát triển thành quả.",
+      ],
+      [
+        "Noãn",
+        "Cấu trúc nằm trong bầu nhụy; sau thụ tinh phát triển thành hạt.",
+      ],
       ["Vòi nhụy", "Đường ống phấn đi qua để đưa giao tử đực đến noãn."],
       ["Đầu nhụy", "Nơi hạt phấn bám và nảy mầm."],
-      ["Túi phôi nếu có", "Cấu trúc bên trong noãn, nơi diễn ra thụ tinh ở thực vật có hoa."],
-      ["Hạt sau thụ tinh", "Hạt được hình thành từ noãn sau thụ tinh, không phải là noãn trước thụ tinh."],
-      ["Quả", "Được hình thành chủ yếu từ bầu nhụy sau thụ tinh, có vai trò bảo vệ và phát tán hạt."],
+      [
+        "Túi phôi nếu có",
+        "Cấu trúc bên trong noãn, nơi diễn ra thụ tinh ở thực vật có hoa.",
+      ],
+      [
+        "Hạt sau thụ tinh",
+        "Hạt được hình thành từ noãn sau thụ tinh, không phải là noãn trước thụ tinh.",
+      ],
+      [
+        "Quả",
+        "Được hình thành chủ yếu từ bầu nhụy sau thụ tinh, có vai trò bảo vệ và phát tán hạt.",
+      ],
       ["Vỏ quả", "Lớp bao ngoài của quả, có thể giúp bảo vệ hạt."],
       ["Hạt", "Được hình thành từ noãn sau thụ tinh."],
       ["Vỏ hạt", "Lớp bảo vệ bên ngoài hạt."],
@@ -1355,36 +1739,72 @@ const lop11Annotations = {
   maleReproductiveSystem: makeAnnotations(
     [
       ["Tinh hoàn", "Nơi tạo tinh trùng và tiết hormone sinh dục nam."],
-      ["Mào tinh", "Nơi tinh trùng tiếp tục hoàn thiện và được lưu giữ tạm thời."],
+      [
+        "Mào tinh",
+        "Nơi tinh trùng tiếp tục hoàn thiện và được lưu giữ tạm thời.",
+      ],
       ["Ống dẫn tinh", "Dẫn tinh trùng từ mào tinh về phía niệu đạo."],
       ["Túi tinh", "Tuyến phụ tiết dịch góp phần tạo tinh dịch."],
-      ["Tuyến tiền liệt", "Tuyến phụ tiết dịch giúp tinh trùng hoạt động thuận lợi hơn."],
-      ["Niệu đạo", "Ống dẫn tinh dịch ra ngoài cơ thể; ở nam cũng là đường dẫn nước tiểu."],
-      ["Dương vật", "Cơ quan đưa tinh dịch vào đường sinh dục nữ trong giao phối."],
+      [
+        "Tuyến tiền liệt",
+        "Tuyến phụ tiết dịch giúp tinh trùng hoạt động thuận lợi hơn.",
+      ],
+      [
+        "Niệu đạo",
+        "Ống dẫn tinh dịch ra ngoài cơ thể; ở nam cũng là đường dẫn nước tiểu.",
+      ],
+      [
+        "Dương vật",
+        "Cơ quan đưa tinh dịch vào đường sinh dục nữ trong giao phối.",
+      ],
     ],
     { min: [-1.0659, -2.8541, -1.1522], max: [1.347, -0.1509, 2.8401] },
   ),
   uterus: makeAnnotations(
     [
       ["Buồng trứng", "Nơi tạo trứng và tiết hormone sinh dục nữ."],
-      ["Ống dẫn trứng", "Đường dẫn trứng về tử cung; thường là nơi diễn ra thụ tinh."],
+      [
+        "Ống dẫn trứng",
+        "Đường dẫn trứng về tử cung; thường là nơi diễn ra thụ tinh.",
+      ],
       ["Tử cung", "Nơi phôi làm tổ và phát triển trong thai kỳ."],
-      ["Nội mạc tử cung", "Lớp lót bên trong tử cung, biến đổi theo chu kỳ và là nơi phôi làm tổ."],
+      [
+        "Nội mạc tử cung",
+        "Lớp lót bên trong tử cung, biến đổi theo chu kỳ và là nơi phôi làm tổ.",
+      ],
       ["Cổ tử cung", "Phần hẹp nối tử cung với âm đạo."],
-      ["Âm đạo", "Đường tiếp nhận tinh trùng và là đường sinh khi sinh thường."],
-      ["Vị trí thụ tinh", "Thụ tinh thường diễn ra ở ống dẫn trứng, không phải trong tử cung."],
+      [
+        "Âm đạo",
+        "Đường tiếp nhận tinh trùng và là đường sinh khi sinh thường.",
+      ],
+      [
+        "Vị trí thụ tinh",
+        "Thụ tinh thường diễn ra ở ống dẫn trứng, không phải trong tử cung.",
+      ],
     ],
     { min: [-0.2345, -0.4946, -0.5], max: [0.2345, 0.4946, 0.5] },
   ),
   spermCellIllustration: makeAnnotations(
     [
       ["Đầu tinh trùng", "Chứa nhân mang thông tin di truyền của bố."],
-      ["Thể cực đầu nếu có", "Chứa enzyme hỗ trợ tinh trùng xuyên qua lớp bao quanh trứng."],
-      ["Cổ tinh trùng", "Vùng nối đầu và đuôi, chứa nhiều ti thể cung cấp năng lượng."],
+      [
+        "Thể cực đầu nếu có",
+        "Chứa enzyme hỗ trợ tinh trùng xuyên qua lớp bao quanh trứng.",
+      ],
+      [
+        "Cổ tinh trùng",
+        "Vùng nối đầu và đuôi, chứa nhiều ti thể cung cấp năng lượng.",
+      ],
       ["Đuôi tinh trùng", "Giúp tinh trùng di chuyển."],
       ["Trứng", "Giao tử cái có kích thước lớn, chứa nhiều tế bào chất."],
-      ["Màng ngoài của trứng", "Lớp bao quanh giúp bảo vệ trứng và tham gia nhận biết tinh trùng."],
-      ["Khác biệt giao tử", "Tinh trùng nhỏ, di động; trứng lớn, nhiều chất dự trữ hơn."],
+      [
+        "Màng ngoài của trứng",
+        "Lớp bao quanh giúp bảo vệ trứng và tham gia nhận biết tinh trùng.",
+      ],
+      [
+        "Khác biệt giao tử",
+        "Tinh trùng nhỏ, di động; trứng lớn, nhiều chất dự trữ hơn.",
+      ],
     ],
     { min: [-0.9448, -0.9502, -0.2191], max: [0.9497, 0.9517, 0.2192] },
   ),
@@ -1392,10 +1812,19 @@ const lop11Annotations = {
     [
       ["Tử cung", "Cơ quan nơi phôi làm tổ và phát triển trong thai kỳ."],
       ["Nội mạc tử cung", "Lớp lót giàu mạch máu, chuẩn bị cho phôi làm tổ."],
-      ["Phôi sớm", "Giai đoạn phát triển ban đầu sau thụ tinh trước và trong quá trình làm tổ."],
+      [
+        "Phôi sớm",
+        "Giai đoạn phát triển ban đầu sau thụ tinh trước và trong quá trình làm tổ.",
+      ],
       ["Vị trí làm tổ", "Phôi bám vào nội mạc tử cung để tiếp tục phát triển."],
-      ["Mạch máu nội mạc", "Cung cấp chất dinh dưỡng và oxygen cho phôi ở giai đoạn phát triển tiếp theo."],
-      ["Nguyên tắc thể hiện", "Dùng hình mô phạm sạch, tránh hình ảnh y khoa quá trực diện hoặc gây khó chịu."],
+      [
+        "Mạch máu nội mạc",
+        "Cung cấp chất dinh dưỡng và oxygen cho phôi ở giai đoạn phát triển tiếp theo.",
+      ],
+      [
+        "Nguyên tắc thể hiện",
+        "Dùng hình mô phạm sạch, tránh hình ảnh y khoa quá trực diện hoặc gây khó chịu.",
+      ],
     ],
     { min: [-0.2683, -0.2617, -0.5], max: [0.2683, 0.2617, 0.5] },
   ),
@@ -1404,134 +1833,343 @@ const lop11Annotations = {
 const lop12Annotations = {
   dna: makeAnnotations(
     [
-      ["Xoắn kép", "DNA có dạng xoắn kép gồm hai mạch polynucleotide quấn quanh một trục chung."],
-      ["Hai mạch polynucleotide", "Mỗi mạch DNA gồm nhiều nucleotide nối liên tiếp với nhau."],
-      ["Khung đường - phosphate", "Nằm ở phía ngoài phân tử DNA, tạo xương sống của mỗi mạch."],
-      ["Base nitrogen", "Nằm quay vào phía trong phân tử DNA, tham gia bắt cặp với base ở mạch đối diện."],
-      ["Bậc thang base bổ sung", "Các cặp base ở giữa hai mạch giống các bậc thang: A bắt cặp T, G bắt cặp C."],
-      ["Trục xoắn chung", "Hai mạch DNA quấn quanh cùng một trục, tạo cấu trúc ổn định cho phân tử."],
-      ["Trình tự base", "Thứ tự các base A, T, G, C trên DNA là cơ sở lưu giữ thông tin di truyền."],
+      [
+        "Xoắn kép",
+        "DNA có dạng xoắn kép gồm hai mạch polynucleotide quấn quanh một trục chung.",
+      ],
+      [
+        "Hai mạch polynucleotide",
+        "Mỗi mạch DNA gồm nhiều nucleotide nối liên tiếp với nhau.",
+      ],
+      [
+        "Khung đường - phosphate",
+        "Nằm ở phía ngoài phân tử DNA, tạo xương sống của mỗi mạch.",
+      ],
+      [
+        "Base nitrogen",
+        "Nằm quay vào phía trong phân tử DNA, tham gia bắt cặp với base ở mạch đối diện.",
+      ],
+      [
+        "Bậc thang base bổ sung",
+        "Các cặp base ở giữa hai mạch giống các bậc thang: A bắt cặp T, G bắt cặp C.",
+      ],
+      [
+        "Trục xoắn chung",
+        "Hai mạch DNA quấn quanh cùng một trục, tạo cấu trúc ổn định cho phân tử.",
+      ],
+      [
+        "Trình tự base",
+        "Thứ tự các base A, T, G, C trên DNA là cơ sở lưu giữ thông tin di truyền.",
+      ],
     ],
-    { min: [-1937.7808, 757.5705, -309.4502], max: [1937.7794, 3042.4287, 309.4503] },
+    {
+      min: [-1937.7808, 757.5705, -309.4502],
+      max: [1937.7794, 3042.4287, 309.4503],
+    },
   ),
   nucleotide: makeAnnotations(
     [
-      ["Nucleotide", "Đơn phân cấu tạo DNA, gồm nhóm phosphate, đường deoxyribose và base nitrogen."],
-      ["Nhóm phosphate", "Thành phần tham gia tạo khung đường - phosphate của mạch DNA."],
-      ["Đường deoxyribose", "Đường 5 carbon của DNA; khác với đường ribose của RNA."],
-      ["Base nitrogen", "Thành phần khác nhau giữa các nucleotide; DNA có 4 loại base: A, T, G, C."],
-      ["Vị trí gắn base", "Base nitrogen gắn với đường deoxyribose để tạo phần nhận diện của nucleotide."],
-      ["Ba thành phần phối hợp", "Phosphate, đường deoxyribose và base nitrogen kết hợp tạo thành một nucleotide hoàn chỉnh."],
+      [
+        "Nucleotide",
+        "Đơn phân cấu tạo DNA, gồm nhóm phosphate, đường deoxyribose và base nitrogen.",
+      ],
+      [
+        "Nhóm phosphate",
+        "Thành phần tham gia tạo khung đường - phosphate của mạch DNA.",
+      ],
+      [
+        "Đường deoxyribose",
+        "Đường 5 carbon của DNA; khác với đường ribose của RNA.",
+      ],
+      [
+        "Base nitrogen",
+        "Thành phần khác nhau giữa các nucleotide; DNA có 4 loại base: A, T, G, C.",
+      ],
+      [
+        "Vị trí gắn base",
+        "Base nitrogen gắn với đường deoxyribose để tạo phần nhận diện của nucleotide.",
+      ],
+      [
+        "Ba thành phần phối hợp",
+        "Phosphate, đường deoxyribose và base nitrogen kết hợp tạo thành một nucleotide hoàn chỉnh.",
+      ],
     ],
     { min: [-0.1718, -0.3419, -0.5], max: [0.1718, 0.3419, 0.5] },
   ),
   nucleotideLinkage: makeAnnotations(
     [
-      ["Mạch polynucleotide", "Nhiều nucleotide nối liên tiếp tạo thành một mạch DNA."],
-      ["Liên kết phosphodiester", "Liên kết cộng hóa trị nối đường của nucleotide này với phosphate của nucleotide kế tiếp."],
+      [
+        "Mạch polynucleotide",
+        "Nhiều nucleotide nối liên tiếp tạo thành một mạch DNA.",
+      ],
+      [
+        "Liên kết phosphodiester",
+        "Liên kết cộng hóa trị nối đường của nucleotide này với phosphate của nucleotide kế tiếp.",
+      ],
       ["Khung đường - phosphate", "Phần nối chính và bền vững của mạch DNA."],
-      ["Base quay vào trong", "Base không phải phần nối chính của mạch, mà hướng vào trong để bắt cặp với mạch đối diện."],
-      ["Chiều 5' -> 3'", "Mỗi mạch DNA có chiều xác định từ đầu 5' đến đầu 3'."],
-      ["Trình tự nucleotide", "Thứ tự các base trên mạch DNA là cơ sở lưu giữ thông tin di truyền."],
+      [
+        "Base quay vào trong",
+        "Base không phải phần nối chính của mạch, mà hướng vào trong để bắt cặp với mạch đối diện.",
+      ],
+      [
+        "Chiều 5' -> 3'",
+        "Mỗi mạch DNA có chiều xác định từ đầu 5' đến đầu 3'.",
+      ],
+      [
+        "Trình tự nucleotide",
+        "Thứ tự các base trên mạch DNA là cơ sở lưu giữ thông tin di truyền.",
+      ],
     ],
     { min: [-0.0285, -0.9752, -0.7189], max: [0.0288, 0.9805, 0.7818] },
   ),
   ribosome: makeAnnotations(
     [
-      ["Ribosome", "Bào quan không có màng bao bọc, là nơi diễn ra dịch mã và tổng hợp protein."],
-      ["Tiểu phần nhỏ", "Bám vào mRNA và giúp ribosome đọc đúng các codon trên mRNA."],
-      ["Tiểu phần lớn", "Chứa các vị trí gắn tRNA và tham gia hình thành liên kết peptide."],
-      ["mRNA", "Mạch khuôn mang thông tin di truyền đi qua ribosome trong quá trình dịch mã."],
-      ["Khe đọc mRNA", "Vùng ribosome giữ mRNA đúng vị trí để các codon được đọc lần lượt."],
-      ["tRNA đang gắn ribosome", "tRNA đưa amino acid đến ribosome theo codon tương ứng trên mRNA."],
-      ["Chuỗi polypeptide", "Chuỗi amino acid đang được tổng hợp theo trình tự codon trên mRNA."],
+      [
+        "Ribosome",
+        "Bào quan không có màng bao bọc, là nơi diễn ra dịch mã và tổng hợp protein.",
+      ],
+      [
+        "Tiểu phần nhỏ",
+        "Bám vào mRNA và giúp ribosome đọc đúng các codon trên mRNA.",
+      ],
+      [
+        "Tiểu phần lớn",
+        "Chứa các vị trí gắn tRNA và tham gia hình thành liên kết peptide.",
+      ],
+      [
+        "mRNA",
+        "Mạch khuôn mang thông tin di truyền đi qua ribosome trong quá trình dịch mã.",
+      ],
+      [
+        "Khe đọc mRNA",
+        "Vùng ribosome giữ mRNA đúng vị trí để các codon được đọc lần lượt.",
+      ],
+      [
+        "tRNA đang gắn ribosome",
+        "tRNA đưa amino acid đến ribosome theo codon tương ứng trên mRNA.",
+      ],
+      [
+        "Chuỗi polypeptide",
+        "Chuỗi amino acid đang được tổng hợp theo trình tự codon trên mRNA.",
+      ],
     ],
     { min: [-0.5436, -0.3368, -0.2348], max: [0.5436, 0.3413, 0.2379] },
   ),
   mrna: makeAnnotations(
     [
-      ["mRNA", "RNA thông tin mang bản mã từ DNA ra tế bào chất để tham gia tổng hợp protein."],
-      ["Codon", "Bộ ba nucleotide liên tiếp trên mRNA, mã hóa một amino acid hoặc tín hiệu kết thúc."],
-      ["Codon mở đầu AUG", "Thường là tín hiệu bắt đầu dịch mã và mã hóa amino acid methionine."],
-      ["Codon kết thúc", "UAA, UAG, UGA là các bộ ba kết thúc, không mã hóa amino acid."],
+      [
+        "mRNA",
+        "RNA thông tin mang bản mã từ DNA ra tế bào chất để tham gia tổng hợp protein.",
+      ],
+      [
+        "Codon",
+        "Bộ ba nucleotide liên tiếp trên mRNA, mã hóa một amino acid hoặc tín hiệu kết thúc.",
+      ],
+      [
+        "Codon mở đầu AUG",
+        "Thường là tín hiệu bắt đầu dịch mã và mã hóa amino acid methionine.",
+      ],
+      [
+        "Codon kết thúc",
+        "UAA, UAG, UGA là các bộ ba kết thúc, không mã hóa amino acid.",
+      ],
       ["Chiều đọc mRNA", "Ribosome đọc mRNA theo chiều 5' -> 3'."],
       ["Codon nằm trên mRNA", "Codon là bộ ba trên mRNA, không nằm trên tRNA."],
-      ["Trình tự codon", "Thứ tự codon trên mRNA quyết định thứ tự amino acid trong chuỗi polypeptide."],
+      [
+        "Trình tự codon",
+        "Thứ tự codon trên mRNA quyết định thứ tự amino acid trong chuỗi polypeptide.",
+      ],
     ],
     { min: [1.0547, 0.4516, -0.1221], max: [2.1483, 2.2826, 1.4562] },
   ),
   trna: makeAnnotations(
     [
-      ["tRNA", "RNA vận chuyển có nhiệm vụ đưa amino acid phù hợp đến ribosome."],
-      ["Cấu trúc gấp của tRNA", "tRNA có cấu trúc gấp đặc trưng giúp nhận diện codon và gắn amino acid phù hợp."],
-      ["Anticodon", "Bộ ba nucleotide trên tRNA bắt cặp bổ sung với codon trên mRNA."],
-      ["Amino acid gắn với tRNA", "Amino acid được gắn vào tRNA trước khi tRNA đi vào ribosome."],
-      ["Bắt cặp codon - anticodon", "Anticodon bắt cặp bổ sung với codon để đưa đúng amino acid vào chuỗi protein."],
-      ["tRNA mang amino acid", "Mỗi tRNA mang amino acid phù hợp với bộ ba mã hóa tương ứng."],
-      ["tRNA rỗng", "Sau khi chuyển amino acid vào chuỗi polypeptide, tRNA rời ribosome ở trạng thái không còn amino acid."],
+      [
+        "tRNA",
+        "RNA vận chuyển có nhiệm vụ đưa amino acid phù hợp đến ribosome.",
+      ],
+      [
+        "Cấu trúc gấp của tRNA",
+        "tRNA có cấu trúc gấp đặc trưng giúp nhận diện codon và gắn amino acid phù hợp.",
+      ],
+      [
+        "Anticodon",
+        "Bộ ba nucleotide trên tRNA bắt cặp bổ sung với codon trên mRNA.",
+      ],
+      [
+        "Amino acid gắn với tRNA",
+        "Amino acid được gắn vào tRNA trước khi tRNA đi vào ribosome.",
+      ],
+      [
+        "Bắt cặp codon - anticodon",
+        "Anticodon bắt cặp bổ sung với codon để đưa đúng amino acid vào chuỗi protein.",
+      ],
+      [
+        "tRNA mang amino acid",
+        "Mỗi tRNA mang amino acid phù hợp với bộ ba mã hóa tương ứng.",
+      ],
+      [
+        "tRNA rỗng",
+        "Sau khi chuyển amino acid vào chuỗi polypeptide, tRNA rời ribosome ở trạng thái không còn amino acid.",
+      ],
     ],
     { min: [51.6322, 14.0887, -13.1771], max: [54.1134, 17.35, -9.883] },
   ),
   trnaBoundMrna: makeAnnotations(
     [
-      ["Vị trí A", "Nơi nhận tRNA mới mang amino acid phù hợp với codon trên mRNA."],
+      [
+        "Vị trí A",
+        "Nơi nhận tRNA mới mang amino acid phù hợp với codon trên mRNA.",
+      ],
       ["Vị trí P", "Nơi giữ tRNA đang mang chuỗi polypeptide kéo dài."],
-      ["Vị trí E", "Nơi tRNA rỗng rời khỏi ribosome sau khi đã chuyển amino acid."],
-      ["mRNA trong ribosome", "Các codon trên mRNA lần lượt đi qua các vị trí A, P, E khi ribosome dịch chuyển."],
-      ["Liên kết peptide", "Liên kết được hình thành giữa amino acid mới và chuỗi polypeptide đang kéo dài."],
-      ["Dịch chuyển ribosome", "Ribosome dịch từng codon trên mRNA; chuyển động chi tiết nên thể hiện bằng animation."],
-      ["Chuỗi polypeptide", "Chuỗi amino acid kéo dài theo thứ tự codon trên mRNA."],
+      [
+        "Vị trí E",
+        "Nơi tRNA rỗng rời khỏi ribosome sau khi đã chuyển amino acid.",
+      ],
+      [
+        "mRNA trong ribosome",
+        "Các codon trên mRNA lần lượt đi qua các vị trí A, P, E khi ribosome dịch chuyển.",
+      ],
+      [
+        "Liên kết peptide",
+        "Liên kết được hình thành giữa amino acid mới và chuỗi polypeptide đang kéo dài.",
+      ],
+      [
+        "Dịch chuyển ribosome",
+        "Ribosome dịch từng codon trên mRNA; chuyển động chi tiết nên thể hiện bằng animation.",
+      ],
+      [
+        "Chuỗi polypeptide",
+        "Chuỗi amino acid kéo dài theo thứ tự codon trên mRNA.",
+      ],
     ],
     { min: [408.266, 394.587, 400.795], max: [575.742, 478.064, 482.994] },
   ),
   chromosome: makeAnnotations(
     [
-      ["Nhiễm sắc thể kì giữa", "NST kép co xoắn cực đại ở kì giữa nên quan sát rõ nhất dưới kính hiển vi."],
-      ["Hai chromatid chị em", "Hai bản sao giống nhau của một NST sau khi DNA đã nhân đôi."],
-      ["Tâm động", "Vùng gắn hai chromatid chị em và là nơi thoi phân bào bám vào."],
-      ["Hai cánh NST", "Hai phần kéo dài từ tâm động đến đầu mút; không phải là hai chromatid chị em."],
+      [
+        "Nhiễm sắc thể kì giữa",
+        "NST kép co xoắn cực đại ở kì giữa nên quan sát rõ nhất dưới kính hiển vi.",
+      ],
+      [
+        "Hai chromatid chị em",
+        "Hai bản sao giống nhau của một NST sau khi DNA đã nhân đôi.",
+      ],
+      [
+        "Tâm động",
+        "Vùng gắn hai chromatid chị em và là nơi thoi phân bào bám vào.",
+      ],
+      [
+        "Hai cánh NST",
+        "Hai phần kéo dài từ tâm động đến đầu mút; không phải là hai chromatid chị em.",
+      ],
       ["Đầu mút NST", "Phần tận cùng của nhiễm sắc thể, giúp bảo vệ đầu NST."],
-      ["Vị trí phân li", "Hai chromatid chị em tách nhau tại tâm động khi bước vào kì sau phân bào."],
-      ["Cấu trúc co xoắn", "Sự co xoắn giúp DNA rất dài được đóng gói gọn và phân li chính xác."],
+      [
+        "Vị trí phân li",
+        "Hai chromatid chị em tách nhau tại tâm động khi bước vào kì sau phân bào.",
+      ],
+      [
+        "Cấu trúc co xoắn",
+        "Sự co xoắn giúp DNA rất dài được đóng gói gọn và phân li chính xác.",
+      ],
     ],
     { min: [-5.4749, -1.0089, -2.3961], max: [10.7942, 13.3996, 0.5106] },
   ),
   typesOfChromosome: makeAnnotations(
     [
-      ["Tâm động", "Vị trí tâm động quyết định hình dạng và chiều dài tương đối của hai cánh NST."],
-      ["NST tâm giữa", "Tâm động nằm gần giữa, hai cánh NST tương đối bằng nhau."],
-      ["NST tâm lệch", "Tâm động lệch khỏi giữa, tạo một cánh dài và một cánh ngắn."],
-      ["NST tâm mút", "Tâm động nằm gần đầu mút, một cánh rất ngắn hoặc khó quan sát."],
-      ["Hai cánh NST", "Cánh NST được xác định theo vị trí tâm động, không phải là hai chromatid chị em."],
-      ["Ý nghĩa phân loại", "Phân loại theo tâm động giúp nhận diện hình thái các NST trong bộ nhiễm sắc thể."],
+      [
+        "Tâm động",
+        "Vị trí tâm động quyết định hình dạng và chiều dài tương đối của hai cánh NST.",
+      ],
+      [
+        "NST tâm giữa",
+        "Tâm động nằm gần giữa, hai cánh NST tương đối bằng nhau.",
+      ],
+      [
+        "NST tâm lệch",
+        "Tâm động lệch khỏi giữa, tạo một cánh dài và một cánh ngắn.",
+      ],
+      [
+        "NST tâm mút",
+        "Tâm động nằm gần đầu mút, một cánh rất ngắn hoặc khó quan sát.",
+      ],
+      [
+        "Hai cánh NST",
+        "Cánh NST được xác định theo vị trí tâm động, không phải là hai chromatid chị em.",
+      ],
+      [
+        "Ý nghĩa phân loại",
+        "Phân loại theo tâm động giúp nhận diện hình thái các NST trong bộ nhiễm sắc thể.",
+      ],
     ],
     { min: [-0.0286, -0.2094, -0.5], max: [0.0286, 0.2094, 0.5] },
   ),
   eukaryoticChromosome: makeAnnotations(
     [
       ["DNA xoắn kép", "Mức cấu trúc phân tử cơ bản mang thông tin di truyền."],
-      ["Nucleosome", "DNA quấn quanh lõi histone, tạo đơn vị đóng gói cơ bản của nhiễm sắc thể."],
-      ["Sợi cơ bản 10 nm", "Chuỗi nucleosome nối tiếp nhau tạo dạng chuỗi hạt."],
-      ["Sợi co xoắn", "Sợi cơ bản tiếp tục cuộn xoắn tạo cấu trúc dày và gọn hơn."],
-      ["Chromatid", "Mức đóng gói cao hơn, chứa một phân tử DNA được cuộn chặt với protein."],
-      ["Nhiễm sắc thể kì giữa", "Mức đóng gói cực đại, thường gồm hai chromatid chị em."],
-      ["Ý nghĩa đóng gói", "Đóng gói giúp DNA rất dài nằm gọn trong nhân và phân li chính xác khi phân bào."],
+      [
+        "Nucleosome",
+        "DNA quấn quanh lõi histone, tạo đơn vị đóng gói cơ bản của nhiễm sắc thể.",
+      ],
+      [
+        "Sợi cơ bản 10 nm",
+        "Chuỗi nucleosome nối tiếp nhau tạo dạng chuỗi hạt.",
+      ],
+      [
+        "Sợi co xoắn",
+        "Sợi cơ bản tiếp tục cuộn xoắn tạo cấu trúc dày và gọn hơn.",
+      ],
+      [
+        "Chromatid",
+        "Mức đóng gói cao hơn, chứa một phân tử DNA được cuộn chặt với protein.",
+      ],
+      [
+        "Nhiễm sắc thể kì giữa",
+        "Mức đóng gói cực đại, thường gồm hai chromatid chị em.",
+      ],
+      [
+        "Ý nghĩa đóng gói",
+        "Đóng gói giúp DNA rất dài nằm gọn trong nhân và phân li chính xác khi phân bào.",
+      ],
     ],
     { min: [-0.185, -0.5, -0.4771], max: [0.185, 0.5, 0.4771] },
   ),
   nucleosome: makeAnnotations(
     [
-      ["Nucleosome", "Đơn vị cấu trúc cơ bản của nhiễm sắc thể ở sinh vật nhân thực."],
-      ["Lõi histone", "Gồm 8 phân tử histone tạo lõi protein để DNA quấn quanh."],
-      ["DNA quấn quanh histone", "DNA xoắn kép quấn quanh lõi histone để tạo nucleosome."],
+      [
+        "Nucleosome",
+        "Đơn vị cấu trúc cơ bản của nhiễm sắc thể ở sinh vật nhân thực.",
+      ],
+      [
+        "Lõi histone",
+        "Gồm 8 phân tử histone tạo lõi protein để DNA quấn quanh.",
+      ],
+      [
+        "DNA quấn quanh histone",
+        "DNA xoắn kép quấn quanh lõi histone để tạo nucleosome.",
+      ],
       ["DNA nối", "Đoạn DNA nối giữa các nucleosome liền kề trên sợi cơ bản."],
-      ["DNA + protein histone", "Nucleosome không phải DNA đơn thuần, mà là phức hợp DNA với protein histone."],
-      ["Chức năng đóng gói", "Nucleosome giúp rút ngắn và tổ chức DNA trong nhân tế bào."],
-      ["Liên hệ mức cao hơn", "Nhiều nucleosome nối tiếp tạo sợi cơ bản và tiếp tục đóng gói thành NST."],
+      [
+        "DNA + protein histone",
+        "Nucleosome không phải DNA đơn thuần, mà là phức hợp DNA với protein histone.",
+      ],
+      [
+        "Chức năng đóng gói",
+        "Nucleosome giúp rút ngắn và tổ chức DNA trong nhân tế bào.",
+      ],
+      [
+        "Liên hệ mức cao hơn",
+        "Nhiều nucleosome nối tiếp tạo sợi cơ bản và tiếp tục đóng gói thành NST.",
+      ],
     ],
     { min: [-0.302, -0.5, -0.4579], max: [0.302, 0.5, 0.4579] },
   ),
 } satisfies Record<string, ModelAnnotation[]>;
+
+lop12Annotations.dna[0].image = {
+  url: "/texture-references/gpt-image-2-biology-more-teaching-2026-05-31/png/dna-replication-fork-teaching.png",
+  alt: "Minh họa cấu trúc DNA",
+};
 
 export const cells: CellItem[] = [
   {
@@ -1565,6 +2203,20 @@ export const cells: CellItem[] = [
     modelKind: "dna",
     defaultFocusId: "helix",
     annotations: lop12Annotations.dna,
+    modelLinks: [
+      {
+        id: "open-nucleotide",
+        label: "Mở cấu tạo nucleotide",
+        targetCellId: "nucleotide",
+        position: [-1650, 2860, 0],
+      },
+      {
+        id: "open-linkage",
+        label: "Mở liên kết nucleotide",
+        targetCellId: "nucleotideLinkage",
+        position: [1650, 940, 0],
+      },
+    ],
     renderImage: {
       url: "/texture-references/gpt-image-2-biology-more-teaching-2026-05-31/png/dna-replication-fork-teaching.png",
     },
@@ -1612,6 +2264,20 @@ export const cells: CellItem[] = [
     modelKind: "dna",
     defaultFocusId: "model",
     annotations: lop12Annotations.nucleotide,
+    modelLinks: [
+      {
+        id: "open-dna",
+        label: "Mở DNA tổng thể",
+        targetCellId: "dna",
+        position: [-0.12, 0.27, 0.18],
+      },
+      {
+        id: "open-linkage",
+        label: "Mở liên kết nucleotide",
+        targetCellId: "nucleotideLinkage",
+        position: [0.12, -0.26, -0.18],
+      },
+    ],
     renderImage: {
       url: "/texture-references/gpt-image-2-biology-more-teaching-2026-05-31/png/dna-replication-fork-teaching.png",
     },
@@ -1704,6 +2370,26 @@ export const cells: CellItem[] = [
     modelKind: "translation",
     defaultFocusId: "model",
     annotations: lop12Annotations.ribosome,
+    modelLinks: [
+      {
+        id: "open-mrna",
+        label: "Mở mRNA và codon",
+        targetCellId: "mrna",
+        position: [-0.42, -0.12, 0.1],
+      },
+      {
+        id: "open-trna",
+        label: "Mở tRNA",
+        targetCellId: "trna",
+        position: [0.42, 0.12, -0.08],
+      },
+      {
+        id: "open-trna-mrna",
+        label: "Mở tRNA + mRNA",
+        targetCellId: "trnaBoundMrna",
+        position: [0, 0.26, 0.14],
+      },
+    ],
     renderImage: {
       url: "/texture-references/gpt-image-2-biology-more-teaching-2026-05-31/png/enzyme-catalysis-active-site-teaching.png",
     },
@@ -1740,7 +2426,7 @@ export const cells: CellItem[] = [
       materialMode: "native",
     },
   },
-  
+
   {
     id: "chromosome",
     name: "Nhiễm sắc thể",
@@ -2910,8 +3596,8 @@ export const cells: CellItem[] = [
   },
   {
     id: "glucose3dModel",
-    name: "Glucose",
-    type: "Phân tử đường đơn cung cấp năng lượng cho tế bào",
+    name: "Carbohydrate",
+    type: "Phân tử đường cung cấp năng lượng cho tế bào",
     accent: "#b89a3f",
     accentSoft: "#f3eed8",
     color: "#d1b760",
@@ -3203,11 +3889,14 @@ export const cells: CellItem[] = [
     modelKind: "mitosis",
     defaultFocusId: "model",
     annotations: lop10Annotations.mitosis,
-    renderImage: { url: "/texture-references/gpt-image-2-biology-more-teaching-2026-05-31/png/meiosis-crossing-over-teaching.png" },
+    renderImage: {
+      url: "/texture-references/gpt-image-2-biology-more-teaching-2026-05-31/png/meiosis-crossing-over-teaching.png",
+    },
     modelAsset: {
       url: "/models/mitosis.glb",
-      previewUrl: "/texture-references/gpt-image-2-biology-more-teaching-2026-05-31/png/meiosis-crossing-over-teaching.png",
-      scale: 0.00591937,
+      previewUrl:
+        "/texture-references/gpt-image-2-biology-more-teaching-2026-05-31/png/meiosis-crossing-over-teaching.png",
+      scale: 1.6,
       rotation: [0, -0.35, 0],
       position: [0, 0.02, 0],
       exposure: 1.08,
