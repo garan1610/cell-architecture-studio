@@ -1,21 +1,39 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { CameraControls, Center, ContactShadows, Html, RoundedBox, useGLTF, useProgress } from "@react-three/drei";
-import { Link2 } from "lucide-react";
-import { Suspense, useMemo, useRef, useState } from "react";
 import {
+  CameraControls,
+  Center,
+  ContactShadows,
+  Environment,
+  Html,
+  Lightformer,
+  RoundedBox,
+  useAnimations,
+  useGLTF,
+  useProgress,
+  type CameraControls as CameraControlsApi,
+} from "@react-three/drei";
+import { Copy, Link2 } from "lucide-react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ACESFilmicToneMapping,
   Color,
   CatmullRomCurve3,
+  Box3,
   DoubleSide,
   Float32BufferAttribute,
   Group,
   Mesh,
   MeshStandardMaterial,
+  Object3D,
+  SRGBColorSpace,
   TubeGeometry,
   Vector3,
   type Material,
   type MeshStandardMaterialParameters,
 } from "three";
+import { clone as cloneSkeleton } from "three/examples/jsm/utils/SkeletonUtils.js";
 import type { CellItem, CellModelAsset, ModelAnnotation, ModelLink, ViewMode } from "../data/cells";
+import { formatChemicalText } from "../utils/chemicalText";
 
 type CellSceneProps = {
   cell: CellItem;
@@ -23,7 +41,9 @@ type CellSceneProps = {
   viewMode: ViewMode;
   crossSection: boolean;
   autoRotate: boolean;
+  animationPaused: boolean;
   hideAnnotations: boolean;
+  debugPosition: boolean;
   resetKey: number;
   onSelectCell: (id: string) => void;
 };
@@ -104,6 +124,126 @@ type CommonModelProps = {
   viewMode: ViewMode;
   crossSection: boolean;
 };
+
+type DebugReadout = {
+  cursor: [number, number, number] | null;
+  camera: [number, number, number] | null;
+};
+
+const formatVector = (value: [number, number, number] | null) =>
+  value ? value.map((coordinate) => coordinate.toFixed(3)).join(", ") : "--";
+
+const formatCopyVector = (value: [number, number, number]) =>
+  value.map((coordinate) => coordinate.toFixed(3)).join(", ");
+
+function isEditableTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+
+  return (
+    target.isContentEditable ||
+    target.tagName === "INPUT" ||
+    target.tagName === "TEXTAREA" ||
+    target.tagName === "SELECT"
+  );
+}
+
+function DebugCopyButton({
+  label,
+  value,
+}: {
+  label: string;
+  value: [number, number, number] | null;
+}) {
+  return (
+    <button
+      type="button"
+      className="debug-copy-button"
+      disabled={!value}
+      aria-label={`Copy ${label}`}
+      title={value ? `Copy ${formatCopyVector(value)}` : "No coordinate to copy"}
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={(event) => {
+        event.stopPropagation();
+        if (!value) {
+          return;
+        }
+        void navigator.clipboard?.writeText(formatCopyVector(value));
+      }}
+    >
+      <Copy size={12} />
+    </button>
+  );
+}
+
+function DebugPositionProbe({
+  onChange,
+}: {
+  onChange: (readout: DebugReadout) => void;
+}) {
+  const lastUpdate = useRef(0);
+
+  function findAnnotationSpace(object: Object3D) {
+    let current: Object3D | null = object;
+    while (current) {
+      if (current.userData?.annotationSpace) {
+        return current.parent ?? current;
+      }
+      current = current.parent;
+    }
+    return null;
+  }
+
+  function findSceneAnnotationSpace(scene: Object3D) {
+    let annotationSpace: Object3D | null = null;
+    scene.traverse((object) => {
+      if (!annotationSpace && object.userData?.annotationSpace) {
+        annotationSpace = object.parent ?? object;
+      }
+    });
+    return annotationSpace;
+  }
+
+  function isDebugHelper(object: Object3D) {
+    let current: Object3D | null = object;
+    while (current) {
+      if (current.userData?.debugHelper) {
+        return true;
+      }
+      current = current.parent;
+    }
+    return false;
+  }
+
+  useFrame(({ camera, clock, pointer, raycaster, scene }) => {
+    const elapsed = clock.getElapsedTime();
+    if (elapsed - lastUpdate.current < 0.08) {
+      return;
+    }
+    lastUpdate.current = elapsed;
+
+    raycaster.setFromCamera(pointer, camera);
+    const hit = raycaster
+      .intersectObjects(scene.children, true)
+      .find((intersection) => !isDebugHelper(intersection.object));
+    const annotationSpace = hit ? findAnnotationSpace(hit.object) : findSceneAnnotationSpace(scene);
+    const cursorPoint = hit && annotationSpace ? annotationSpace.worldToLocal(hit.point.clone()) : null;
+    const cameraPoint = annotationSpace ? annotationSpace.worldToLocal(camera.position.clone()) : null;
+
+    onChange({
+      cursor: cursorPoint ? [cursorPoint.x, cursorPoint.y, cursorPoint.z] : null,
+      camera: cameraPoint ? [cameraPoint.x, cameraPoint.y, cameraPoint.z] : null,
+    });
+  });
+
+  return (
+    <group userData={{ debugHelper: true }}>
+      <gridHelper args={[6, 12, "#64748b", "#cbd5e1"]} position={[0, -1.82, 0]} />
+      <axesHelper args={[1.6]} />
+    </group>
+  );
+}
 
 function applyAssetVertexColors(mesh: Mesh, cell: CellItem) {
   const geometry = mesh.geometry;
@@ -195,24 +335,38 @@ function createNativeAssetMaterial({
   const cloneMaterial = (source: Material) => {
     const material = source.clone();
     material.side = DoubleSide;
-    material.transparent = crossSection || material.transparent;
-    material.opacity = crossSection ? Math.min(material.opacity, 0.86) : material.opacity;
+    if (crossSection) {
+      material.transparent = true;
+      material.opacity = Math.min(material.opacity, 0.86);
+    } else if (asset.transparent !== undefined) {
+      material.transparent = asset.transparent;
+      if (!asset.transparent) {
+        material.opacity = 1;
+        material.depthWrite = true;
+      }
+    }
 
     if (material instanceof MeshStandardMaterial) {
       const displayMap = material.map ?? null;
+      const materialColorOverride = asset.materialColorOverrides?.[material.name];
+      const materialOpacityOverride = asset.materialOpacityOverrides?.[material.name];
       if (displayMap) {
         displayMap.anisotropy = 8;
         displayMap.needsUpdate = true;
       }
       material.vertexColors = asset.preserveNativeColor ? material.vertexColors : false;
-      material.emissive = new Color("#fff8eb");
-      material.emissiveMap = displayMap;
-      material.emissiveIntensity = 0.07 * (asset.exposure ?? 1);
-      material.envMapIntensity = 0.62 * (asset.exposure ?? 1);
-      material.roughness = Math.max(0.34, Math.min(material.roughness, 0.58));
-      material.metalness = Math.min(material.metalness, 0.08);
-      if (!asset.preserveNativeColor) {
+      material.emissive.set("#000000");
+      material.emissiveMap = null;
+      material.emissiveIntensity = 0;
+      material.envMapIntensity = 0.95 * (asset.exposure ?? 1);
+      if (materialColorOverride) {
+        material.color.set(materialColorOverride);
+      } else if (!asset.preserveNativeColor) {
         material.color.setRGB(1.04, 1.035, 1.02);
+      }
+      if (materialOpacityOverride !== undefined) {
+        material.transparent = materialOpacityOverride < 1 || material.transparent;
+        material.opacity = materialOpacityOverride;
       }
     }
 
@@ -223,14 +377,77 @@ function createNativeAssetMaterial({
   return Array.isArray(original) ? original.map(cloneMaterial) : cloneMaterial(original);
 }
 
+function createOriginalAssetMaterial({
+  original,
+  materialOverride,
+}: {
+  original: Mesh["material"];
+  materialOverride: NonNullable<CellModelAsset["meshMaterialOverrides"]>[string];
+}) {
+  const cloneMaterial = (source: Material) => {
+    const material = source.clone();
+
+    if (materialOverride.transparent !== undefined) {
+      material.transparent = materialOverride.transparent;
+    }
+    if (materialOverride.opacity !== undefined) {
+      material.opacity = materialOverride.opacity;
+    }
+    if (materialOverride.depthWrite !== undefined) {
+      material.depthWrite = materialOverride.depthWrite;
+    }
+    if (material instanceof MeshStandardMaterial && materialOverride.transparent === false) {
+      material.alphaTest = 0;
+    }
+
+    material.needsUpdate = true;
+    return material;
+  };
+
+  return Array.isArray(original) ? original.map(cloneMaterial) : cloneMaterial(original);
+}
+
+function getMeshMaterialOverride(mesh: Mesh, asset: CellModelAsset) {
+  return asset.meshMaterialOverrides?.[mesh.name];
+}
+
+function NativeStudioEnvironment() {
+  return (
+    <Environment resolution={256}>
+      <Lightformer
+        form="rect"
+        intensity={2.4}
+        color="#fffdf8"
+        position={[0, 5, -4]}
+        rotation-x={Math.PI / 2}
+        scale={[8, 8, 1]}
+      />
+      <Lightformer
+        form="rect"
+        intensity={1.8}
+        color="#dcecff"
+        position={[-5, 1, 2]}
+        rotation-y={Math.PI / 2}
+        scale={[5, 5, 1]}
+      />
+      <Lightformer
+        form="rect"
+        intensity={1.4}
+        color="#ffe9cf"
+        position={[5, -1, 1]}
+        rotation-y={-Math.PI / 2}
+        scale={[4, 4, 1]}
+      />
+    </Environment>
+  );
+}
+
 function ModelAnnotationDot({
   annotation,
-  number,
   open,
   onToggle,
 }: {
   annotation: ModelAnnotation;
-  number: number;
   open: boolean;
   onToggle: () => void;
 }) {
@@ -239,7 +456,7 @@ function ModelAnnotationDot({
       <button
         type="button"
         className="model-annotation-dot"
-        aria-label={`${open ? "Ẩn" : "Hiện"} ${annotation.label}`}
+        aria-label={`${open ? "Ẩn" : "Hiện"} ${formatChemicalText(annotation.label)}`}
         aria-expanded={open}
         onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => {
@@ -247,12 +464,12 @@ function ModelAnnotationDot({
           onToggle();
         }}
       >
-        {number}
+        {annotation.number}
       </button>
       {open && (
         <div className="model-annotation-card">
-          <strong>{annotation.label}</strong>
-          {annotation.description && <p>{annotation.description}</p>}
+          <strong>{formatChemicalText(annotation.label)}</strong>
+          {annotation.description && <p>{formatChemicalText(annotation.description)}</p>}
           {annotation.image && (
             <img
               src={annotation.image.url}
@@ -292,25 +509,34 @@ function ModelLinkDot({
   );
 }
 
+const CLOSED_ANNOTATION_Z_INDEX_RANGE: [number, number] = [16777271, 0];
+const OPEN_ANNOTATION_Z_INDEX_RANGE: [number, number] = [30000000, 30000000];
+
 function AssetCellModel({
   cell,
   asset,
   viewMode,
   crossSection,
+  animationPaused,
   hideAnnotations,
   onSelectCell,
 }: CommonModelProps & {
   cell: CellItem;
   asset: CellModelAsset;
+  animationPaused: boolean;
   hideAnnotations: boolean;
   onSelectCell: (id: string) => void;
 }) {
-  const { scene } = useGLTF(asset.url);
-  const [openAnnotationId, setOpenAnnotationId] = useState<string | null>(null);
+  const { scene, animations } = useGLTF(asset.url);
+  const modelGroup = useRef<Group>(null);
+  const { actions } = useAnimations(animations, modelGroup);
+  const animationEnabled = asset.animation ?? true;
+  const [openAnnotationKey, setOpenAnnotationKey] = useState<string | null>(null);
   const annotations = cell.annotations ?? asset.annotations;
   const modelLinks = cell.modelLinks;
   const clonedScene = useMemo(() => {
-    const clone = scene.clone(true);
+    const clone = cloneSkeleton(scene);
+    clone.userData.annotationSpace = true;
     let meshIndex = 0;
 
     clone.traverse((node) => {
@@ -327,6 +553,17 @@ function AssetCellModel({
           asset,
           crossSection,
         });
+      } else if (asset.materialMode === "original") {
+        const materialOverride = getMeshMaterialOverride(mesh, asset);
+        if (materialOverride) {
+          if (materialOverride.renderOrder !== undefined) {
+            mesh.renderOrder = materialOverride.renderOrder;
+          }
+          mesh.material = createOriginalAssetMaterial({
+            original: mesh.material,
+            materialOverride,
+          });
+        }
       } else {
         mesh.geometry.computeVertexNormals();
         applyAssetVertexColors(mesh, cell);
@@ -341,41 +578,89 @@ function AssetCellModel({
       meshIndex += 1;
     });
 
+    if (asset.autoFit) {
+      clone.updateMatrixWorld(true);
+      const bounds = new Box3().setFromObject(clone);
+      const size = bounds.getSize(new Vector3());
+      const center = bounds.getCenter(new Vector3());
+      const maxDimension = Math.max(size.x, size.y, size.z);
+      const normalizedScale = maxDimension > 0 ? 3.2 / maxDimension : 1;
+
+      clone.scale.setScalar(normalizedScale);
+      clone.position.set(
+        -center.x * normalizedScale,
+        -center.y * normalizedScale,
+        -center.z * normalizedScale,
+      );
+    }
+
     return clone;
   }, [asset, cell, scene, viewMode, crossSection]);
 
+  useEffect(() => {
+    const activeActions = Object.values(actions).filter((action) => action !== null);
+    if (!animationEnabled) {
+      activeActions.forEach((action) => {
+        action.stop().reset();
+        action.enabled = false;
+      });
+      return () => undefined;
+    }
+
+    activeActions.forEach((action) => {
+      action.enabled = true;
+      action.reset().fadeIn(0.2).play();
+    });
+
+    return () => {
+      activeActions.forEach((action) => action.fadeOut(0.15).stop());
+    };
+  }, [actions, animationEnabled]);
+
+  useEffect(() => {
+    Object.values(actions).forEach((action) => {
+      if (action) {
+        action.paused = animationEnabled ? animationPaused : true;
+        action.enabled = animationEnabled;
+      }
+    });
+  }, [actions, animationEnabled, animationPaused]);
+
   return (
     <group
+      ref={modelGroup}
       position={asset.position ?? [0, 0, 0]}
       rotation={asset.rotation ?? [0, 0, 0]}
       scale={[asset.scale, asset.scale, asset.scale]}
     >
       <Center>
         <primitive object={clonedScene} />
-        {!hideAnnotations && annotations?.map((annotation, index) => (
-          <Html
-            key={annotation.id}
-            position={annotation.position}
-            center
-            distanceFactor={7.5}
-            className="model-annotation"
-          >
-            <ModelAnnotationDot
-              annotation={annotation}
-              number={index + 1}
-              open={openAnnotationId === annotation.id}
-              onToggle={() =>
-                setOpenAnnotationId((currentId) => (currentId === annotation.id ? null : annotation.id))
-              }
-            />
-          </Html>
-        ))}
-        {!hideAnnotations && modelLinks?.map((link) => (
+        {!asset.autoFit && !hideAnnotations && annotations?.map((annotation, index) => {
+          const annotationKey = `${annotation.id}-${index}`;
+          const isOpen = openAnnotationKey === annotationKey;
+          return (
+            <Html
+              key={annotationKey}
+              position={annotation.position}
+              center
+              className="model-annotation"
+              zIndexRange={isOpen ? OPEN_ANNOTATION_Z_INDEX_RANGE : CLOSED_ANNOTATION_Z_INDEX_RANGE}
+            >
+              <ModelAnnotationDot
+                annotation={annotation}
+                open={isOpen}
+                onToggle={() =>
+                  setOpenAnnotationKey((currentKey) => (currentKey === annotationKey ? null : annotationKey))
+                }
+              />
+            </Html>
+          );
+        })}
+        {!asset.autoFit && !hideAnnotations && modelLinks?.map((link) => (
           <Html
             key={link.id}
             position={link.position}
             center
-            distanceFactor={7.5}
             className="model-annotation"
           >
             <ModelLinkDot link={link} onSelectCell={onSelectCell} />
@@ -510,486 +795,6 @@ function Mitochondrion({
   );
 }
 
-function PlantModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
-  return (
-    <group rotation={[0, -0.28, 0]}>
-      <RoundedBox args={[4.7, 2.7, 0.42]} radius={0.18} smoothness={8} position={[0, 0, 0]}>
-        <CellMaterial
-          id="cellWall"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#84ad4a"
-          opacity={crossSection ? 0.34 : 0.5}
-        />
-      </RoundedBox>
-      <RoundedBox args={[4.18, 2.24, 0.24]} radius={0.12} smoothness={8} position={[0.02, 0.02, 0.08]}>
-        <CellMaterial
-          id="cellWall"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#4f9f83"
-          opacity={0.24}
-        />
-      </RoundedBox>
-      <mesh position={[-0.45, -0.12, 0.32]} scale={[1.05, 0.78, 0.28]} castShadow>
-        <sphereGeometry args={[0.78, 46, 46]} />
-        <CellMaterial
-          id="vacuole"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#62bdd2"
-          opacity={0.74}
-        />
-      </mesh>
-      <Nucleus
-        position={[0.92, 0.42, 0.45]}
-        scale={[0.52, 0.52, 0.38]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-      {[
-        [-1.65, 0.48, 0.28],
-        [1.68, -0.38, 0.3],
-        [-1.52, -0.62, 0.22],
-      ].map((position, index) => (
-        <group key={index} position={position as [number, number, number]} rotation={[0, 0, index * 0.7]}>
-          <mesh scale={[0.35, 0.18, 0.12]} castShadow>
-            <sphereGeometry args={[1, 30, 20]} />
-            <CellMaterial
-              id="chloroplast"
-              activePartId={activePartId}
-              viewMode={viewMode}
-              color="#67ad46"
-            />
-          </mesh>
-          <mesh rotation={[Math.PI / 2, 0, 0]} scale={[1, 0.82, 1]}>
-            <torusGeometry args={[0.22, 0.012, 8, 42]} />
-            <CellMaterial
-              id="chloroplast"
-              activePartId={activePartId}
-              viewMode={viewMode}
-              color="#9ed36a"
-            />
-          </mesh>
-        </group>
-      ))}
-      <Mitochondrion
-        position={[0.28, -0.72, 0.42]}
-        rotation={[0.3, 0.2, 1.35]}
-        scale={[0.95, 0.95, 0.95]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-      <CurveTube
-        id="nucleus"
-        color="#ce785c"
-        points={[
-          [0.42, 0.12, 0.42],
-          [0.62, -0.06, 0.5],
-          [1.05, -0.08, 0.46],
-          [1.44, 0.06, 0.38],
-        ]}
-        radius={0.05}
-        activePartId={activePartId}
-        viewMode={viewMode}
-      />
-      <Dots
-        id="vacuole"
-        color="#c76ac5"
-        count={18}
-        spread={[1.72, 0.92, 0.42]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-    </group>
-  );
-}
-
-function WhiteBloodModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
-  return (
-    <group scale={[1.2, 1.2, 1.2]}>
-      <mesh castShadow receiveShadow>
-        <sphereGeometry args={[1.35, 64, 64]} />
-        <CellMaterial
-          id="membrane"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#d6d7e6"
-          opacity={crossSection ? 0.28 : 0.45}
-        />
-      </mesh>
-      {[
-        [-0.42, 0.22, 0.34],
-        [0.28, 0.06, 0.36],
-        [0.02, -0.42, 0.28],
-      ].map((position, index) => (
-        <Nucleus
-          key={index}
-          id="nucleus"
-          position={position as [number, number, number]}
-          scale={[0.42, 0.36, 0.28]}
-          color="#6c35a0"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          crossSection={crossSection}
-        />
-      ))}
-      <Dots
-        id="granules"
-        color="#c06696"
-        count={30}
-        spread={[1.05, 1.02, 0.72]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-      <Dots
-        id="lysosome"
-        color="#8b54b7"
-        count={12}
-        spread={[0.92, 0.88, 0.62]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-    </group>
-  );
-}
-
-function NeuronModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
-  return (
-    <group rotation={[0, -0.2, 0]} scale={[1.05, 1.05, 1.05]}>
-      <Nucleus
-        id="soma"
-        position={[-0.55, 0, 0.08]}
-        scale={[0.64, 0.58, 0.44]}
-        color="#774eb2"
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-      <mesh position={[-0.55, 0, 0]} scale={[0.94, 0.82, 0.62]} castShadow receiveShadow>
-        <sphereGeometry args={[1, 52, 52]} />
-        <CellMaterial
-          id="soma"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#8db5d8"
-          opacity={crossSection ? 0.36 : 0.55}
-        />
-      </mesh>
-      <CurveTube
-        id="axon"
-        color="#6b7dc6"
-        points={[
-          [0.04, 0.02, 0.04],
-          [0.72, -0.02, 0.02],
-          [1.56, 0.04, 0.02],
-          [2.35, -0.04, 0],
-        ]}
-        radius={0.08}
-        activePartId={activePartId}
-        viewMode={viewMode}
-      />
-      {[0.55, 1.06, 1.58, 2.08].map((x, index) => (
-        <mesh key={index} position={[x, 0, 0.02]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <capsuleGeometry args={[0.16, 0.24, 8, 24]} />
-          <CellMaterial
-            id="axon"
-            activePartId={activePartId}
-            viewMode={viewMode}
-            color="#bfd1df"
-            opacity={0.94}
-          />
-        </mesh>
-      ))}
-      {[
-        [
-          [-1.08, 0.28, 0],
-          [-1.55, 0.82, 0.08],
-          [-2.1, 1.03, 0],
-        ],
-        [
-          [-1.16, -0.18, 0],
-          [-1.7, -0.54, 0.05],
-          [-2.2, -0.9, 0],
-        ],
-        [
-          [-0.78, 0.58, 0.04],
-          [-0.82, 1.16, 0.02],
-          [-1.12, 1.58, 0],
-        ],
-        [
-          [-0.9, -0.55, 0.04],
-          [-0.92, -1.04, 0],
-          [-1.2, -1.44, 0.02],
-        ],
-      ].map((points, index) => (
-        <CurveTube
-          key={index}
-          id="dendrites"
-          color="#7d9bcf"
-          points={points as Array<[number, number, number]>}
-          radius={0.052}
-          activePartId={activePartId}
-          viewMode={viewMode}
-        />
-      ))}
-      <Dots
-        id="dendrites"
-        color="#b46ac7"
-        count={12}
-        spread={[2.2, 1.4, 0.2]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-    </group>
-  );
-}
-
-function EpithelialModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
-  return (
-    <group rotation={[0, -0.22, 0]} scale={[1.08, 1.08, 1.08]}>
-      <RoundedBox args={[2.4, 2.0, 0.72]} radius={0.1} smoothness={8} position={[0, -0.12, 0]}>
-        <CellMaterial
-          id="membrane"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#d79baa"
-          opacity={crossSection ? 0.32 : 0.52}
-        />
-      </RoundedBox>
-      {Array.from({ length: 12 }, (_, index) => (
-        <mesh
-          key={index}
-          position={[-1.1 + index * 0.2, 1.04, 0.08]}
-          rotation={[0, 0, 0]}
-          castShadow
-        >
-          <capsuleGeometry args={[0.045, 0.34, 8, 14]} />
-          <CellMaterial
-            id="microvilli"
-            activePartId={activePartId}
-            viewMode={viewMode}
-            color="#c86f80"
-          />
-        </mesh>
-      ))}
-      <Nucleus
-        position={[0.15, -0.2, 0.32]}
-        scale={[0.55, 0.5, 0.36]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-      <CurveTube
-        id="junctions"
-        color="#9f6cbd"
-        points={[
-          [-1.18, 0.74, 0.38],
-          [-0.6, 0.7, 0.44],
-          [0.1, 0.73, 0.4],
-          [0.96, 0.68, 0.42],
-        ]}
-        radius={0.04}
-        activePartId={activePartId}
-        viewMode={viewMode}
-      />
-      <Dots
-        id="nucleus"
-        color="#d082a2"
-        count={18}
-        spread={[0.96, 0.72, 0.38]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-    </group>
-  );
-}
-
-function BacteriaModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
-  return (
-    <group rotation={[0, 0.1, 0]} scale={[1.12, 1.12, 1.12]}>
-      <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
-        <capsuleGeometry args={[0.78, 2.9, 14, 48]} />
-        <CellMaterial
-          id="cellWall"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#65b8ae"
-          opacity={crossSection ? 0.36 : 0.62}
-        />
-      </mesh>
-      <mesh rotation={[0, 0, Math.PI / 2]} scale={[0.88, 0.88, 0.82]}>
-        <capsuleGeometry args={[0.62, 2.6, 12, 40]} />
-        <CellMaterial
-          id="cellWall"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#235a74"
-          opacity={0.44}
-        />
-      </mesh>
-      <CurveTube
-        id="nucleoid"
-        color="#7a43ad"
-        points={[
-          [-0.9, 0.12, 0.3],
-          [-0.42, -0.14, 0.38],
-          [0.1, 0.18, 0.34],
-          [0.62, -0.12, 0.36],
-          [1.02, 0.06, 0.32],
-        ]}
-        radius={0.12}
-        activePartId={activePartId}
-        viewMode={viewMode}
-      />
-      <CurveTube
-        id="flagellum"
-        color="#b87438"
-        points={[
-          [1.82, -0.22, 0.08],
-          [2.35, -0.72, 0],
-          [2.95, -0.5, 0.02],
-          [3.55, -0.95, 0],
-        ]}
-        radius={0.055}
-        activePartId={activePartId}
-        viewMode={viewMode}
-      />
-      <Dots
-        id="nucleoid"
-        color="#e59b3a"
-        count={34}
-        spread={[1.42, 0.48, 0.36]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-    </group>
-  );
-}
-
-function AnimalModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
-  return (
-    <group rotation={[0, -0.34, 0]} scale={[1.08, 1.08, 1.08]}>
-      <mesh scale={[1.7, 1.25, 0.72]} castShadow receiveShadow>
-        <sphereGeometry args={[1, 64, 64]} />
-        <CellMaterial
-          id="membrane"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#9db6dc"
-          opacity={crossSection ? 0.28 : 0.48}
-        />
-      </mesh>
-      <Nucleus
-        position={[0.22, 0.18, 0.36]}
-        scale={[0.55, 0.55, 0.42]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-      <Mitochondrion
-        position={[-0.82, 0.44, 0.32]}
-        rotation={[0.4, 0.1, 1.12]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-      <Mitochondrion
-        position={[0.82, -0.42, 0.25]}
-        rotation={[0.1, 0.35, -0.75]}
-        scale={[0.9, 0.9, 0.9]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-      {[0, 1, 2, 3].map((index) => (
-        <mesh key={index} position={[-0.24 + index * 0.18, -0.56 + index * 0.08, 0.46]} rotation={[0.2, 0, 0.7]}>
-          <torusGeometry args={[0.38 + index * 0.035, 0.025, 10, 52]} />
-          <CellMaterial
-            id="golgi"
-            activePartId={activePartId}
-            viewMode={viewMode}
-            color="#d49057"
-          />
-        </mesh>
-      ))}
-      <Dots
-        id="nucleus"
-        color="#b35fc8"
-        count={28}
-        spread={[1.25, 0.85, 0.46]}
-        activePartId={activePartId}
-        viewMode={viewMode}
-        crossSection={crossSection}
-      />
-    </group>
-  );
-}
-
-function MuscleModel({ activePartId, viewMode, crossSection }: CommonModelProps) {
-  return (
-    <group rotation={[0, -0.26, 0]} scale={[1.08, 1.08, 1.08]}>
-      <mesh rotation={[0, 0, Math.PI / 2]} scale={[0.95, 1, 0.82]} castShadow receiveShadow>
-        <capsuleGeometry args={[0.76, 2.9, 14, 48]} />
-        <CellMaterial
-          id="sarcolemma"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          color="#d7b284"
-          opacity={crossSection ? 0.26 : 0.42}
-        />
-      </mesh>
-      {[-0.42, 0, 0.42].map((y, row) =>
-        [-0.58, 0.24, 1.06].map((x, index) => (
-          <mesh key={`${row}-${index}`} position={[x, y, 0.15]} rotation={[0, Math.PI / 2, 0]} castShadow>
-            <cylinderGeometry args={[0.13, 0.13, 0.86, 24]} />
-            <CellMaterial
-              id="myofibril"
-              activePartId={activePartId}
-              viewMode={viewMode}
-              color={index % 2 === 0 ? "#bd3d51" : "#cf6272"}
-            />
-          </mesh>
-        )),
-      )}
-      {[-1.1, 1.42].map((x, index) => (
-        <Nucleus
-          key={index}
-          id="mitochondria"
-          position={[x, 0.54 - index * 0.92, 0.36]}
-          scale={[0.26, 0.2, 0.18]}
-          color="#cf7042"
-          activePartId={activePartId}
-          viewMode={viewMode}
-          crossSection={crossSection}
-        />
-      ))}
-      {[0, 1, 2, 3, 4].map((index) => (
-        <CurveTube
-          key={index}
-          id="sarcolemma"
-          color="#ead2a7"
-          points={[
-            [-1.55 + index * 0.65, -0.86, 0.26],
-            [-1.45 + index * 0.65, -0.24, 0.34],
-            [-1.55 + index * 0.65, 0.72, 0.28],
-          ]}
-          radius={0.035}
-          activePartId={activePartId}
-          viewMode={viewMode}
-        />
-      ))}
-    </group>
-  );
-}
 
 function CellModel({
   cell,
@@ -997,9 +802,10 @@ function CellModel({
   viewMode,
   crossSection,
   autoRotate,
+  animationPaused,
   hideAnnotations,
   onSelectCell,
-}: Omit<CellSceneProps, "resetKey">) {
+}: Omit<CellSceneProps, "debugPosition" | "resetKey">) {
   const group = useRef<Group>(null);
 
   useFrame((_, delta) => {
@@ -1017,14 +823,13 @@ function CellModel({
           key={cell.modelAsset.url}
           cell={cell}
           asset={cell.modelAsset}
+          animationPaused={animationPaused}
           hideAnnotations={hideAnnotations}
           onSelectCell={onSelectCell}
           {...common}
         />
       ) : (
-        <>
-          {cell.modelKind === "plant" && <PlantModel {...common} />}
-        </>
+        null
       )}
     </group>
   );
@@ -1038,7 +843,7 @@ function ModelLoadingOverlay({ cell }: { cell: CellItem }) {
     <Html center className="model-loader">
       <div>
         <span>Đang tải mẫu 3D</span>
-        <strong>{cell.name}</strong>
+        <strong>{formatChemicalText(cell.name)}</strong>
         <i>
           <b style={{ width: `${displayProgress}%` }} />
         </i>
@@ -1048,88 +853,171 @@ function ModelLoadingOverlay({ cell }: { cell: CellItem }) {
   );
 }
 
+function ResettableCameraControls({ resetToken, cameraZoom = 5.5 }: { resetToken: string; cameraZoom?: number }) {
+  const controls = useRef<CameraControlsApi>(null);
+
+  useEffect(() => {
+    void controls.current?.setLookAt(0, 0, cameraZoom, 0, 0, 0, false);
+  }, [resetToken, cameraZoom]);
+
+  return (
+    <CameraControls
+      ref={controls}
+      makeDefault
+      draggingSmoothTime={0.08}
+      minDistance={0}
+      maxDistance={Infinity}
+      minZoom={0}
+      maxZoom={Infinity}
+      dollySpeed={0.72} // Zoom sensitivity
+      truckSpeed={1.25}
+      azimuthRotateSpeed={0.9}
+      polarRotateSpeed={0.9}
+    />
+  );
+}
+
 export function CellScene({
   cell,
   activePartId,
   viewMode,
   crossSection,
   autoRotate,
+  animationPaused,
   hideAnnotations,
+  debugPosition,
   resetKey,
   onSelectCell,
 }: CellSceneProps) {
   const nativeMaterial = cell.modelAsset?.materialMode === "native";
+  const nativeColorFilter = nativeMaterial && cell.modelAsset?.preserveNativeColor === true;
   const modelKey = cell.modelAsset?.url ?? cell.id;
+  const canvasKey = `${modelKey}-${resetKey}`;
+  const [debugReadout, setDebugReadout] = useState<DebugReadout>({
+    cursor: null,
+    camera: null,
+  });
+  const latestCursorCoordinate = useRef<DebugReadout["cursor"]>(null);
+
+  useEffect(() => {
+    latestCursorCoordinate.current = debugReadout.cursor;
+  }, [debugReadout.cursor]);
+
+  useEffect(() => {
+    if (!debugPosition) {
+      return undefined;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (
+        event.key.toLowerCase() !== "c" ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        isEditableTarget(event.target)
+      ) {
+        return;
+      }
+
+      const cursorCoordinate = latestCursorCoordinate.current;
+      if (!cursorCoordinate) {
+        return;
+      }
+
+      event.preventDefault();
+      void navigator.clipboard?.writeText(formatCopyVector(cursorCoordinate));
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [debugPosition]);
 
   return (
-    <Canvas
-      key={resetKey}
-      className={`cell-canvas${nativeMaterial ? " is-native-asset" : ""}`}
-      dpr={[1, 2]}
-      shadows
-      gl={{ antialias: true, alpha: true, premultipliedAlpha: false }}
-      camera={{ position: [0, 0, 5.5], fov: 38 }}
-    >
-      {!nativeMaterial && <color attach="background" args={["#fbf7ee"]} />}
-      <ambientLight intensity={nativeMaterial ? 1.42 : 1.28} />
-      <hemisphereLight
-        args={[
-          nativeMaterial ? "#fffaf0" : "#fff8ea",
-          nativeMaterial ? "#efe3d2" : "#e3ded2",
-          nativeMaterial ? 1.26 : 1.18,
-        ]}
-      />
-      <directionalLight
-        position={[4.2, 5.2, 5.8]}
-        intensity={nativeMaterial ? 2.72 : 2.75}
-        castShadow
-      />
-      {nativeMaterial && (
-        <directionalLight
-          position={[-4.4, 2.2, 3.6]}
-          intensity={0.82}
-          color="#fff1df"
-        />
+    <div className="cell-canvas-shell">
+      {debugPosition && (
+        <div className="debug-readout" aria-live="polite">
+          <span>Cursor Annotation XYZ</span>
+          <strong>{formatVector(debugReadout.cursor)}</strong>
+          <DebugCopyButton label="cursor annotation coordinate" value={debugReadout.cursor} />
+          <span>Camera Annotation XYZ</span>
+          <strong>{formatVector(debugReadout.camera)}</strong>
+          <DebugCopyButton label="camera annotation coordinate" value={debugReadout.camera} />
+        </div>
       )}
-      <spotLight
-        position={[-3.6, 3.2, 4.6]}
-        angle={0.42}
-        penumbra={0.74}
-        intensity={nativeMaterial ? 0.78 : 1.45}
-        color={nativeMaterial ? "#fff8ec" : cell.accentSoft}
-      />
-      <pointLight
-        position={[2.8, -1.2, 3.2]}
-        intensity={nativeMaterial ? 0.46 : 0.6}
-        color={nativeMaterial ? "#ffffff" : cell.accent}
-      />
-      <Suspense key={modelKey} fallback={<ModelLoadingOverlay cell={cell} />}>
-        <CellModel
-          key={modelKey}
-          cell={cell}
-          activePartId={activePartId}
-          viewMode={viewMode}
-          crossSection={crossSection}
-          autoRotate={autoRotate}
-          hideAnnotations={hideAnnotations}
-          onSelectCell={onSelectCell}
+      <Canvas
+        key={canvasKey}
+        className={`cell-canvas${nativeColorFilter ? " is-native-color-asset" : ""}`}
+        dpr={[1, 2]}
+        shadows
+        gl={{
+          antialias: true,
+          alpha: true,
+          premultipliedAlpha: false,
+          outputColorSpace: SRGBColorSpace,
+          toneMapping: ACESFilmicToneMapping,
+        }}
+        onCreated={({ gl }) => {
+          gl.toneMappingExposure = nativeMaterial ? 1.35 : 1;
+        }}
+        camera={{ position: [0, 0, cell.modelAsset?.cameraZoom ?? 5.5], fov: 38 }}
+      >
+        {!nativeMaterial && <color attach="background" args={["#fbf7ee"]} />}
+        {nativeMaterial && <NativeStudioEnvironment />}
+        <ambientLight intensity={nativeMaterial ? 0.32 : 1.28} />
+        <hemisphereLight
+          args={[
+            nativeMaterial ? "#f5f8ff" : "#fff8ea",
+            nativeMaterial ? "#574f48" : "#e3ded2",
+            nativeMaterial ? 0.48 : 1.18,
+          ]}
         />
-        <ContactShadows
-          position={[0, -1.8, 0]}
-          opacity={nativeMaterial ? 0.18 : 0.26}
-          scale={nativeMaterial ? 7.8 : 7.2}
-          blur={nativeMaterial ? 3.2 : 2.4}
-          far={4.2}
+        <directionalLight
+          position={[4.2, 5.2, 5.8]}
+          intensity={nativeMaterial ? 2.1 : 2.75}
+          castShadow
         />
-      </Suspense>
-      <CameraControls
-        makeDefault
-        draggingSmoothTime={0.08}
-        dollySpeed={1.05}
-        truckSpeed={1.25}
-        azimuthRotateSpeed={0.9}
-        polarRotateSpeed={0.9}
-      />
-    </Canvas>
+        {nativeMaterial && (
+          <directionalLight
+            position={[-4.4, 2.2, 3.6]}
+            intensity={0.42}
+            color="#dcecff"
+          />
+        )}
+        <spotLight
+          position={[-3.6, 3.2, 4.6]}
+          angle={0.42}
+          penumbra={0.74}
+          intensity={nativeMaterial ? 0.32 : 1.45}
+          color={nativeMaterial ? "#ffe9cf" : cell.accentSoft}
+        />
+        <pointLight
+          position={[2.8, -1.2, 3.2]}
+          intensity={nativeMaterial ? 0.18 : 0.6}
+          color={nativeMaterial ? "#ffffff" : cell.accent}
+        />
+        <Suspense key={modelKey} fallback={<ModelLoadingOverlay cell={cell} />}>
+          <CellModel
+            key={modelKey}
+            cell={cell}
+            activePartId={activePartId}
+            viewMode={viewMode}
+            crossSection={crossSection}
+            autoRotate={autoRotate}
+            animationPaused={animationPaused}
+            hideAnnotations={hideAnnotations}
+            onSelectCell={onSelectCell}
+          />
+          <ContactShadows
+            position={[0, -1.8, 0]}
+            opacity={nativeMaterial ? 0.18 : 0.26}
+            scale={nativeMaterial ? 7.8 : 7.2}
+            blur={nativeMaterial ? 3.2 : 2.4}
+            far={4.2}
+          />
+          <ResettableCameraControls resetToken={canvasKey} cameraZoom={cell.modelAsset?.cameraZoom} />
+        </Suspense>
+        {debugPosition && <DebugPositionProbe onChange={setDebugReadout} />}
+      </Canvas>
+    </div>
   );
 }

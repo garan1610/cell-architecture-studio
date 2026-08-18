@@ -1,135 +1,59 @@
 import {
-  BookOpen,
   Box,
+  Bug,
   ChevronDown,
   EyeOff,
-  Grid3X3,
   Library,
+  MousePointer2,
+  MoveVertical,
+  Pause,
+  Play,
   RotateCcw,
-  Settings,
   Sparkles,
-  Star,
+  Undo2,
 } from "lucide-react";
-import { useMemo, useRef, useState, type CSSProperties } from "react";
+import { useMemo, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { CellScene } from "./components/CellScene";
-import { cells, getCellById, type CellItem, type ModelKind, type ViewMode } from "./data/cells";
+import {
+  classItems,
+  getFirstClassWithItems,
+  type CellItem,
+  type GradeKey,
+  type LessonItem,
+  type LessonTab,
+  type ViewMode,
+} from "./data/cells";
+import { formatChemicalText } from "./utils/chemicalText";
 
-const initialCell = getCellById("animalCellModel");
-
-function Header({ cell }: { cell: CellItem }) {
+function Header() {
   return (
     <header className="topbar">
       <div className="brand-block">
         <div className="brand-orb" aria-hidden="true">
-          <Sparkles size={26} />
+          <Sparkles size={24} />
         </div>
         <div>
-          <h1>Phòng khám phá cấu trúc tế bào</h1>
-          <p>Khám phá sự sống ở cấp độ hiển vi</p>
+          <h1>Phòng khám phá mô hình 3D</h1>
+          <p>Sinh học phổ thông</p>
         </div>
       </div>
-
-      <nav className="top-nav" aria-label="Điều hướng chính">
-        <a href="#gallery">
-          <Grid3X3 size={24} />
-          <span>Bộ sưu tập</span>
-        </a>
-        <a href="#library">
-          <Library size={24} />
-          <span>Thư viện</span>
-        </a>
-        <a href="#notebooks">
-          <BookOpen size={24} />
-          <span>Ghi chú</span>
-        </a>
-        <a href="#settings">
-          <Settings size={24} />
-          <span>Cài đặt</span>
-        </a>
-        <button className="avatar-button" type="button" aria-label="Menu người dùng">
-          <span className="avatar-core" style={{ background: cell.accentSoft }}>
-            <span style={{ background: cell.accent }} />
-          </span>
-          <ChevronDown size={20} />
-        </button>
-      </nav>
     </header>
   );
 }
 
-type SidebarProps = {
-  selectedCell: CellItem;
-  selectedGrade: GradeLevel;
-  favorites: Set<string>;
-  onSelectCell: (id: string) => void;
-  onSelectedGradeChange: (grade: GradeLevel) => void;
-  onToggleFavorite: (id: string) => void;
-};
+function MiniModel({ model }: { model: CellItem }) {
+  const previewUrl = model.renderImage?.url ?? model.modelAsset?.previewUrl;
 
-type GradeLevel = "Lớp 10" | "Lớp 11" | "Lớp 12";
-
-type ModelGroup = {
-  label: string;
-  items: CellItem[];
-};
-
-const gradeModelKinds: Record<GradeLevel, ModelKind[]> = {
-  "Lớp 10": [
-    "bioMolecules",
-    "prokaryoticCell",
-    "eukaryoticCell",
-    "membraneTransport",
-    "virus",
-    "mitosis",
-  ],
-  "Lớp 11": [
-    "plant",
-    "chloroplast",
-    "mitochondria",
-    "rootSystem",
-    "plantVascular",
-    "leafStomata",
-    "digestiveSystem",
-    "gasExchange",
-    "cardiovascular",
-    "immuneSystem",
-    "urinarySystem",
-    "nervousSystem",
-    "senseOrgans",
-    "plantStemGrowth",
-    "plantReproduction",
-    "humanReproduction",
-  ],
-  "Lớp 12": ["dna", "chromosome", "translation"],
-};
-
-function getGradeForCell(cell: CellItem): GradeLevel {
-  return (
-    (Object.keys(gradeModelKinds) as GradeLevel[]).find((grade) =>
-      gradeModelKinds[grade].includes(cell.modelKind),
-    ) ?? "Lá»›p 10"
-  );
-}
-
-function MiniCell({ cell }: { cell: CellItem }) {
-  if (cell.renderImage?.url) {
+  if (previewUrl) {
     return (
-      <span className="mini-cell has-preview" style={{ "--thumb": cell.accent } as CSSProperties}>
-        <img src={cell.renderImage.url} alt="" aria-hidden="true" />
-      </span>
-    );
-  }
-
-  if (cell.modelAsset?.previewUrl) {
-    return (
-      <span className="mini-cell has-preview" style={{ "--thumb": cell.accent } as CSSProperties}>
-        <img src={cell.modelAsset.previewUrl} alt="" aria-hidden="true" />
+      <span className="mini-cell has-preview" style={{ "--thumb": model.accent } as CSSProperties}>
+        <img src={previewUrl} alt="" aria-hidden="true" />
       </span>
     );
   }
 
   return (
-    <span className={`mini-cell mini-cell-${cell.modelKind}`} style={{ "--thumb": cell.accent } as CSSProperties}>
+    <span className="mini-cell" style={{ "--thumb": model.accent } as CSSProperties}>
       <span />
       <i />
       <b />
@@ -137,109 +61,39 @@ function MiniCell({ cell }: { cell: CellItem }) {
   );
 }
 
-function Sidebar({
-  selectedCell,
-  selectedGrade,
-  favorites,
-  onSelectCell,
-  onSelectedGradeChange,
-  onToggleFavorite,
-}: SidebarProps) {
-  const gradeOptions = Object.keys(gradeModelKinds) as GradeLevel[];
-  const modelGroups: ModelGroup[] = [
-    {
-      label: "Tế bào",
-      items: cells.filter(
-        (cell) =>
-          ![
-            "plant",
-            "dna",
-            "chromosome",
-            "rootSystem",
-            "plantVascular",
-            "leafStomata",
-            "chloroplast",
-            "mitochondria",
-            "translation",
-            "digestiveSystem",
-            "gasExchange",
-            "cardiovascular",
-            "immuneSystem",
-            "urinarySystem",
-            "nervousSystem",
-            "senseOrgans",
-            "plantStemGrowth",
-            "plantReproduction",
-            "humanReproduction",
-            "bioMolecules",
-            "prokaryoticCell",
-            "eukaryoticCell",
-            "membraneTransport",
-            "virus",
-            "mitosis",
-          ].includes(cell.modelKind),
-      ),
-    },
-    { label: "Các phân tử sinh học", items: cells.filter((cell) => cell.modelKind === "bioMolecules") },
-    { label: "Tế bào nhân sơ", items: cells.filter((cell) => cell.modelKind === "prokaryoticCell") },
-    { label: "Tế bào nhân thực", items: cells.filter((cell) => cell.modelKind === "eukaryoticCell") },
-    { label: "Màng sinh chất và vận chuyển qua màng", items: cells.filter((cell) => cell.modelKind === "membraneTransport") },
-    { label: "Virus", items: cells.filter((cell) => cell.modelKind === "virus") },
-    { label: "Nguyên phân - NST và thoi phân bào", items: cells.filter((cell) => cell.modelKind === "mitosis") },
-    { label: "Phân tử", items: cells.filter((cell) => cell.modelKind === "dna") },
-    { label: "Nhiễm sắc thể", items: cells.filter((cell) => cell.modelKind === "chromosome") },
-    { label: "Hệ rễ", items: cells.filter((cell) => cell.modelKind === "rootSystem") },
-    { label: "Tế bào cây", items: cells.filter((cell) => cell.modelKind === "plant") },
-    { label: "Hệ mô dẫn ở thực vật", items: cells.filter((cell) => cell.modelKind === "plantVascular") },
-    { label: "Khí khổng và biểu bì lá", items: cells.filter((cell) => cell.modelKind === "leafStomata") },
-    { label: "Lục lạp", items: cells.filter((cell) => cell.modelKind === "chloroplast") },
-    { label: "Ti thể", items: cells.filter((cell) => cell.modelKind === "mitochondria") },
-    { label: "Dịch mã", items: cells.filter((cell) => cell.modelKind === "translation") },
-    { label: "Hệ tiêu hóa người", items: cells.filter((cell) => cell.modelKind === "digestiveSystem") },
-    { label: "Cơ quan trao đổi khí", items: cells.filter((cell) => cell.modelKind === "gasExchange") },
-    { label: "Tim và hệ mạch người", items: cells.filter((cell) => cell.modelKind === "cardiovascular") },
-    { label: "Hệ miễn dịch người", items: cells.filter((cell) => cell.modelKind === "immuneSystem") },
-    { label: "Thận và nephron", items: cells.filter((cell) => cell.modelKind === "urinarySystem") },
-    { label: "Hệ thần kinh", items: cells.filter((cell) => cell.modelKind === "nervousSystem") },
-    { label: "Cơ quan cảm giác", items: cells.filter((cell) => cell.modelKind === "senseOrgans") },
-    { label: "Mô phân sinh và cấu tạo thân cây", items: cells.filter((cell) => cell.modelKind === "plantStemGrowth") },
-    { label: "Hoa và cơ quan sinh sản thực vật", items: cells.filter((cell) => cell.modelKind === "plantReproduction") },
-    { label: "Hệ sinh sản người", items: cells.filter((cell) => cell.modelKind === "humanReproduction") },
-  ].filter((group) => group.items.length > 0);
+type RightSidebarProps = {
+  selectedGrade: GradeKey;
+  selectedItem: LessonItem;
+  onGradeChange: (grade: GradeKey) => void;
+  onItemChange: (itemId: string) => void;
+};
 
-  const gradeGroups = (Object.keys(gradeModelKinds) as GradeLevel[])
-    .map((grade) => {
-      const kinds = gradeModelKinds[grade];
-      return {
-        label: grade,
-        groups: modelGroups
-          .map((group) => ({
-            ...group,
-            items: group.items.filter((cell) => kinds.includes(cell.modelKind)),
-          }))
-          .filter((group) => group.items.length > 0),
-      };
-    })
-    .filter((grade) => grade.groups.length > 0);
-  const activeGradeGroup = gradeGroups.find((grade) => grade.label === selectedGrade) ?? gradeGroups[0];
+function RightSidebar({
+  selectedGrade,
+  selectedItem,
+  onGradeChange,
+  onItemChange,
+}: RightSidebarProps) {
+  const gradeEntries = Object.entries(classItems) as Array<[GradeKey, (typeof classItems)[GradeKey]]>;
+  const activeClass = classItems[selectedGrade];
 
   return (
-    <aside className="left-rail">
-      <section className="panel cell-type-panel">
+    <aside className="right-rail">
+      <section className="panel model-picker">
         <div className="panel-heading">
           <span>
             <Box size={18} />
-            Mô hình 3D
+            Tên mô hình
           </span>
           <label className="model-grade-select">
             <select
               value={selectedGrade}
-              onChange={(event) => onSelectedGradeChange(event.target.value as GradeLevel)}
-              aria-label="Chon lop"
+              onChange={(event) => onGradeChange(event.target.value as GradeKey)}
+              aria-label="Chọn lớp"
             >
-              {gradeOptions.map((grade, index) => (
-                <option key={grade} value={grade}>
-                  Lop {index + 10}
+              {gradeEntries.map(([gradeKey, grade]) => (
+                <option key={gradeKey} value={gradeKey} disabled={grade.items.length === 0}>
+                  {grade.label}
                 </option>
               ))}
             </select>
@@ -247,42 +101,23 @@ function Sidebar({
           </label>
         </div>
 
-        <div className="model-groups">
-          {activeGradeGroup?.groups.map((group) => (
-                <div className="model-group" key={`${activeGradeGroup.label}-${group.label}`}>
-                  <h3>{group.label}</h3>
-              <div className="cell-list">
-                {group.items.map((cell) => {
-                  const selected = selectedCell.id === cell.id;
-                  return (
-                    <button
-                      className={`cell-row ${selected ? "is-active" : ""}`}
-                      type="button"
-                      key={cell.id}
-                      onClick={() => onSelectCell(cell.id)}
-                    >
-                      <MiniCell cell={cell} />
-                      <span className="cell-row-copy">
-                        <strong>{cell.name}</strong>
-                        <span>{cell.type}</span>
-                      </span>
-                      <span
-                        className={`favorite-dot ${favorites.has(cell.id) ? "is-on" : ""}`}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          onToggleFavorite(cell.id);
-                        }}
-                        role="button"
-                        tabIndex={0}
-                        aria-label={`Yêu thích ${cell.name}`}
-                      >
-                        <Star size={18} fill="currentColor" />
-                      </span>
-                    </button>
-                  );
-                })}
-                  </div>
-                </div>
+        <div className="model-list">
+          {activeClass.items.length === 0 && (
+            <p className="empty-note">Chưa có mô hình demo cho lớp này.</p>
+          )}
+
+          {activeClass.items.map((item) => (
+            <button
+              className={`model-row ${selectedItem.id === item.id ? "is-active" : ""}`}
+              type="button"
+              key={item.id}
+              onClick={() => onItemChange(item.id)}
+            >
+              <MiniModel model={item.tabs[0].models[0]} />
+              <span>
+                <strong>{formatChemicalText(item.name)}</strong>
+              </span>
+            </button>
           ))}
         </div>
       </section>
@@ -290,71 +125,219 @@ function Sidebar({
   );
 }
 
-type StageProps = {
-  cell: CellItem;
-  activePartId: string;
+type ModelViewportProps = {
+  model: CellItem;
   viewMode: ViewMode;
-  crossSection: boolean;
   autoRotate: boolean;
+  animationPaused: boolean;
   hideAnnotations: boolean;
+  debugPosition: boolean;
   resetKey: number;
-  onCrossSectionChange: (value: boolean) => void;
+  allowDetailOpen: boolean;
+  onOpenDetail: (modelId: string) => void;
+};
+
+function ModelViewport({
+  model,
+  viewMode,
+  autoRotate,
+  animationPaused,
+  hideAnnotations,
+  debugPosition,
+  resetKey,
+  allowDetailOpen,
+  onOpenDetail,
+}: ModelViewportProps) {
+  const pointerState = useRef({
+    dragged: false,
+    startX: 0,
+    startY: 0,
+  });
+
+  return (
+    <article className="model-viewport">
+      <div className="model-viewport-title">
+        <h3>{formatChemicalText(model.name)}</h3>
+      </div>
+      <button
+        className={`canvas-hit-area${allowDetailOpen ? "" : " is-static"}`}
+        type="button"
+        onPointerDown={(event) => {
+          pointerState.current = {
+            dragged: false,
+            startX: event.clientX,
+            startY: event.clientY,
+          };
+        }}
+        onPointerMove={(event) => {
+          const deltaX = event.clientX - pointerState.current.startX;
+          const deltaY = event.clientY - pointerState.current.startY;
+          if (Math.hypot(deltaX, deltaY) > 6) {
+            pointerState.current.dragged = true;
+          }
+        }}
+        onClick={(event) => {
+          if (pointerState.current.dragged) {
+            event.preventDefault();
+            pointerState.current.dragged = false;
+            return;
+          }
+
+          if (allowDetailOpen) {
+            onOpenDetail(model.id);
+          }
+        }}
+        aria-label={`Xem chi tiết ${formatChemicalText(model.name)}`}
+      >
+        <CellScene
+          cell={model}
+          activePartId={model.defaultFocusId}
+          viewMode={viewMode}
+          crossSection={false}
+          autoRotate={autoRotate}
+          animationPaused={animationPaused}
+          hideAnnotations={hideAnnotations}
+          debugPosition={debugPosition}
+          resetKey={resetKey}
+          onSelectCell={() => undefined}
+        />
+      </button>
+    </article>
+  );
+}
+
+type StageProps = {
+  item: LessonItem;
+  tab: LessonTab;
+  detailModel: CellItem | null;
+  viewMode: ViewMode;
+  autoRotate: boolean;
+  animationPaused: boolean;
+  hideAnnotations: boolean;
+  debugPosition: boolean;
+  renderHeight: number | null;
+  resetKey: number;
   onAutoRotateChange: (value: boolean) => void;
+  onAnimationPausedChange: (value: boolean) => void;
   onHideAnnotationsChange: (value: boolean) => void;
-  onSelectCell: (id: string) => void;
+  onDebugPositionChange: (value: boolean) => void;
+  onRenderHeightChange: (value: number) => void;
+  onOpenDetail: (modelId: string) => void;
+  onCloseDetail: () => void;
   onReset: () => void;
 };
 
 function Stage({
-  cell,
-  activePartId,
+  item,
+  tab,
+  detailModel,
   viewMode,
-  crossSection,
   autoRotate,
+  animationPaused,
   hideAnnotations,
+  debugPosition,
+  renderHeight,
   resetKey,
-  onCrossSectionChange,
   onAutoRotateChange,
+  onAnimationPausedChange,
   onHideAnnotationsChange,
-  onSelectCell,
+  onDebugPositionChange,
+  onRenderHeightChange,
+  onOpenDetail,
+  onCloseDetail,
   onReset,
 }: StageProps) {
+  const visibleModels = detailModel ? [detailModel] : tab.models;
+  const allowDetailOpen = !detailModel && tab.models.length > 1;
+  const gridClass = `model-grid model-count-${Math.min(visibleModels.length, 3)}`;
+  const resizeState = useRef({
+    startY: 0,
+    startHeight: renderHeight ?? 342,
+  });
+
+  function startRenderResize(event: PointerEvent<HTMLButtonElement>) {
+    const currentGridHeight =
+      event.currentTarget.previousElementSibling instanceof HTMLElement
+        ? event.currentTarget.previousElementSibling.getBoundingClientRect().height
+        : (renderHeight ?? 342);
+
+    resizeState.current = {
+      startY: event.clientY,
+      startHeight: currentGridHeight,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function resizeRender(event: PointerEvent<HTMLButtonElement>) {
+    if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+      return;
+    }
+
+    const deltaY = event.clientY - resizeState.current.startY;
+    const nextHeight = Math.max(180, Math.min(1100, resizeState.current.startHeight + deltaY));
+    onRenderHeightChange(Math.round(nextHeight));
+  }
+
   return (
-    <main className="stage-column">
-      <section className="stage-panel">
-        <div className="stage-title">
-          <div>
-            <h2>{cell.name}</h2>
-            <p>{cell.type}</p>
-          </div>
-
-          <div className="view-card">
-            <span>Chế độ xem</span>
-            <div className="mode-switcher mode-switcher-single">
-              <button
-                type="button"
-                className={crossSection ? "is-active" : ""}
-                onClick={() => onCrossSectionChange(!crossSection)}
-              >
-                Lát cắt
-              </button>
-            </div>
-          </div>
+    <section className={`stage-panel${renderHeight === null ? "" : " is-manual-height"}`}>
+      <div className="stage-title">
+        <div>
+          <h2>{formatChemicalText(item.name)}</h2>
+          <p>{formatChemicalText(detailModel ? detailModel.type : tab.title)}</p>
         </div>
 
-        <div className="canvas-wrap">
-          <CellScene
-            cell={cell}
-            activePartId={activePartId}
-            viewMode={viewMode}
-            crossSection={crossSection}
-            autoRotate={autoRotate}
-            hideAnnotations={hideAnnotations}
-            resetKey={resetKey}
-            onSelectCell={onSelectCell}
-          />
-        </div>
+        {detailModel && (
+          <button className="return-button" type="button" onClick={onCloseDetail}>
+            <Undo2 size={18} />
+            Trở lại
+          </button>
+        )}
+      </div>
 
+      <div
+        className={gridClass}
+        style={
+          renderHeight === null
+            ? undefined
+            : ({ "--render-height": `${renderHeight}px` } as CSSProperties)
+        }
+      >
+        {visibleModels.length > 0 ? (
+          visibleModels.map((model) => (
+            <ModelViewport
+              key={model.id}
+              model={model}
+              viewMode={viewMode}
+              autoRotate={autoRotate}
+              animationPaused={animationPaused}
+              hideAnnotations={hideAnnotations}
+              debugPosition={debugPosition}
+              resetKey={resetKey}
+              allowDetailOpen={allowDetailOpen}
+              onOpenDetail={onOpenDetail}
+            />
+          ))
+        ) : (
+          <div className="empty-stage">
+            <Library size={36} />
+            <strong>Tab đang chờ mô hình 3D</strong>
+            <span>Dữ liệu chữ đã được đặt sẵn để bổ sung asset ở bước sau.</span>
+          </div>
+        )}
+      </div>
+
+      <button
+        type="button"
+        className="render-resize-handle"
+        aria-label="Thay đổi chiều cao khung render"
+        title="Kéo để thay đổi chiều cao khung render"
+        onPointerDown={startRenderResize}
+        onPointerMove={resizeRender}
+      >
+        <MoveVertical size={17} aria-hidden="true" />
+      </button>
+
+      <div className="stage-utility-row">
         <div className="stage-toolbar">
           <button
             type="button"
@@ -366,11 +349,27 @@ function Stage({
           </button>
           <button
             type="button"
+            className={animationPaused ? "is-active" : ""}
+            onClick={() => onAnimationPausedChange(!animationPaused)}
+          >
+            {animationPaused ? <Play size={20} /> : <Pause size={20} />}
+            {animationPaused ? "Tiếp tục" : "Tạm dừng"}
+          </button>
+          <button
+            type="button"
             className={hideAnnotations ? "is-active" : ""}
             onClick={() => onHideAnnotationsChange(!hideAnnotations)}
           >
             <EyeOff size={20} />
             Ẩn chú thích
+          </button>
+          <button
+            type="button"
+            className={debugPosition ? "is-active" : ""}
+            onClick={() => onDebugPositionChange(!debugPosition)}
+          >
+            <Bug size={20} />
+            Debug vị trí
           </button>
           <button type="button" onClick={onReset}>
             <RotateCcw size={20} />
@@ -379,12 +378,67 @@ function Stage({
         </div>
 
         <div className="camera-instructions" aria-label="Hướng dẫn điều khiển camera">
+          <span>
+            <MousePointer2 size={17} />
+            Chuột trái kéo: xoay
+          </span>
           <span>Chuột phải kéo: di chuyển</span>
-          <span>Chuột trái kéo: xoay</span>
           <span>Cuộn chuột: thu phóng</span>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
+  );
+}
+
+type InfoPanelProps = {
+  tab: LessonTab;
+  detailModel: CellItem | null;
+};
+
+function InfoPanel({ tab, detailModel }: InfoPanelProps) {
+  const infoModel = detailModel ?? (tab.models.length === 1 ? tab.models[0] : null);
+  const annotations = infoModel?.annotations;
+
+  return (
+    <section className="info-panel" aria-live="polite">
+      <div>
+        <p>{formatChemicalText(infoModel?.description ?? tab.mainText)}</p>
+        {infoModel && annotations && annotations.length > 0 && (
+          <div className="info-annotations" aria-label="Danh sách chú thích">
+            {annotations.map((annotation, index) => (
+              <span className="info-annotation-item" key={`${annotation.id}-${index}`}>
+                <strong>{annotation.number ?? ""}.</strong>
+                {formatChemicalText(annotation.label)}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+type TabStripProps = {
+  tabs: LessonTab[];
+  activeTabId: string;
+  onTabChange: (tabId: string) => void;
+};
+
+function TabStrip({ tabs, activeTabId, onTabChange }: TabStripProps) {
+  return (
+    <nav className="tab-strip" aria-label="Danh sách tab mô hình">
+      {tabs.map((tab, index) => (
+        <button
+          type="button"
+          className={activeTabId === tab.id ? "is-active" : ""}
+          key={tab.id}
+          onClick={() => onTabChange(tab.id)}
+        >
+          <span>Tab {index + 1}</span>
+          <strong>{formatChemicalText(tab.title)}</strong>
+        </button>
+      ))}
+    </nav>
   );
 }
 
@@ -392,23 +446,47 @@ function Toast({ message }: { message: string | null }) {
   if (!message) {
     return null;
   }
+
   return <div className="toast">{message}</div>;
 }
 
 export default function App() {
-  const [selectedCellId, setSelectedCellId] = useState(initialCell.id);
-  const [selectedGrade, setSelectedGrade] = useState<GradeLevel>(() => getGradeForCell(initialCell));
+  const initialGrade = getFirstClassWithItems();
+  const [selectedGrade, setSelectedGrade] = useState<GradeKey>(initialGrade);
+  const [selectedItemId, setSelectedItemId] = useState(classItems[initialGrade].items[0].id);
+  const [selectedTabId, setSelectedTabId] = useState(classItems[initialGrade].items[0].tabs[0].id);
+  const [detailModelId, setDetailModelId] = useState<string | null>(null);
   const [viewMode] = useState<ViewMode>("mesh");
-  const [crossSection, setCrossSection] = useState(false);
   const [autoRotate, setAutoRotate] = useState(false);
+  const [animationPaused, setAnimationPaused] = useState(false);
   const [hideAnnotations, setHideAnnotations] = useState(false);
+  const [debugPosition, setDebugPosition] = useState(false);
+  const [renderHeight, setRenderHeight] = useState<number | null>(null);
   const [resetKey, setResetKey] = useState(0);
-  const [favorites, setFavorites] = useState<Set<string>>(() => new Set([initialCell.id]));
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<number | null>(null);
 
-  const selectedCell = useMemo(() => getCellById(selectedCellId), [selectedCellId]);
-  const activePartId = selectedCell.defaultFocusId;
+  const selectedItem = useMemo(() => {
+    const activeClass = classItems[selectedGrade];
+    return activeClass.items.find((item) => item.id === selectedItemId) ?? activeClass.items[0];
+  }, [selectedGrade, selectedItemId]);
+
+  const activeTab = useMemo(
+    () => selectedItem.tabs.find((tab) => tab.id === selectedTabId) ?? selectedItem.tabs[0],
+    [selectedItem, selectedTabId],
+  );
+
+  const detailModel = useMemo(
+    () => activeTab.models.find((model) => model.id === detailModelId) ?? null,
+    [activeTab, detailModelId],
+  );
+
+  const accentModel = detailModel ?? activeTab.models[0] ?? selectedItem.tabs[0].models[0];
+  const shellStyle = {
+    "--accent": accentModel.accent,
+    "--accent-soft": accentModel.accentSoft,
+    "--cell-color": accentModel.color,
+  } as CSSProperties;
 
   function showToast(message: string) {
     setToast(message);
@@ -418,70 +496,86 @@ export default function App() {
     toastTimer.current = window.setTimeout(() => setToast(null), 2600);
   }
 
-  function toggleFavorite(id: string) {
-    setFavorites((current) => {
-      const next = new Set(current);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
+  function changeGrade(grade: GradeKey) {
+    const nextClass = classItems[grade];
+    if (nextClass.items.length === 0) {
+      return;
+    }
+    setSelectedGrade(grade);
+    setSelectedItemId(nextClass.items[0].id);
+    setSelectedTabId(nextClass.items[0].tabs[0].id);
+    setDetailModelId(null);
+    setResetKey((key) => key + 1);
   }
 
-  function selectCell(id: string) {
-    const nextCell = getCellById(id);
-    setSelectedGrade(getGradeForCell(nextCell));
-    setSelectedCellId((currentId) => {
-      if (currentId === id) {
-        return currentId;
-      }
-
-      setResetKey((key) => key + 1);
-      return id;
-    });
+  function changeItem(itemId: string) {
+    const item = classItems[selectedGrade].items.find((candidate) => candidate.id === itemId);
+    if (!item) {
+      return;
+    }
+    setSelectedItemId(item.id);
+    setSelectedTabId(item.tabs[0].id);
+    setDetailModelId(null);
+    setResetKey((key) => key + 1);
   }
 
-  const shellStyle = {
-    "--accent": selectedCell.accent,
-    "--accent-soft": selectedCell.accentSoft,
-    "--cell-color": selectedCell.color,
-  } as CSSProperties;
+  function changeTab(tabId: string) {
+    setSelectedTabId(tabId);
+    setDetailModelId(null);
+    setResetKey((key) => key + 1);
+  }
 
   return (
     <div className="app-shell" style={shellStyle}>
-      <Header cell={selectedCell} />
+      <Header />
 
       <div className="app-grid">
-        <Sidebar
-          selectedCell={selectedCell}
+        <RightSidebar
           selectedGrade={selectedGrade}
-          favorites={favorites}
-          onSelectCell={selectCell}
-          onSelectedGradeChange={setSelectedGrade}
-          onToggleFavorite={toggleFavorite}
+          selectedItem={selectedItem}
+          onGradeChange={changeGrade}
+          onItemChange={changeItem}
         />
 
-        <div className="center-stack">
+        <main className="center-stack">
           <Stage
-            cell={selectedCell}
-            activePartId={activePartId}
+            item={selectedItem}
+            tab={activeTab}
+            detailModel={detailModel}
             viewMode={viewMode}
-            crossSection={crossSection}
             autoRotate={autoRotate}
+            animationPaused={animationPaused}
             hideAnnotations={hideAnnotations}
+            debugPosition={debugPosition}
+            renderHeight={renderHeight}
             resetKey={resetKey}
-            onCrossSectionChange={setCrossSection}
             onAutoRotateChange={setAutoRotate}
+            onAnimationPausedChange={setAnimationPaused}
             onHideAnnotationsChange={setHideAnnotations}
-            onSelectCell={selectCell}
+            onDebugPositionChange={setDebugPosition}
+            onRenderHeightChange={setRenderHeight}
+            onOpenDetail={(modelId) => {
+              if (detailModelId === modelId) {
+                return;
+              }
+
+              setDetailModelId(modelId);
+              setResetKey((key) => key + 1);
+            }}
+            onCloseDetail={() => {
+              setDetailModelId(null);
+              setResetKey((key) => key + 1);
+            }}
             onReset={() => {
               setResetKey((key) => key + 1);
               showToast("Đã đặt lại góc nhìn.");
             }}
           />
-        </div>
+
+          <InfoPanel tab={activeTab} detailModel={detailModel} />
+
+          <TabStrip tabs={selectedItem.tabs} activeTabId={activeTab.id} onTabChange={changeTab} />
+        </main>
       </div>
 
       <Toast message={toast} />
